@@ -1,0 +1,1 @@
+Directory that contains subdirectories for teams.
