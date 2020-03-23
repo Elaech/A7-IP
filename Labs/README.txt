@@ -1,1 +1,0 @@
-Directory made for working in groups during labs
