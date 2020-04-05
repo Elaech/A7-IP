@@ -7,3 +7,9 @@ module.exports = withCSS({
 		localIdentName: '[local]___[hash:base64:5]',
 	},
 })
+
+module.exports = {
+	env: {
+		BaseURL: '',
+	},
+}
