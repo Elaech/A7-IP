@@ -1,4 +1,4 @@
-class Mesaj {
+export class Mesaj {
 
 static contentContraint = {
   min:0,

@@ -1,5 +1,7 @@
-class Profesor extends User {
-  static create(partial :Partial<Profesor>) {
+import { User } from './User';
+
+export class Profesor extends User {
+  static createProfesor(partial :Partial<Profesor>) {
     return new Profesor(partial);
   }
 

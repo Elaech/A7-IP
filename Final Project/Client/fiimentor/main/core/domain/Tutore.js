@@ -1,5 +1,7 @@
-class Tutore extends Profesor {
- static create(partial: Partial<Tutore>) {
+import { Profesor } from './Profesor';
+
+export class Tutore extends Profesor {
+ static createTutore(partial: Partial<Tutore>) {
    return new Tutore(partial);
  }
 

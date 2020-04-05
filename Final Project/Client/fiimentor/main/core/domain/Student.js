@@ -1,6 +1,8 @@
-class Student extends User {
+import { User } from './User';
 
-  static create(partial: Partial<Student>) {
+export class Student extends User {
+
+  static createStudent(partial: Partial<Student>) {
     return new Student(partial);
   }
 
@@ -9,7 +11,7 @@ class Student extends User {
   tutorId: ?number;
   year: number;
 
-  constructor(student: Partial<User> = {}) {
+  constructor(student: Partial<Student> = {}) {
     super(student);
 
     const { studentId, group, tutorId, year } = student;
