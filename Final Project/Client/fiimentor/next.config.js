@@ -1,15 +1,17 @@
-const withCSS = require('@zeit/next-css')
+const webpack = require('webpack');
 
-module.exports = withCSS({
-	cssModules: true,
-	cssLoaderOptions: {
-		importLoaders: 1,
-		localIdentName: '[local]___[hash:base64:5]',
-	},
-})
 
 module.exports = {
-	env: {
-		BaseURL: '',
-	},
-}
+  webpack: (config) => {
+    const definePlugin = new webpack.DefinePlugin({
+
+      API_KEY: JSON.stringify(process.env.API_KEY),
+      BASE_URL: JSON.stringify(process.env.BASE_URL),
+
+    });
+
+    config.plugins.push(definePlugin);
+
+    return config
+  },
+};
