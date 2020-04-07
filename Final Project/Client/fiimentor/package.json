@@ -16,6 +16,8 @@
     "@zeit/next-css": "^1.0.1",
     "axios": "^0.19.2",
     "formik": "^2.1.4",
+    "babel-plugin-styled-components": "^1.10.7",
+    "flow-typed": "^3.1.0",
     "next": "9.3.3",
     "react": "16.13.1",
     "react-dom": "16.13.1",
@@ -25,6 +27,10 @@
     "sweetalert2": "^9.10.9"
   },
   "devDependencies": {
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.9.0",
+    "@babel/plugin-transform-flow-strip-types": "^7.9.0",
+    "@babel/preset-flow": "^7.9.0",
     "eslint": "^6.8.0",
     "eslint-config-airbnb": "^18.1.0",
     "eslint-config-prettier": "^6.10.1",
@@ -33,8 +39,11 @@
     "eslint-plugin-prettier": "^3.1.2",
     "eslint-plugin-react": "^7.19.0",
     "eslint-plugin-react-hooks": "^2.5.1",
+    "formik": "^2.1.4",
     "jest": "^25.2.4",
     "prettier": "2.0.2",
-    "redux-devtools": "^3.5.0"
+    "redux-devtools": "^3.5.0",
+    "webpack": "^4.42.1",
+    "yup": "^0.28.3"
   }
 }
