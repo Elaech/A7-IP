@@ -37,3 +37,37 @@ export const loginUserErrorAction = (payload: Error): LoginUserErrorAction => ({
   payload,
 });
 
+export type UserActions = {
+  REGISTER_USER : 'REGISTER_USER',
+  REGISTER_USER_SUCCESS : 'REGISTER_USER_SUCCESS',
+  REGISTER_USER_ERROR  : 'REGISTER_USER_ERROR',
+};
+
+export interface RegisterUserAction extends Action{
+  type: UserActions.REGISTER_USER;
+};
+
+export interface RegisterUserSuccessAction extends Action{
+  type: UserActions.REGISTER_USER_SUCCESS;
+  payload: User;
+};
+
+export interface RegisterUserErrorAction extends Action {
+  type: UserActions.REGISTER_USER_ERROR;
+  payload: Error;
+}
+
+
+export const registerUserAction = (): RegisterUserAction => ({
+  type: UserActions.REGISTER_USER,
+});
+
+export const registerUserSuccessAction = (payload: User): RegisterUserSuccessAction => ({
+  type: UserActions.REGISTER_USER_SUCCESS,
+  payload,
+});
+
+export const registerUserErrorAction = (payload: Error): RegisterUserErrorAction => ({
+  type: UserActions.REGISTER_USER_ERROR,
+  payload,
+});
