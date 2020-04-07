@@ -21,34 +21,34 @@ export class HttpApiService implements ApiService{
   }
 
   async registerUser(req: RegisterUserRequest): Promise<User> {
-   return this.axiosService.post<RegisterUserRequest, User>('user',req);
+   return this.axiosService.post<RegisterUserRequest, User>('/user',req);
   }
 
   async loginUser(req:LoginUserRequest):Promise<User> {
-    return this.axiosService.post<LoginUserRequest, User>('user/login',req);
+    return this.axiosService.post<LoginUserRequest, User>('/user/login',req);
   }
 
   async getUser(userId: number): Promise<User> {
-    return this.axiosService.get<number, User>(`user/${userId}`);
+    return this.axiosService.get<number, User>(`/user/${userId}`);
   }
 
   async getStudent(studentId: number): Promise<Student> {
-    return this.axiosService.get<number, Student>(`user/${studentId}`);
+    return this.axiosService.get<number, Student>(`/user/${studentId}`);
   }
 
   async getProfesor(profesorId: number): Promise<Profesor> {
-    return this.axiosService.get<number, Profesor>(`user/${profesorId}`);
+    return this.axiosService.get<number, Profesor>(`/user/${profesorId}`);
   }
 
   async getTutore(tutoreId: number): Promise<Tutore> {
-    return this.axiosService.get<number, Tutore>(`user/${tutoreId}`);
+    return this.axiosService.get<number, Tutore>(`/user/${tutoreId}`);
   }
 
   async createMessage(req: CreateMessageRequest): Promise<void> {
-    return this.axiosService.post<CreateMessageRequest, void>('message',req);
+    return this.axiosService.post<CreateMessageRequest, void>('/message',req);
   }
 
   async getMessages(): Promise<Mesaj[]> {
-    return this.axiosService.get<void, Mesaj[]>('message');
+    return this.axiosService.get<void, Mesaj[]>('/message');
   }
 }
