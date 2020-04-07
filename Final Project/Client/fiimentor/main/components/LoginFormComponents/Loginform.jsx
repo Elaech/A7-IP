@@ -5,11 +5,14 @@ import {
   FormGroup,
   Button,
 } from '@material-ui/core';
-import {User} from '../core/domain/User.js'
+import {User} from '../../core/domain/User.js'
 
-import {EmailInput} from './Generics/emailInput';
-import {PasswordInput} from './Generics/passwordInput';
+import {EmailInput} from '../Generics/emailInput';
+import {PasswordInput} from '../Generics/passwordInput';
 import {LoginFormContainer } from './LoginFormStyles';
+import {buttonStyles} from './LoginFormStyles';
+
+import {Link} from '@material-ui/core'
 
 interface LoginFormValues {
     email: string;
@@ -50,6 +53,11 @@ const validationSchema: Yup.Schema<LoginFormValues> = Yup.object().shape({
  
                     return(
                       <FormGroup onSubmit={handleSubmit}>
+                        <h1>
+                        
+                          Login
+                  
+                        </h1>
                         <Field
                             name="email"
                             label="Email*"
@@ -61,9 +69,21 @@ const validationSchema: Yup.Schema<LoginFormValues> = Yup.object().shape({
                             label="Password*"
                             placeholder="Password"
                             component={PasswordInput}
-                        />
-                        
-                <Button type="submit">Login</Button>
+                        />   
+                         <Button
+                         type="submit"
+                         style={buttonStyles}
+                         variant="contained"
+                         >
+                        Login
+                        </Button>
+                      
+                        <Link href="#" onClick={""} color="inherit">
+                          {'Ai uitat parola?'}
+                        </Link>
+                        <Link href="#" onClick={""} color="inherit">
+                          {'Nu ai cont? Inregistreaza-te!'}
+                        </Link>
                       
                       </FormGroup>
                     );
