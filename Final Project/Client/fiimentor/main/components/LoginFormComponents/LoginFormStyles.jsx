@@ -2,6 +2,10 @@ import styled from 'styled-components';
 import { FormatAlignCenter } from '@material-ui/icons';
 import { CSSProperties} from 'react';
 
+export const TitleContainer = styled.div`
+    textAlign:center;
+    margin-bottom: 10%;
+`;
 
 export const LoginFormContainer = styled.div`
     font: 15px Spectral;
@@ -12,16 +16,6 @@ export const LoginFormContainer = styled.div`
     padding: 25px 25px 25px 25px;
     box-shadow: 1px 2px 5px 2px #D4D4CE;
 `;
-
-export const TitleContainer = styled.div`
-    text-align:center;
-    background:#87C0CD;
-    border-radius: 40px;
-    margin-bottom: 10%;
-    box-shadow: 1px 2px 5px 2px #D4D4CE;
-`;
-
-
 
 export const buttonStyles: CSSProperties = {
     backgroundColor: '#87C0CD',

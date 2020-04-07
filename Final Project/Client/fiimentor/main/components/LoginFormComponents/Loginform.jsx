@@ -11,6 +11,7 @@ import {EmailInput} from '../Generics/emailInput';
 import {PasswordInput} from '../Generics/passwordInput';
 import {LoginFormContainer } from './LoginFormStyles';
 import {buttonStyles} from './LoginFormStyles';
+import {TitleContainer} from './LoginFormStyles';
 
 import {Link} from '@material-ui/core'
 
@@ -28,11 +29,11 @@ const initialValues: LoginFormValues = {
 const validationSchema: Yup.Schema<LoginFormValues> = Yup.object().shape({
     email: Yup.string()
       .email()
-      .required('Trebuie sa introduci email-ul'),
+      .required('Acest camp nu poate fi gol'),
     password: Yup.string()
       .min(User.passwordConstraint.min, 'Parola trebuie sa aiba cel putin 6 caractere')
       .max(User.passwordConstraint.max, 'Parola trebuie sa aiba cel mult 18 caractere')
-      .required('trebuie sa introduci parola'),
+      .required('Acest camp nu poate fi gol'),
   });
 
   class LoginForm extends React.Component {
@@ -53,28 +54,30 @@ const validationSchema: Yup.Schema<LoginFormValues> = Yup.object().shape({
  
                     return(
                       <FormGroup onSubmit={handleSubmit}>
-                        <h1>
                         
-                          Login
-                  
-                        </h1>
+                        <TitleContainer>
+                          <h1> Login </h1>
+                        </TitleContainer>
+                        
                         <Field
                             name="email"
                             label="Email*"
                             placeholder="Email"
                             component={EmailInput}
                         />
+                        
                         <Field
                             name="password"
                             label="Password*"
                             placeholder="Password"
                             component={PasswordInput}
                         />   
-                         <Button
-                         type="submit"
-                         style={buttonStyles}
-                         variant="contained"
-                         >
+                         
+                        <Button
+                        type="submit"
+                        style={buttonStyles}
+                        variant="contained"
+                        >
                         Login
                         </Button>
                       
