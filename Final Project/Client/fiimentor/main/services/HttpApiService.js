@@ -10,6 +10,7 @@ import { Student } from '../core/domain/Student';
 import { Profesor } from '../core/domain/Profesor';
 import { Tutore } from '../core/domain/Tutore';
 import { Mesaj } from '../core/domain/Mesaj';
+import type { UserLogged } from '../../global';
 
 export class HttpApiService implements ApiService{
   axiosService: AxiosService;
@@ -24,8 +25,8 @@ export class HttpApiService implements ApiService{
    return this.axiosService.post<RegisterUserRequest, User>('/user',req);
   }
 
-  async loginUser(req:LoginUserRequest):Promise<User> {
-    return this.axiosService.post<LoginUserRequest, User>('/user/login',req);
+  async loginUser(req:LoginUserRequest):Promise<UserLogged> {
+    return this.axiosService.post<LoginUserRequest,UserLogged>('/user/login',req);
   }
 
   async getUser(userId: number): Promise<User> {
