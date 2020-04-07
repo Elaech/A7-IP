@@ -1,5 +1,6 @@
 import {Action} from 'redux';
 import { User } from '../../core/domain/User';
+import type { UserLogged } from '../../../global';
 
 export const UserActions = {
   LOGIN_USER : 'LOGIN_USER',
@@ -31,7 +32,7 @@ export interface RegisterUserAction extends Action{
 
 export interface RegisterUserSuccessAction extends Action{
   type: UserActions.REGISTER_USER_SUCCESS;
-  payload: User;
+  payload: UserLogged;
 };
 
 export interface RegisterUserErrorAction extends Action {
@@ -48,7 +49,7 @@ export const loginUserSuccessAction = (payload: User): LoginUserSuccessAction =>
   payload,
 });
 
-export const loginUserErrorAction = (payload: Error): LoginUserErrorAction => ({
+export const loginUserErrorAction = (payload?: Error): LoginUserErrorAction => ({
   type: UserActions.LOGIN_USER_ERROR,
   payload,
 });
@@ -57,12 +58,12 @@ export const registerUserAction = (): RegisterUserAction => ({
   type: UserActions.REGISTER_USER,
 });
 
-export const registerUserSuccessAction = (payload: User): RegisterUserSuccessAction => ({
+export const registerUserSuccessAction = (payload: UserLogged): RegisterUserSuccessAction => ({
   type: UserActions.REGISTER_USER_SUCCESS,
   payload,
 });
 
-export const registerUserErrorAction = (payload: Error): RegisterUserErrorAction => ({
+export const registerUserErrorAction = (payload?: Error): RegisterUserErrorAction => ({
   type: UserActions.REGISTER_USER_ERROR,
   payload,
 });

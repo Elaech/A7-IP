@@ -13,6 +13,7 @@
   "dependencies": {
     "@material-ui/core": "^4.9.8",
     "@material-ui/icons": "^4.9.1",
+    "@types/jest": "^25.2.1",
     "@zeit/next-css": "^1.0.1",
     "@zeit/next-less": "latest",
     "axios": "^0.19.2",
