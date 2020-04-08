@@ -1,15 +1,14 @@
 import React from 'react';
 import { Field, Formik, FormikProps } from 'formik';
 import * as Yup from 'yup';
-import {
-  FormGroup,
-  Button,
-} from '@material-ui/core';
+import { Button } from '@material-ui/core';
 import {
    ForgotPasswordFormContainer,
    buttonStyles
    } from './ForgotPasswordFormStyles';
 import {EmailInput} from '../Generics/EmailInput';
+import {FormGroup} from '../LoginFormComponents/LoginFormStyles';
+
 interface ForgotPasswordFormValues {
   content: string;
 }

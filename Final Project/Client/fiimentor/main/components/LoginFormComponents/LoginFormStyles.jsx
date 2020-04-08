@@ -32,6 +32,12 @@ export const FormGroupContainer = styled.div`
     flex-direction: column;
 `;
 
+export const FormGroup = styled.form`
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+`;
+
 export const buttonStyles: CSSProperties = {
     backgroundColor: '#87C0CD',
     width: '35%',
