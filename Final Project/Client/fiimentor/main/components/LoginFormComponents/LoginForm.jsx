@@ -1,32 +1,26 @@
 import React from 'react';
 import { Field, Formik, FormikProps } from 'formik';
 import * as Yup from 'yup';
-import {
-  FormGroup,
-  Button,
-} from '@material-ui/core';
-import {User} from '../../core/domain/User.js'
+import { Button, Link } from '@material-ui/core';
+import { User } from '../../core/domain/User.js';
 
-import {EmailInput} from '../Generics/EmailInput';
-import {PasswordInput} from '../Generics/PasswordInput';
-import {LoginFormContainer } from './LoginFormStyles';
-import {buttonStyles} from './LoginFormStyles';
-import {TitleContainer} from './LoginFormStyles';
-
-import {Link} from '@material-ui/core'
+import { EmailInput } from '../Generics/EmailInput';
+import { PasswordInput } from '../Generics/PasswordInput';
+import { buttonStyles, FormGroup, LoginFormContainer, TitleContainer } from './LoginFormStyles';
 
 interface LoginFormValues {
-    email: string;
-    password: string;
-  }
+  email: string;
+  password: string;
+}
 
 
 const initialValues: LoginFormValues = {
-    email: '',
-    password: ''
-  };
+  email: '',
+  password: ''
+};
 
-const validationSchema: Yup.Schema<LoginFormValues> = Yup.object().shape({
+const validationSchema: Yup.Schema<LoginFormValues> = Yup.object()
+  .shape({
     email: Yup.string()
       .email()
       .required('Acest camp nu poate fi gol'),
@@ -36,66 +30,67 @@ const validationSchema: Yup.Schema<LoginFormValues> = Yup.object().shape({
       .required('Acest camp nu poate fi gol'),
   });
 
-  class LoginForm extends React.Component {
+class LoginForm extends React.Component {
 
-    handleSubmit (values: LoginFormValues) {
-      console.log(values);
-}
-    render() {
-        return (
-            <LoginFormContainer>
-                <Formik
-                  initialValues={initialValues}
-                  validationSchema={validationSchema}
-                  onSubmit={this.handleSubmit}
+  handleSubmit = (values: LoginFormValues) => {
+    console.log(values);
+  };
+
+  render() {
+    return (
+      <LoginFormContainer>
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={this.handleSubmit}
+        >
+          {(formikProps: FormikProps<LoginFormValues>) => {
+            const { handleSubmit } = formikProps;
+
+            return (
+              <FormGroup onSubmit={handleSubmit}>
+
+                <TitleContainer>
+                  <h1> Login </h1>
+                </TitleContainer>
+
+                <Field
+                  name="email"
+                  label="Email*"
+                  placeholder="Email"
+                  component={EmailInput}
+                />
+
+                <Field
+                  name="password"
+                  label="Password*"
+                  placeholder="Password"
+                  component={PasswordInput}
+                />
+
+                <Button
+                  type="submit"
+                  style={buttonStyles}
+                  variant="contained"
                 >
-                  {(formikProps: FormikProps<LoginFormValues>)=>{
-                    const {handleSubmit} = formikProps;
+                  Login
+                </Button>
 
-                    return(
-                      <FormGroup onSubmit={handleSubmit}>
+                <Link href="#" color="inherit">
+                  Ai uitat parola?
+                </Link>
+                <Link href="#" color="inherit">
+                  Nu ai cont? Inregistreaza-te!
+                </Link>
 
-                        <TitleContainer>
-                          <h1> Login </h1>
-                        </TitleContainer>
+              </FormGroup>
+            );
+          }}
 
-                        <Field
-                            name="email"
-                            label="Email*"
-                            placeholder="Email"
-                            component={EmailInput}
-                        />
-
-                        <Field
-                            name="password"
-                            label="Password*"
-                            placeholder="Password"
-                            component={PasswordInput}
-                        />
-
-                        <Button
-                        type="submit"
-                        style={buttonStyles}
-                        variant="contained"
-                        >
-                        Login
-                        </Button>
-
-                        <Link href="#"  color="inherit">
-                          Ai uitat parola?
-                        </Link>
-                        <Link href="#"  color="inherit">
-                          Nu ai cont? Inregistreaza-te!
-                        </Link>
-
-                      </FormGroup>
-                    );
-                  }}
-
-                </Formik>
-              </LoginFormContainer>
-        );
-    }
+        </Formik>
+      </LoginFormContainer>
+    );
+  }
 }
 
 export default LoginForm;

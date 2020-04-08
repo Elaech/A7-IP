@@ -4,8 +4,7 @@ import App from 'next/app';
 import withRedux from 'next-redux-wrapper';
 import { initializeStore } from '../main/store/store';
 
-
-export default withRedux(initializeStore, { debug: true })(
+export default withRedux(initializeStore)(
   class FiiMentorApp extends App {
     static async getInitialProps({ Component, ctx }) {
       return {

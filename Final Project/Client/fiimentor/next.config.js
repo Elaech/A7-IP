@@ -1,6 +1,10 @@
 const webpack = require('webpack');
 const withFonts = require('nextjs-fonts');
-module.exports = withFonts({
+const withCss = require("@zeit/next-css");
+const withImages = require('next-images');
+
+module.exports = withImages(withFonts(withCss({
+
   webpack: (config) => {
     const definePlugin = new webpack.DefinePlugin({
 
@@ -13,4 +17,4 @@ module.exports = withFonts({
 
     return config
   },
-});
+})));
