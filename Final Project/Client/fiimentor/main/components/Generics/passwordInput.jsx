@@ -7,6 +7,7 @@ import {
   FormHelperText,
 } from '@material-ui/core';
 import styled from 'styled-components';
+import {TextInput} from '../LoginFormComponents/LoginFormStyles'
 
 
 interface Props extends FieldProps {
@@ -32,7 +33,7 @@ export const PasswordInput: FC<Props> = (props: Props) => {
   return (
     <FormGroup className={groupClassName}>
       <InputLabel>{label}</InputLabel>
-      <TextField
+      <TextInput
         {...field}
         id={name}
         type="password"

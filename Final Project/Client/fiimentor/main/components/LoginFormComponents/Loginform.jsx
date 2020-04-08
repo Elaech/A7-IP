@@ -60,7 +60,6 @@ const validationSchema: Yup.Schema<LoginFormValues> = Yup.object().shape({
                         </TitleContainer>
                         
                         <Field
-                            defaultValue="Small"
                             name="email"
                             label="Email*"
                             placeholder="Email"
