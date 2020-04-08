@@ -1,0 +1,16 @@
+.LoginFormLayout {
+    text-align: center;
+}
+
+.img {
+    display: flex;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+.LoginForm {
+   
+    align-items: center;
+    justify-content: center;
+}
