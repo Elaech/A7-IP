@@ -1,25 +1,17 @@
 import React, {Component} from 'react'
-import logo from './final-logo.png'
 import './LoginPageLayout.css';
 import LoginForm from '../LoginFormComponents/LoginForm';
+import { Logo } from '../../globalStyledVariables';
 
-class LoginFormLayout extends Component {
+class LoginPageLayout extends Component {
 
     render() {
-        
         return (
-            
-            
-
             <div>
-
-            <div className = "logofinal-div">
-
-              <img src={logo} />
-
-
+            <div className = "LogoContainer">
+              <Logo/>
           </div>
-          <div className = "LoginForm" >
+          <div className = "LoginFormContainer" >
           <LoginForm />
           </div>
           </div>
@@ -27,4 +19,4 @@ class LoginFormLayout extends Component {
     }
 }
 
-export default LoginFormLayout
+export default LoginPageLayout

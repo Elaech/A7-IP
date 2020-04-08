@@ -3,8 +3,8 @@ const withFonts = require('nextjs-fonts');
 const withCss = require("@zeit/next-css");
 const withImages = require('next-images');
 
-module.exports = withImages(withFonts({
-  
+module.exports = withImages(withFonts(withCss({
+
   webpack: (config) => {
     const definePlugin = new webpack.DefinePlugin({
 
@@ -17,4 +17,4 @@ module.exports = withImages(withFonts({
 
     return config
   },
-}));
+})));
