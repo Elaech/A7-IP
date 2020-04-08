@@ -5,61 +5,53 @@ import {
   FormGroup,
   Button,
 } from '@material-ui/core';
-import { MessageFormContainer } from './MessageFormStyles';
-import {Mesaj} from '../../core/domain/Mesaj'
-import { TextAreaInput } from '../Generics/TextAreaInput';
-import {Checkbox} from '../Generics/CheckBox';
-
-interface MessageFormValues {
+import {
+   ForgotPasswordFormContainer,
+   buttonStyles
+   } from './ForgotPasswordFormStyles';
+import {EmailInput} from '../Generics/EmailInput';
+interface ForgotPasswordFormValues {
   content: string;
 }
 
-const initialValues: MessageFormValues = {
+const initialValues: ForgotPasswordFormValues = {
   content: '',
 };
 
-/*const validationSchema: Yup.Schema<MessageFormValues> = Yup.object().shape({
-  content: Yup.string()
-    .min(Mesaj.contentContraint.min)
-    .max(Mesaj.contentContraint.max)
-    .required('Mesajul nu poate fi gol'),
-});*/
 const validationSchema = Yup.object().shape({
   email: Yup.string()
     .label('Email')
     .email('Enter a valid email')
     .required('Please enter a registered email')
 })
-class MessageForm extends React.Component {
+class ForgotPasswordForm extends React.Component {
 
-    handleSubmit (values: MessageFormValues) {
+    handleSubmit (values: ForgotPasswordFormValues) {
       console.log(values);
 }
     render() {
         return (
-          <MessageFormContainer>
+          <ForgotPasswordFormContainer>
                 <Formik
                   initialValues={initialValues}
                   onSubmit={this.handleSubmit}
                   validationSchema={validationSchema}>
-                  {(formikProps: FormikProps<MessageFormValues>)=>{
+                  {(formikProps: FormikProps<ForgotPasswordFormValues>)=>{
                     const {handleSubmit} = formikProps;
                     return(
                       <FormGroup onSubmit={handleSubmit}>
                         <Field
                         name='email'
-                        component={TextAreaInput}
+                        component={EmailInput}
                         placeholder='Enter email'
                         autoCapitalize='none'
-                        iconName='ios-mail'
-                        iconColor='#2C384A'
                         />
                         <Button
                           buttonType='outline'
                           title='Send Email'
                           buttonColor='#039BE5'
+                          style={buttonStyles}
                           variant="contained"
-                          color='red'
                         >
                           Send Email
                         </Button>
@@ -67,9 +59,9 @@ class MessageForm extends React.Component {
                     );
                   }}
                 </Formik>
-          </MessageFormContainer>
+          </ForgotPasswordFormContainer>
         );
     }
 }
 
-export default MessageForm;
+export default ForgotPasswordForm;
