@@ -4,26 +4,32 @@ import * as Yup from 'yup';
 import { Button, Link } from '@material-ui/core';
 import { User } from '../../core/domain/User.js';
 
-import { EmailInput } from '../Generics/EmailInput';
+import { TextInput } from '../Generics/TextInput';
 import { PasswordInput } from '../Generics/PasswordInput';
 import { buttonStyles, FormGroup, LoginFormContainer, TitleContainer } from './LoginFormStyles';
 
 interface LoginFormValues {
-  email: string;
+  username: string;
   password: string;
 }
 
 
 const initialValues: LoginFormValues = {
-  email: '',
+  username: '',
   password: ''
 };
 
 const validationSchema: Yup.Schema<LoginFormValues> = Yup.object()
   .shape({
-    email: Yup.string()
-      .email()
-      .required('Acest camp nu poate fi gol'),
+    username: Yup.string()
+      .min(User.usernameConstraint.min,
+        `Usernameul trebuie sa aiba cel putin ${User.usernameConstraint.min} caractere`
+      )
+      .max(User.usernameConstraint.max,
+    `Usernameul trebuie sa aiba cel putin ${User.usernameConstraint.max} caractere`
+  )
+     .required('Acest camp nu poate fi gol'),
+
     password: Yup.string()
       .min(User.passwordConstraint.min, 'Parola trebuie sa aiba cel putin 6 caractere')
       .max(User.passwordConstraint.max, 'Parola trebuie sa aiba cel mult 18 caractere')
@@ -55,10 +61,10 @@ class LoginForm extends React.Component {
                 </TitleContainer>
 
                 <Field
-                  name="email"
-                  label="Email*"
-                  placeholder="Email"
-                  component={EmailInput}
+                  name="username"
+                  label="Username*"
+                  placeholder="Username"
+                  component={TextInput}
                 />
 
                 <Field
