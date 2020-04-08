@@ -30,16 +30,17 @@ export const EmailInput: FC<Props> = (props: Props) => {
   const { name } = field;
 
   return (
-    <FormGroup className={groupClassName}>
+    <FormGroup className = {groupClassName}>
       <InputLabel>{label}</InputLabel>
       <TextField
         {...field}
-        id={name}
-        type="email"
-        className={inputClassName}
-        placeholder={placeholder}
-        variant="outlined"
+        id = {name}
+        type = "email"
+        className = {inputClassName}
+        placeholder = {placeholder}
+        variant = "outlined"
       />
+      
       <FormHelperText error>
         {errors[name]}
       </FormHelperText>
