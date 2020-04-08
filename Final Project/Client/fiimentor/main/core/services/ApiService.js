@@ -3,6 +3,7 @@ import { Tutore } from '../domain/Tutore';
 import { Profesor } from '../domain/Profesor';
 import { Student } from '../domain/Student';
 import { User } from '../domain/User';
+import type { UserLogged } from '../../../global';
 
 export interface RegisterUserRequest {
   firstName: string;
@@ -29,7 +30,7 @@ export interface CreateMessageRequest {
 export interface ApiService {
   registerUser(req: RegisterUserRequest): Promise<User>;
 
-  loginUser(req: LoginUserRequest): Promise<User>;
+  loginUser(req: LoginUserRequest): Promise<UserLogged>;
 
   getUser(userId: string): Promise<User>;
 
