@@ -58,7 +58,7 @@ async function login(req: any, res: any){
                         });
                     }
                     if(professor!=null) {
-                        if(tutor!=null){
+                        if(tutor.length){
                             payload={userByUserName,professor,tutor};
                         }
                         else{
