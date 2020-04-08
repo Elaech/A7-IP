@@ -5,8 +5,8 @@
     "main": "index.ts",
     "scripts": {
         "start": "ts-node ./index.ts",
-        "dev": "NODE_ENV=dev ts-node index.ts",
-        "prod": "NODE_ENV=prod ts-node index.ts"
+        "dev": "SET \"NODE_ENV=dev\" ts-node index.t",
+        "prod": "SET \"NODE_ENV=prod\" ts-node index.ts"
     },
     "keywords": [],
     "author": "",
