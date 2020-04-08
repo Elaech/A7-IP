@@ -6,8 +6,7 @@ const Home = () => (
   <Head>
   <title>FIIMentor</title>
 		</Head>
- 
-  <LoginFormLayout />
+  <h1>FIIMentor</h1> 
 	</>
 );
 export default Home
