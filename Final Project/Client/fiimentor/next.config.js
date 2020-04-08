@@ -1,7 +1,6 @@
 const webpack = require('webpack');
-
-
-module.exports = {
+const withFonts = require('nextjs-fonts');
+module.exports = withFonts({
   webpack: (config) => {
     const definePlugin = new webpack.DefinePlugin({
 
@@ -14,4 +13,4 @@ module.exports = {
 
     return config
   },
-};
+});
