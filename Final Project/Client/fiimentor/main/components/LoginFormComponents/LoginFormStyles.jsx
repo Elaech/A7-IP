@@ -20,10 +20,10 @@ export const LoginFormContainer = styled.div`
 
 export const buttonStyles: CSSProperties = {
     backgroundColor: '#87C0CD',
-    width: '30%',
-    marginTop:'8%',
+    width: '35%',
+    marginTop:'2%',
     marginLeft:'35%',
-    boxShadow: '1px 2px 5px 2px #D4D4CE',
+    boxShadow: '5px 1px 5px 2px #D4D4CE',
 };
 
 export const TextInput = styled.input `
@@ -32,7 +32,7 @@ export const TextInput = styled.input `
     width: 90%;
     border: 1px solid grey;
     height: 0.2rem;
-    margin: 0;
+    margin: 3px 0 20px 0;
     display: block;
     padding: 18.5px 14px;
     min-width: 0;
