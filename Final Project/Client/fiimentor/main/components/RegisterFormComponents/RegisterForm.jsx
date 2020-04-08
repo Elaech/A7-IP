@@ -9,7 +9,6 @@ import {User} from '../../core/domain/User'
 import { 
   RegisterFormContainer,
   TitleContainer, 
-  TextInputStyle,
   buttonStyles
   } from './RegisterFormStyles';
 import { TextInput } from '../Generics/TextInput';
@@ -90,7 +89,6 @@ class RegisterForm extends React.Component {
                          name="lastName"
                          label="Nume*"
                          placeholder="Nume"
-                         style={TextInputStyle}
                          component={TextInput}
                         />
 
@@ -141,7 +139,7 @@ class RegisterForm extends React.Component {
                           style={buttonStyles}
                           variant="contained"
                         >
-                          Inregistrare
+                          SUBMIT
                         </Button>
 
                       </FormGroup>
