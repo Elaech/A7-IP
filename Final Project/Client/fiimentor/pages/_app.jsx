@@ -3,7 +3,6 @@ import { Provider } from 'react-redux';
 import App from 'next/app';
 import withRedux from 'next-redux-wrapper';
 import { initializeStore } from '../main/store/store';
-import '../main/components/LoginFormLayout/LoginPageLayout.css'
 
 export default withRedux(initializeStore, { debug: true })(
   class FiiMentorApp extends App {
