@@ -1,13 +1,12 @@
 import { FieldProps } from 'formik';
 import React, { FC, CSSProperties } from 'react';
 import {
-  FormGroup,
   InputLabel,
   FormHelperText,
 } from '@material-ui/core';
-import styled from 'styled-components';
 
 import { TextStyle, labelStyle } from '../RegisterFormComponents/RegisterFormStyles';
+import { FormGroupContainer } from '../LoginFormComponents/LoginFormStyles';
 
 interface Props extends FieldProps {
   name: string;
@@ -34,7 +33,7 @@ export const TextInput: FC<Props> = (props: Props) => {
   const { name } = field;
 
   return (
-    <FormGroup className={groupClassName}>
+    <FormGroupContainer className={groupClassName}>
       <InputLabel style={labelStyle}> {label}</InputLabel>
       <TextStyle
         {...field}
@@ -48,6 +47,6 @@ export const TextInput: FC<Props> = (props: Props) => {
       <FormHelperText error>
         {errors[name]}
       </FormHelperText>
-    </FormGroup>
+    </FormGroupContainer>
   );
 };

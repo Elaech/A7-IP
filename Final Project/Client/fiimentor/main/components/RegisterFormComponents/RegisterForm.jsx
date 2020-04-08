@@ -6,25 +6,26 @@ import {
   Button,
 } from '@material-ui/core';
 import {User} from '../../core/domain/User'
-import { 
+import {
   RegisterFormContainer,
-  TitleContainer, 
-  buttonStyles
+  TitleContainer,
+  registerButton,
   } from './RegisterFormStyles';
+
 import { TextInput } from '../Generics/TextInput';
 import { PasswordInput } from '../Generics/PasswordInput';
 import { EmailInput } from '../Generics/EmailInput';
 
 interface RegisterFormValues {
     firstName: string;
-    lastname: string;
+    lastName: string;
     registrNo: string;
     username: string;
     password: string;
     confPassword: string;
     email: string;
     year?: number;
-    group?: string;  
+    group?: string;
 }
 
 const initialValues: RegisterFormValues = {
@@ -49,8 +50,8 @@ const validationSchema: Yup.Schema<ResgisterFormValues> = Yup.object().shape({
     .email('Email-ul trebuie sa fie unul valid!')
     .required('Campul nu poate fi gol'),
   password: Yup.string()
-    .min(User.passwordConstraint.min, 'Parola trebuie sa aiba minim '+ User.passwordConstraint.min + ' caractere!')
-    .max(User.passwordConstraint.max, 'Parola trebuie sa aiba maxim '+ User.passwordConstraint.max + ' caractere!')
+    .min(User.passwordConstraint.min, `Parola trebuie sa aiba minim ${User.passwordConstraint.min}  caractere!`)
+    .max(User.passwordConstraint.max, `Parola trebuie sa aiba maxim ${User.passwordConstraint.max}  caractere!`)
     .required('Campul nu poate fi gol!'),
   confPassword: Yup.string()
     .oneOf([Yup.ref('password'),null],'Parolele trebuie sa corespunda!'),
@@ -84,50 +85,50 @@ class RegisterForm extends React.Component {
 
                     return(
                       <FormGroup onSubmit={handleSubmit}>
-                      <TitleContainer>Inregistrare</TitleContainer>
-                        <Field 
+                      <TitleContainer>Creare cont</TitleContainer>
+                        <Field
                          name="lastName"
                          label="Nume*"
                          placeholder="Nume"
                          component={TextInput}
                         />
 
-                        <Field 
+                        <Field
                          name="firstName"
                          label="Prenume*"
                          placeholder="Prenume"
                          component={TextInput}
                         />
 
-                        <Field 
+                        <Field
                          name="registrNo"
                          label="Numar matricol*"
                          placeholder="Numar matricol"
                          component={TextInput}
                         />
 
-                        <Field 
+                        <Field
                          name="username"
                          label="Nume utilizator*"
                          placeholder="Nume utilizator"
                          component={TextInput}
                         />
 
-                        <Field 
+                        <Field
                          name="password"
                          label="Parola*"
                          placeholder="Parola"
                          component={PasswordInput}
                         />
 
-                        <Field 
+                        <Field
                          name="confPassword"
                          label="Confirma parola*"
                          placeholder="Confirma parola"
                          component={PasswordInput}
                         />
 
-                        <Field 
+                        <Field
                          name="email"
                          label="Email*"
                          placeholder="Email"
@@ -136,7 +137,7 @@ class RegisterForm extends React.Component {
 
                         <Button
                           type="submit"
-                          style={buttonStyles}
+                          style={registerButton}
                           variant="contained"
                         >
                           SUBMIT
