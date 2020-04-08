@@ -1,13 +1,15 @@
 import { FieldProps } from 'formik';
 import React, { FC } from 'react';
 import {
-  FormGroup,
   InputLabel,
   FormHelperText,
 } from '@material-ui/core';
-import styled from 'styled-components';
+import {
+  FormGroupContainer,
+  labelStyle,
+  TextInput
+} from '../LoginFormComponents/LoginFormStyles';
 
-import { TextStyle, labelStyle } from '../RegisterFormComponents/RegisterFormStyles';
 
 interface Props extends FieldProps {
   name: string;
@@ -16,12 +18,6 @@ interface Props extends FieldProps {
   groupClassName?: string;
   inputClassName?: string;
 }
-
-const PasswordInputStyle: CSSProperties = {
-  backgroundColor:'#F3F9FB',
-  marginTop:'1.5%',
-  
-};
 
 export const PasswordInput: FC<Props> = (props: Props) => {
   const {
@@ -36,12 +32,11 @@ export const PasswordInput: FC<Props> = (props: Props) => {
   const { name } = field;
 
   return (
-    <FormGroup className={groupClassName}>
+    <FormGroupContainer className={groupClassName}>
       <InputLabel style={labelStyle}>{label}</InputLabel>
-      <TextStyle
+      <TextInput
         {...field}
         id={name}
-        style={PasswordInputStyle}
         type="password"
         className={inputClassName}
         placeholder={placeholder}
@@ -50,6 +45,6 @@ export const PasswordInput: FC<Props> = (props: Props) => {
       <FormHelperText error>
         {errors[name]}
       </FormHelperText>
-    </FormGroup>
+    </FormGroupContainer>
   );
 };

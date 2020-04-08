@@ -1,13 +1,13 @@
 import { FieldProps } from 'formik';
 import React, { FC } from 'react';
 import {
+  TextField,
   FormGroup,
   InputLabel,
   FormHelperText,
 } from '@material-ui/core';
 import styled from 'styled-components';
-
-import { TextStyle, labelStyle } from '../RegisterFormComponents/RegisterFormStyles';
+import { FormGroupContainer, labelStyle, TextInput } from '../LoginFormComponents/LoginFormStyles';
 
 interface Props extends FieldProps {
   name: string;
@@ -16,12 +16,6 @@ interface Props extends FieldProps {
   groupClassName?: string;
   inputClassName?: string;
 }
-
-const EmailInputStyle: CSSProperties = {
-  backgroundColor:'#F3F9FB',
-  marginTop:'1.5%',
-  
-};
 
 export const EmailInput: FC<Props> = (props: Props) => {
   const {
@@ -36,20 +30,20 @@ export const EmailInput: FC<Props> = (props: Props) => {
   const { name } = field;
 
   return (
-    <FormGroup className={groupClassName}>
+    <FormGroupContainer className = {groupClassName}>
       <InputLabel style={labelStyle}>{label}</InputLabel>
-      <TextStyle
+      <TextInput
         {...field}
-        id={name}
-        style={EmailInputStyle}
-        type="email"
-        className={inputClassName}
-        placeholder={placeholder}
-        variant="outlined"
+        id = {name}
+        type = "email"
+        className = {inputClassName}
+        placeholder = {placeholder}
+        variant = "outlined"
       />
+
       <FormHelperText error>
         {errors[name]}
       </FormHelperText>
-    </FormGroup>
+    </FormGroupContainer>
   );
 };
