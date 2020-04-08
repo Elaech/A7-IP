@@ -7,7 +7,7 @@ static contentContraint = {
 
   id: number;
   senderId: number;
-  receiverId: number;
+  receiverId: number[];
   content: string;
   time: number;
   isAnonymous: boolean;
