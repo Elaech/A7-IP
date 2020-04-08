@@ -5,6 +5,7 @@ const Home = () => (
   <>
   <Head>
   <title>FIIMentor</title>
+  <link rel="stylesheet" href="../main/components/LoginFormLayout/LoginPageLayout.css"/>
 		</Head>
   <LoginFormLayout />
 	</>
