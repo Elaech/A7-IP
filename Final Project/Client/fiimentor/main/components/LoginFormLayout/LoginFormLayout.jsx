@@ -10,15 +10,15 @@ class LoginFormLayout extends Component {
         return (
           <div>
           
-          <div className= "logo">
+               <div className= "logo">
               
-              <img src={logo} /> 
+                    <img src={logo} /> 
 
           
-          </div>
-          <div className = "LoginForm" > 
-          <LoginForm />
-          </div>
+               </div>
+               <div className = "LoginForm" > 
+                   <LoginForm />
+               </div>
           </div>
         )
     }
