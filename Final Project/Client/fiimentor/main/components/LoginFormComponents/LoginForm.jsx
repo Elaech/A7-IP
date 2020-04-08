@@ -7,8 +7,8 @@ import {
 } from '@material-ui/core';
 import {User} from '../../core/domain/User.js'
 
-import {EmailInput} from '../Generics/emailInput';
-import {PasswordInput} from '../Generics/passwordInput';
+import {EmailInput} from '../Generics/EmailInput';
+import {PasswordInput} from '../Generics/PasswordInput';
 import {LoginFormContainer } from './LoginFormStyles';
 import {buttonStyles} from './LoginFormStyles';
 import {TitleContainer} from './LoginFormStyles';
@@ -37,7 +37,7 @@ const validationSchema: Yup.Schema<LoginFormValues> = Yup.object().shape({
   });
 
   class LoginForm extends React.Component {
- 
+
     handleSubmit (values: LoginFormValues) {
       console.log(values);
 }
@@ -51,28 +51,28 @@ const validationSchema: Yup.Schema<LoginFormValues> = Yup.object().shape({
                 >
                   {(formikProps: FormikProps<LoginFormValues>)=>{
                     const {handleSubmit} = formikProps;
- 
+
                     return(
                       <FormGroup onSubmit={handleSubmit}>
-                        
+
                         <TitleContainer>
                           <h1> Login </h1>
                         </TitleContainer>
-                        
+
                         <Field
                             name="email"
                             label="Email*"
                             placeholder="Email"
                             component={EmailInput}
                         />
-                        
+
                         <Field
                             name="password"
                             label="Password*"
                             placeholder="Password"
                             component={PasswordInput}
-                        />   
-                         
+                        />
+
                         <Button
                         type="submit"
                         style={buttonStyles}
@@ -80,14 +80,14 @@ const validationSchema: Yup.Schema<LoginFormValues> = Yup.object().shape({
                         >
                         Login
                         </Button>
-                      
-                        <Link href="#" onClick={""} color="inherit">
-                          {'Ai uitat parola?'}
+
+                        <Link href="#"  color="inherit">
+                          Ai uitat parola?
                         </Link>
-                        <Link href="#" onClick={""} color="inherit">
-                          {'Nu ai cont? Inregistreaza-te!'}
+                        <Link href="#"  color="inherit">
+                          Nu ai cont? Inregistreaza-te!
                         </Link>
-                      
+
                       </FormGroup>
                     );
                   }}
@@ -97,5 +97,5 @@ const validationSchema: Yup.Schema<LoginFormValues> = Yup.object().shape({
         );
     }
 }
- 
+
 export default LoginForm;

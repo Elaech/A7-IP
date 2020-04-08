@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import React from 'react'
-import LoginForm from '../main/components/LoginFormComponents/Loginform'
+import LoginForm from '../main/components/LoginFormComponents/LoginForm'
 const Home = () => (
   <>
   <Head>
