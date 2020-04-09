@@ -5,7 +5,7 @@
     "main": "index.ts",
     "scripts": {
         "start": "ts-node ./index.ts",
-        "dev": "SET \"NODE_ENV=dev\" ts-node index.t",
+        "dev": "SET \"NODE_ENV=dev\" ts-node index.ts",
         "prod": "SET \"NODE_ENV=prod\" ts-node index.ts"
     },
     "keywords": [],
