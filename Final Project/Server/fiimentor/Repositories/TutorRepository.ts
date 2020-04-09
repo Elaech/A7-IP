@@ -14,8 +14,5 @@ export class TutorRepository extends ReadWriteRepository<Tutor>{
             .find(Tutor, {where : {professorId : professorIdParameter} })
     }
 
-    async getByGroupeId (groupeIdParameter: number) : Promise<Tutor[]> {
-        return await this.connection.manager
-            .find(Tutor, {where : {groupeId : groupeIdParameter} })
-    }
+
 }

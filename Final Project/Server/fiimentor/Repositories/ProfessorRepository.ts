@@ -15,9 +15,4 @@ export class ProfessorRepository extends ReadWriteRepository<Professor>{
             .find(Professor, { where: { userId: userIdParameter } })
     }
 
-
-    async getByAcademicRank(academicRank: string): Promise<Professor[]> {
-        return await this.connection.manager
-            .find(Professor, { where: { academicRank: academicRank } })
-    }
 }

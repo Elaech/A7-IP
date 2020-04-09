@@ -13,18 +13,4 @@ export class StudentRepository extends ReadWriteRepository<Student>{
             .find(Student, {where : {userId : userIdParameter} })
     }
 
-    async getByGroupe (groupeParameter: string) : Promise<Student[]> {
-        return await this.connection.manager
-            .find(Student, {where : {groupe : groupeParameter} })
-    }
-
-    async getByYear (yearParameter: number) : Promise<Student[]> {
-        return await this.connection.manager
-            .find(Student, {where : {year : yearParameter} })
-    }
-
-    async getByTutorId (tutorIdParameter: number) : Promise<Student[]> {
-        return await this.connection.manager
-            .find(Student, {where : {tutorId : tutorIdParameter} })
-    }
 }
