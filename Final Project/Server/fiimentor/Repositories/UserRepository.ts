@@ -1,7 +1,6 @@
 import { User } from "../models/entities/User";
-import { Connection, InsertResult, DeleteResult } from "typeorm";
-import { IReadRepository } from "./IReadRepository";
-import { IWriteRepository } from "./IWriteRepository";
+import { Connection} from "typeorm";
+
 import { ReadWriteRepository } from "./ReadWriteRepository";
 
 export class UserRepository extends ReadWriteRepository<User>{

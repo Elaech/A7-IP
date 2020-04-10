@@ -1,33 +1,75 @@
 import HttpStatus from "http-status-codes";
-
+import {createConnection} from 'typeorm';
 import {createToken} from '../utils';
-import {error} from "util";
-import {createConnection} from "typeorm";
-import {User} from "../models/entities/User";
-import {UserRepository} from "../Repositories/UserRepository";
+import {UserRepository} from '../Repositories/UserRepository'
+import {ProfessorRepository} from "../Repositories/ProfessorRepository";
+import {StudentRepository} from "../Repositories/StudentRepository";
+import {TutorRepository} from "../Repositories/TutorRepository";
+import {Student} from '../models/entities/Student';
+import { Professor} from "../models/entities/Professor";
+import {Tutor} from '../models/entities/Tutor';
 
 async function login(req: any, res: any){
     try {
-        // Mock user
-        const user = {
-            id: 1,
-            username: 'teodor',
-            email: 'teodor@gmail.com'
-        };
-
         const username = req.body.username;
         const password = req.body.password;
+        createConnection().then(async connection => {
+            const userRepository = new UserRepository(connection);
+            const userByUserName = await userRepository.getByUsername(username);
+            if (!userByUserName.length){
+                await connection.close();
+                return res.status(HttpStatus.UNAUTHORIZED).json({
+                    success: false,
+                    status: 'Invalid username'
+                });
+            }
+            else{
+                if(password.localeCompare(userByUserName[0].password)!=0){
+                    await connection.close();
+                    return res.status(HttpStatus.UNAUTHORIZED).json({
+                        success: false,
+                        status: 'Invalid password'
+                    });
+                }
+                else{
+                    const studentRepository = new StudentRepository(connection);
+                    const professorRepository = new ProfessorRepository(connection);
+                    let student : Student[]=await studentRepository.getByUserId(userByUserName[0].id);
+                    let professor : Professor[]=await professorRepository.getByUserId(userByUserName[0].id);
+                    let tutor : Tutor[];
+                    let payload : any;
+                    let token : any;
+                    if(student.length){
+                        payload={userByUserName,student};
+                        token = await createToken(payload, process.env.JWT_SECRET);
+                        await connection.close();
+                        return res.status(HttpStatus.OK).json({
+                            token : token,
+                            student : payload
+                        });
+                    }
+                    if(professor.length) {
+                        const tutorRepository = new TutorRepository(connection);
+                        tutor=await tutorRepository.getByProfessorId(professor[0].id);
+                        if(tutor.length){
+                            payload={userByUserName,professor,tutor};
+                        }
+                        else{
+                            payload={userByUserName,professor};
+                        }
+                        token= await createToken(payload,process.env.JWT_SECRET);
+                        await connection.close();
+                        return res.status(HttpStatus.OK).json({
+                            token : token,
+                            professor : payload
+                        });
+                    }
+                }
+            }
+        }).catch (error => {
+            console.log(error);
+        })
 
-        //serach in the database if user is existent
-
-
-        // Creating a token to return to the client
-        const token = await createToken(user, process.env.JWT_SECRET);
-        //send the token to the client
-
-        return res.status(HttpStatus.OK).json({
-            token
-        });
 
         //if something goes wrong throw an error ("error..a user is already registered")
     } catch (error) {
