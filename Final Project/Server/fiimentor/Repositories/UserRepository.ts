@@ -14,4 +14,9 @@ export class UserRepository extends ReadWriteRepository<User>{
             .find(User, { where: { username: usernameParameter } })
     }
 
+    async getBySerialNumber(serialNumber: string): Promise<User[]> {
+        return await this.connection.manager
+            .find(User, { where: { serialNumber: serialNumber } })
+    }
+
 }
