@@ -1,17 +1,15 @@
-import { Connection } from "typeorm";
-import { User } from "../models/entities/User";
 import { ReadWriteRepository } from "./ReadWriteRepository";
-import {Tutor} from '../models/entities/Tutor'
+import { Tutor } from '../models/entities/Tutor'
 
 export class TutorRepository extends ReadWriteRepository<Tutor>{
 
-    constructor(conn: Connection) {
-        super(User, conn);
+    constructor() {
+        super(Tutor);
     }
 
-    async getByProfessorId (professorIdParameter: number) : Promise<Tutor[]> {
+    async getByProfessorId(professorIdParameter: number): Promise<Tutor[]> {
         return await this.connection.manager
-            .find(Tutor, {where : {professorId : professorIdParameter} })
+            .find(Tutor, { where: { professorId: professorIdParameter } })
     }
 
 

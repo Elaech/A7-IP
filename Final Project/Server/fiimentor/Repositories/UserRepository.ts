@@ -1,12 +1,10 @@
 import { User } from "../models/entities/User";
-import { Connection} from "typeorm";
-
 import { ReadWriteRepository } from "./ReadWriteRepository";
 
 export class UserRepository extends ReadWriteRepository<User>{
 
-    constructor(conn: Connection) {
-        super(User, conn);
+    constructor() {
+        super(User);
     }
 
     async getByUsername(usernameParameter: string): Promise<User[]> {

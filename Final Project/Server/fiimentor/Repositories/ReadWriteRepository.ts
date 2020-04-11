@@ -1,15 +1,15 @@
 import { IReadRepository } from "./IReadRepository";
 import { IWriteRepository } from "./IWriteRepository";
-import { EntityManager, ObjectType, InsertResult, DeleteResult, Connection } from "typeorm";
+import { EntityManager, ObjectType, InsertResult, DeleteResult, Connection, getConnection } from "typeorm";
 
 export class ReadWriteRepository<T> implements IReadRepository<T>, IWriteRepository<T> {
 
     private typeEntity: ObjectType<T>;
     protected connection: Connection;
 
-    constructor(type: ObjectType<T>, conn: Connection) {
+    constructor(type: ObjectType<T>) {
         this.typeEntity = type;
-        this.connection = conn;
+        this.connection = getConnection();
     }
 
     async getAll(): Promise<T[]> {
