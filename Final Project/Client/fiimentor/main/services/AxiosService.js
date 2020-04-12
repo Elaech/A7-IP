@@ -1,5 +1,7 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 
+export let errorResponse: string;
+
 export class AxiosService {
 
   static handleErrors(error: AxiosError) {
@@ -7,6 +9,7 @@ export class AxiosService {
       console.log(error.response.data);
       console.log(error.response.status);
       console.log(error.response.headers);
+      errorResponse = error.response.data;
     } else if (error.request) {
       console.log(error.request);
     } else {

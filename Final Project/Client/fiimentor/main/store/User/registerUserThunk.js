@@ -10,6 +10,7 @@ import {Context} from '../../Context';
 import type { RegisterUserRequest } from '../../core/services/ApiService';
 import {User} from '../../core/domain/User';
 import {setUserTokenThunk} from './setUserTokenThunk';
+import {errorResponse} from '../../services/AxiosService';
 
 interface Payload {
     token: string;
@@ -32,7 +33,7 @@ export  const registerUserThunk = (userCredentials: RegisterUserRequest)=> async
 
         Swal.fire({
             title: 'Error!',
-            text: 'There was an error on register!',
+            text: ` ${errorResponse.status} `,
             icon: 'error',
             confirmButtonText: 'Ok',
         })

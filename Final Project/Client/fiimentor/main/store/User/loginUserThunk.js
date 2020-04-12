@@ -13,6 +13,7 @@ import {Student} from '../../core/domain/Student';
 import {Profesor} from '../../core/domain/Profesor';
 import {Tutore} from '../../core/domain/Tutore';
 import {setUserTokenThunk} from './setUserTokenThunk';
+import {errorResponse} from '../../services/AxiosService';
 
 interface Payload {
   token: string;
@@ -44,7 +45,7 @@ export  const loginUserThunk = (userCredentials: LoginUserRequest)=> async(
 
      await Swal.fire({
        title: 'Error!',
-       text: 'There was an error on login!',
+       text: ` ${errorResponse.status} `,
        type: 'error',
        confirmButtonText: 'Ok',
        icon: 'error',
