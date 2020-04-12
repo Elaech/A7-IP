@@ -6,7 +6,7 @@ export class User {
   };
 
   static passwordConstraint = {
-    min: 6,
+    min: 8,
     max: 50,
   };
 
