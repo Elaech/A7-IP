@@ -6,15 +6,17 @@ import {
     setUserTokenSuccessAction,
 } from './userActions';
 
-export  const setUserTokenThunk = (userToken: string)=> async(
+export  const setUserTokenThunk = (userToken?: string)=> async(
     dispatch: Dispatch
 )=>{
     try{
         dispatch(setUserTokenAction());
 
-
-        dispatch(setUserTokenSuccessAction(userToken));
-
+        if(userToken) {
+            dispatch(setUserTokenSuccessAction(userToken));
+        } else{
+            dispatch(setUserTokenErrorAction());
+        }
     } catch(e) {
         dispatch(setUserTokenErrorAction(e));
 
