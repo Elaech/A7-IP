@@ -13,6 +13,7 @@ export class Tutore extends Profesor {
     const {groupId } = tutore;
 
     this.groupId = groupId;
+    this.role = 'tutor';
   }
 
 }

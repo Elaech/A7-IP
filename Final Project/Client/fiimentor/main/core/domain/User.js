@@ -15,6 +15,8 @@ export class User {
     max: 50,
   };
 
+  static emailPattern = new RegExp(/[a-zA-Z0-9_\\.\\+-]+@info.uaic.ro$/);
+
   static create(partial: Partial<User> = {}) {
     return new User(partial);
   }
