@@ -11,6 +11,30 @@ import { Tutor } from '../models/entities/Tutor';
 import { User } from "../models/entities/User";
 import { error } from "console";
 
+interface LoginPayload {
+    id: number;
+    serialNumber: string;
+    username: string;
+    firstName: string;
+    lastName: string
+    role: string
+    email: string;
+};
+
+interface LoginStudentPayload extends LoginPayload {
+    group: string;
+    year: number;
+    tutorId?: number;
+}
+
+interface LoginProfessorPayload extends LoginPayload {
+    academicRank: string;
+}
+
+interface LoginTutorPayload extends LoginProfessorPayload {
+    groupId?: number;
+}
+
 async function login(req: any, res: any) {
     try {
         const username = req.body.username;
@@ -23,31 +47,39 @@ async function login(req: any, res: any) {
                 success: false,
                 status: 'Invalid username'
             });
-        }
-        else {
+        } else {
             console.log(userByUserName[0].id);
             if (password.localeCompare(userByUserName[0].password) !== 0) {
                 return res.status(HttpStatus.UNAUTHORIZED).json({
                     success: false,
                     status: 'Invalid password'
                 });
-            }
-            else {
+            } else {
                 const studentRepository = new StudentRepository();
                 const professorRepository = new ProfessorRepository();
 
                 const student: Student[] = await studentRepository.getByUserId(userByUserName[0].id);
                 const professor: Professor[] = await professorRepository.getByUserId(userByUserName[0].id);
-                let payload: Object;
                 let token: any;
 
                 if (student.length) {
-                    console.log('student');
-                    payload = { userByUserName, student };
+                    const payload: LoginStudentPayload = {
+                        username: userByUserName[0].username,
+                        id: userByUserName[0].id,
+                        firstName: userByUserName[0].firstName,
+                        lastName: userByUserName[0].lastName,
+                        email: userByUserName[0].lastName,
+                        serialNumber: userByUserName[0].serialNumber,
+                        role: userByUserName[0].role,
+                        group: student[0].groupe,
+                        year: student[0].year,
+                        tutorId: student[0].tutorId ? student[0].tutorId : undefined,
+
+                    };
                     token = await createToken(payload, process.env.JWT_SECRET);
                     return res.status(HttpStatus.OK).json({
                         token: token,
-                        student: payload
+                        payload,
                     });
                 }
 
@@ -56,20 +88,43 @@ async function login(req: any, res: any) {
                     const tutor: Tutor[] = await tutorRepository.getByProfessorId(professor[0].id);
 
                     if (tutor.length) {
-                        payload = { userByUserName, professor, tutor };
+                        const payload: LoginTutorPayload = {
+                            username: userByUserName[0].username,
+                            id: userByUserName[0].id,
+                            firstName: userByUserName[0].firstName,
+                            lastName: userByUserName[0].lastName,
+                            email: userByUserName[0].lastName,
+                            serialNumber: userByUserName[0].serialNumber,
+                            role: userByUserName[0].role,
+                            academicRank: professor[0].academicRank,
+                            groupId: tutor[0].groupeId ? tutor[0].groupeId : undefined,
+                        }
+                        token = await createToken(payload, process.env.JWT_SECRET);
+                        return res.status(HttpStatus.OK).json({
+                            token: token,
+                            payload
+                        });
+                    } else {
+                        const payload: LoginProfessorPayload = {
+                            username: userByUserName[0].username,
+                            id: userByUserName[0].id,
+                            firstName: userByUserName[0].firstName,
+                            lastName: userByUserName[0].lastName,
+                            email: userByUserName[0].lastName,
+                            serialNumber: userByUserName[0].serialNumber,
+                            role: userByUserName[0].role,
+                            academicRank: professor[0].academicRank,
+                        }
+                        token = await createToken(payload, process.env.JWT_SECRET);
+                        return res.status(HttpStatus.OK).json({
+                            token: token,
+                            payload
+                        });
                     }
-                    else {
-                        payload = { userByUserName, professor };
-                    }
-                    token = await createToken(payload, process.env.JWT_SECRET);
-                    return res.status(HttpStatus.OK).json({
-                        token: token,
-                        professor: payload
-                    });
                 }
             }
         }
-    } catch (error) {
+    }catch (error) {
         console.log(error);
         return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
             success: false,

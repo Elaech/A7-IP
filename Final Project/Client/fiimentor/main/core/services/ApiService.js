@@ -11,8 +11,7 @@ export interface RegisterUserRequest {
   serialNumber: string;
   username: string;
   password: string;
-  role: string;
-  email?: string;
+  email: string;
 }
 
 export interface LoginUserRequest {

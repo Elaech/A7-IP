@@ -6,7 +6,7 @@ export class User {
   };
 
   static passwordConstraint = {
-    min: 8,
+    min: 6,
     max: 50,
   };
 
@@ -14,6 +14,8 @@ export class User {
     min: 5,
     max: 50,
   };
+
+  static emailPattern = new RegExp(/[a-zA-Z0-9_\\.\\+-]+@info.uaic.ro$/);
 
   static create(partial: Partial<User> = {}) {
     return new User(partial);

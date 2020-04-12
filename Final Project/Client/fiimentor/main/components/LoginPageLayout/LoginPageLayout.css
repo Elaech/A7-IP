@@ -10,6 +10,10 @@
 .LoginFormContainer{
 
     position: fixed;
-    left: 32%;
+    left: 34%;
     width:100%;
+}
+
+.registerButton {
+    margin-left: 1rem!important;
 }

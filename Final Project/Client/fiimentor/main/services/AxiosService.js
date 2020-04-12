@@ -20,9 +20,9 @@ export class AxiosService {
     this._AXIOS = axios.create(apiConfig);
   }
 
-  async get<P, R>(urlPath: string, params?: P, config?: AxiosRequestConfig,): Promise<R> {
+  async get(urlPath: string, params?, config?: AxiosRequestConfig,) {
     try {
-      const axiosResponse: AxiosResponse<R> = await this._AXIOS.get<R>(urlPath, { ...config, params },);
+      const axiosResponse = await this._AXIOS.get(urlPath, { ...config, params },);
 
       return axiosResponse.data;
     } catch (error) {
@@ -31,9 +31,9 @@ export class AxiosService {
     }
   }
 
-  async post<B, R>(urlPath: string, body: B, config?: AxiosRequestConfig): Promise<R> {
+  async post(urlPath: string, body, config?: AxiosRequestConfig) {
     try {
-      const axiosResponse: AxiosResponse<R> = await this._AXIOS.post(urlPath, body, config);
+      const axiosResponse: AxiosResponse = await this._AXIOS.post(urlPath, body, config);
       return axiosResponse.data;
     } catch (error) {
       AxiosService.handleErrors(error);
@@ -41,13 +41,13 @@ export class AxiosService {
     }
   }
 
-  async put<B, R>(
+  async put(
     urlPath: string,
-    body: B,
+    body,
     config?: AxiosRequestConfig,
-  ): Promise<R> {
+  ){
     try {
-      const axiosResponse: AxiosResponse<R> = await this._AXIOS.put<R>(
+      const axiosResponse: AxiosResponse = await this._AXIOS(
         urlPath,
         body,
         config,
@@ -59,13 +59,13 @@ export class AxiosService {
     }
   }
 
-  async delete<P, R>(
+  async delete(
     urlPath: string,
-    params?: P,
+    params?,
     config?: AxiosRequestConfig,
-  ): Promise<R> {
+  ){
     try {
-      const axiosResponse: AxiosResponse<R> = await this._AXIOS.delete<R>(
+      const axiosResponse: AxiosResponse = await this._AXIOS.delete(
         urlPath,
         { ...config, params },
       );
