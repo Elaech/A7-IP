@@ -17,4 +17,9 @@ export class UserRepository extends ReadWriteRepository<User>{
             .find(User, { where: { serialNumber: serialNumber } })
     }
 
+
+    async getByRole(role: string): Promise<User[]> {
+        return await this.connection.manager
+            .find(User, { where: { role: role } });
+    }
 }
