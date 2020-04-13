@@ -1,3 +1,3 @@
 import {getAllUsers} from './userController'
-import {login, register} from './authController'
-export {getAllUsers, login, register}
+import {login, register, registerRole} from './authController'
+export {getAllUsers, login, register, registerRole}
