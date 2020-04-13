@@ -22,4 +22,9 @@ export class UserRepository extends ReadWriteRepository<User>{
         return await this.connection.manager.update(User,{ id: id}, {role: role});
     }
 
+
+    async getByRole(role: string): Promise<User[]> {
+        return await this.connection.manager
+            .find(User, { where: { role: role } });
+    }
 }
