@@ -1,15 +1,16 @@
 import HttpStatus from "http-status-codes";
-import { getConnection } from 'typeorm';
-import { createToken } from '../utils';
-import { UserRepository } from '../Repositories/UserRepository'
-import { ProfessorRepository } from "../Repositories/ProfessorRepository";
-import { StudentRepository } from "../Repositories/StudentRepository";
-import { TutorRepository } from "../Repositories/TutorRepository";
-import { Student } from '../models/entities/Student';
-import { Professor } from "../models/entities/Professor";
-import { Tutor } from '../models/entities/Tutor';
-import { User } from "../models/entities/User";
-import { error } from "console";
+import {getConnection} from 'typeorm';
+import {createToken} from '../utils';
+import {UserRepository} from '../Repositories/UserRepository'
+import {ProfessorRepository} from "../Repositories/ProfessorRepository";
+import {StudentRepository} from "../Repositories/StudentRepository";
+import {TutorRepository} from "../Repositories/TutorRepository";
+import {Student} from '../models/entities/Student';
+import {Professor} from "../models/entities/Professor";
+import {Tutor} from '../models/entities/Tutor';
+import {User} from "../models/entities/User";
+import {error} from "console";
+import {ReadWriteRepository} from "../Repositories/ReadWriteRepository";
 
 interface LoginPayload {
     id: number;
@@ -124,7 +125,7 @@ async function login(req: any, res: any) {
                 }
             }
         }
-    }catch (error) {
+    } catch (error) {
         console.log(error);
         return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
             success: false,
@@ -247,6 +248,40 @@ async function register(req: any, res: any) {
     }
 }
 
-const utils = { login, register };
+async function registerRole(req: any, res: any) {
+    try {
+        const id = req.body.id;
+        const role = req.body.role;
+        const userRepository = new UserRepository();
+
+        await userRepository.setRole(role, id);
+
+
+        if (role.localeCompare("student") == 0) { // student
+            let student = new Student();
+            student.userId = id;
+            const repository = new ReadWriteRepository(Student);
+            await repository.create(student);
+        } else if (role.localeCompare("professor") == 0) {
+            let professor = new Professor();
+            professor.userId = id;
+            const repository = new ReadWriteRepository(Professor);
+            await repository.create(professor);
+        } else
+            throw (error);
+
+        return res.status(HttpStatus.OK).json({
+            success: true,
+        });
+
+    } catch (error) {
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+            success: false,
+        });
+    }
+}
+
+
+const utils = {login, register, registerRole};
 
 export = utils;

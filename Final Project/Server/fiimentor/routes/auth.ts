@@ -1,7 +1,7 @@
 import HttpStatus from 'http-status-codes';
 import {Router} from "express";
 
-import {login, register} from "../controllers";
+import {login, register, registerRole} from "../controllers";
 
 const router = Router();
 
@@ -14,5 +14,6 @@ router.get('/', (req: any, res: any) => {
 
 router.post('/login', login);
 router.post('/register', register);
+router.post('/register/role', registerRole);
 
 export = router;
