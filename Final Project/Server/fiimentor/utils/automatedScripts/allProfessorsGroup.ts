@@ -7,8 +7,6 @@ import { GroupeMember } from "../../models/entities/GroupeMember";
 
 async function generateProfessorsGroup() {
 
-    console.log('am intrat in professors');
-
     const userRepository = new UserRepository();
     const professors = await userRepository.getByRole('professor');
 

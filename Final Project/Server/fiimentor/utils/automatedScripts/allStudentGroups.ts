@@ -7,7 +7,6 @@ import {StudentRepository} from "../../Repositories/StudentRepository";
 
 async function generateStudentsGroup() {
 
-    console.log('am intrat in studentGroup');
     const studentRepository = new StudentRepository();
     const students = await studentRepository.getAll();
 
