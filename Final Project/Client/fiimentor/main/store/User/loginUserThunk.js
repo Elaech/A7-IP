@@ -6,9 +6,19 @@ import {
   loginUserSuccessAction,
 } from './userActions';
 
-import {User} from '../../core/domain/User';
 import {Context} from '../../Context';
 import type { LoginUserRequest } from '../../core/services/ApiService';
+import type {UserLogged} from '../../../global';
+import {Student} from '../../core/domain/Student';
+import {Profesor} from '../../core/domain/Profesor';
+import {Tutore} from '../../core/domain/Tutore';
+import {setUserTokenThunk} from './setUserTokenThunk';
+import {errorResponse} from '../../services/AxiosService';
+
+interface Payload {
+  token: string;
+  payload: UserLogged;
+}
 
 export  const loginUserThunk = (userCredentials: LoginUserRequest)=> async(
   dispatch: Dispatch
@@ -16,17 +26,29 @@ export  const loginUserThunk = (userCredentials: LoginUserRequest)=> async(
    try{
      dispatch(loginUserAction());
 
-     const user: User = await Context.apiService.loginUser(userCredentials);
+     const payload: Payload = await Context.apiService.loginUser(userCredentials);
 
-     dispatch(loginUserSuccessAction(user));
+     await setUserTokenThunk(payload.token)(dispatch);
+
+     if(payload.payload.role === 'student') {
+       dispatch(loginUserSuccessAction(Student.createStudent(payload.payload)));
+     } else {
+       if(payload.payload.groupId) {
+         dispatch(loginUserSuccessAction(Tutore.createTutore(payload.payload)));
+       } else {
+         dispatch(loginUserSuccessAction(Profesor.createProfesor(payload.payload)));
+       }
+     }
+
    } catch(e) {
      dispatch(loginUserErrorAction(e));
 
-     Swal.fire({
+     await Swal.fire({
        title: 'Error!',
-       text: 'There was an error on login!',
+       text: ` ${errorResponse.status} `,
        type: 'error',
        confirmButtonText: 'Ok',
+       icon: 'error',
      })
    }
 };
