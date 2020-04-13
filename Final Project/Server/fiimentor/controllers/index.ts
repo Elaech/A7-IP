@@ -1,4 +1,4 @@
 import {getAllUsers} from './userController'
-import {login, register} from './authController'
+import {login, register, registerRole} from './authController'
 import {createPost} from './postController'
-export {getAllUsers, login, register, createPost}
+export {getAllUsers, login, register, createPost,registerRole}
