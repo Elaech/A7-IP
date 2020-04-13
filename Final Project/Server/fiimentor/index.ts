@@ -61,10 +61,7 @@ createConnection().then(async () => {
 
 }).catch(error => {
     console.log(error);
-}).finally(() => {
-    getConnection().close;
-}) 
-
+})
 
 
 

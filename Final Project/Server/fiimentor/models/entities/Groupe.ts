@@ -6,7 +6,7 @@ export class Groupe {
   @PrimaryGeneratedColumn({ type: "int", name: "Id", unsigned: true })
   id: number;
 
-  @Column("int", { name: "OwnerId", unsigned: true, default: () => "'0'" })
+  @Column("int", { name: "OwnerId", unsigned: true, default: () => "'0'", nullable:true})
   ownerId: number;
 
   @Column("varchar", { name: "Title", length: 50, default: () => "'0'" })
