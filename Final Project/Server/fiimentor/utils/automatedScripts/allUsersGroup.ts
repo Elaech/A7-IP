@@ -7,7 +7,6 @@ import { GroupeMember } from "../../models/entities/GroupeMember";
 
 async function generateUsersGroup() {
 
-    console.log('am intrat in users');
     //ne aducem toti userii din baza de date
     const userRepository = new UserRepository();
     const users = await userRepository.getAll();

@@ -18,7 +18,7 @@ import { ProfessorRepository } from "./Repositories/ProfessorRepository";
 
 
 //deciding the port based on development/production
-const PORT = process.env.NODE_ENV === 'prod' ? 80 : 3000;
+const PORT = process.env.NODE_ENV === 'prod' ? 80 : 8000;
 //in case NODE_ENV is not defined, set it to dev
 process.env.NODE_ENV = process.env.NODE_ENV === 'prod' ? 'prod' : 'dev';
 //setting the config files
