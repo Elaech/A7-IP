@@ -1,3 +1,4 @@
+import { Postare } from '../domain/Postare';
 import { Mesaj } from '../domain/Mesaj';
 import { Tutore } from '../domain/Tutore';
 import { Profesor } from '../domain/Profesor';
@@ -26,6 +27,14 @@ export interface CreateMessageRequest {
   isAnonymous: boolean;
 }
 
+export interface CreatePostRequest {
+  senderId: number;
+  receiverId: number[];
+  title: string;
+  content: string;
+  isAnonymous: boolean;
+}
+
 export interface ApiService {
   registerUser(req: RegisterUserRequest): Promise<User>;
 
@@ -42,4 +51,8 @@ export interface ApiService {
   createMessage(req: CreateMessageRequest): Promise<void>;
 
   getMessages():Promise<Mesaj[]>;
+
+  createPost(req: CreatePostRequest): Promise<void>;
+
+  getPosts():Promise<Postare[]>;
 }

@@ -10,6 +10,7 @@ import { Student } from '../core/domain/Student';
 import { Profesor } from '../core/domain/Profesor';
 import { Tutore } from '../core/domain/Tutore';
 import { Mesaj } from '../core/domain/Mesaj';
+import { Postare } from '../domain/Postare';
 import type { UserLogged } from '../../global';
 
 export class HttpApiService implements ApiService{
@@ -51,5 +52,13 @@ export class HttpApiService implements ApiService{
 
   async getMessages(): Promise<Mesaj[]> {
     return this.axiosService.get('/message');
+  }
+
+  async createPost(req: CreatePostRequest): Promise<void> {
+    return this.axiosService.post('/post',req);
+  }
+
+  async getPosts(): Promise<Postare[]> {
+    return this.axiosService.get('/post');
   }
 }
