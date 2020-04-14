@@ -10,7 +10,7 @@ import {Context} from '../../Context';
 import type { RegisterUserRequest } from '../../core/services/ApiService';
 import type { UserLogged } from '../../../global';
 
-export  const registerUserThunk = (messageContent:)=> async(
+export  const createAPostThunk = (messageContent:)=> async(
     dispatch: Dispatch
 )=>{
     try{
