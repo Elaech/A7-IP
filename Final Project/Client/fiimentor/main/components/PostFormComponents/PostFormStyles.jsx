@@ -30,10 +30,9 @@ export const buttonStyles: CSSProperties = {
 };
 
 export const autoCompleteStyles: CSSProperties = {
-    backgroundColor: 'white',
+    backgroundColor: 'transparent',
     width: '100%',
-    marginTop: '2%',
-    marginBottom: '8%',
+    marginBottom: '5%',
     border:'#D4D4CE 1px solid',
 };
 
