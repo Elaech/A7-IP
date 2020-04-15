@@ -5,3 +5,4 @@ import {tutorGroupeList} from "./tutorGroupeController";
 import {getProfessorList} from './professorController'
 import {getGroupeList} from "./groupeController";
 export {getAllUsers, login, register, createPost, registerRole, getGroupeList,getProfessorList,tutorGroupeList}
+

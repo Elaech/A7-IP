@@ -14,6 +14,7 @@ router.get('/', (req: any, res: any) => {
         status: 'active',
     });
 });
+
 router.use('/groupe',groupe);
 router.use('/users', users);
 router.use('/auth', auth);

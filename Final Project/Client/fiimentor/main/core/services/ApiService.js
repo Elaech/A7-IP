@@ -1,5 +1,5 @@
 import { Postare } from '../domain/Postare';
-import { Mesaj } from '../domain/Mesaj';
+//import { Mesaj } from '../domain/Mesaj';
 import { Tutore } from '../domain/Tutore';
 import { Profesor } from '../domain/Profesor';
 import { Student } from '../domain/Student';

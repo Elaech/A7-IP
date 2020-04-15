@@ -17,6 +17,7 @@ interface Props extends FieldProps {
 
 const checkBoxStyles: CSSProperties = {
   marginLeft:' 0.5rem',
+  color:'lightgrey',
 };
 
 export const Checkbox: FC<Props> = (props: Props) => {
@@ -32,7 +33,7 @@ export const Checkbox: FC<Props> = (props: Props) => {
     <FormGroup className={groupClassName}>
       <FormControlLabel
         {...field}
-        control={<CheckBox color="primary" style={checkBoxStyles}/>}
+        control={<CheckBox color="default" style={checkBoxStyles}/>}
         label={label}
         labelPlacement="end"
         className={inputClassName}
