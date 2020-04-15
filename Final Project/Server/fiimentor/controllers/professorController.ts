@@ -9,11 +9,11 @@ interface ProfessorPayload {
     LastName : string 
 }
 
-async function professor_list (req : any , res: any) {
+async function getProfessorList (req : any , res: any) {
 
     try {
 
-        let proffesorsArray = new Array<ProfessorPayload>();
+        const professorsArray : ProfessorPayload[] = [];
 
         const userRepository = new UserRepository();
         const users = await userRepository.getAll();
@@ -23,21 +23,20 @@ async function professor_list (req : any , res: any) {
         const allProfessors = await professorRepository.getAll();
 
 
-        let payload : ProfessorPayload;
-        let contor : number;
+        // le payload : ProfessorPayload;
         allProfessors.forEach(item => {
             
-            contor = item.userId - 1;
-            payload = {
+            const index = item.userId - 1;
+            const payload = {
                 id : item.id ,
                 UserId : item.userId ,
-                FirstName : users[contor].firstName ,
-                LastName : users[contor].lastName ,
+                FirstName : users[index].firstName ,
+                LastName : users[index].lastName ,
             }
-            proffesorsArray.push(payload);
+            professorsArray.push(payload);
         });
         return res.status(HttpStatus.OK).json({
-           proffesorsArray,
+           professorsArray,
         });
     }catch(error) {
         req.log.error(`Unable to get professors -> ${req.url} -> ${error}`);
@@ -47,6 +46,6 @@ async function professor_list (req : any , res: any) {
     };
 }
 
-const utils = {professor_list};
+const utils = {getProfessorList};
 
 export = utils;

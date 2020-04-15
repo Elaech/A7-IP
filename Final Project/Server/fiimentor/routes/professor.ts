@@ -1,9 +1,9 @@
 import {Router} from "express";
-import { professor_list } from "../controllers";
+import {getProfessorList} from "../controllers";
 
 const router = Router();
 
-router.get('/professor_list', professor_list);
+router.get('/professor_list', getProfessorList);
 
 
 
