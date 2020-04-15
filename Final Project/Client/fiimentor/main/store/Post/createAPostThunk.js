@@ -7,25 +7,31 @@ import {
 } from './postActions';
 
 import {Context} from '../../Context';
-import type { RegisterUserRequest } from '../../core/services/ApiService';
-import type { UserLogged } from '../../../global';
 
-export  const createAPostThunk = (messageContent:)=> async(
+
+export  const createAPostThunk = (postContent)=> async(
     dispatch: Dispatch
 )=>{
     try{
         dispatch(createPostAction());
 
-        const post: UserLogged = await Context.apiService.createPost(userCredentials);
+        const post = await Context.apiService.createPost(postContent);
 
         dispatch(createPostSuccessAction(post));
+
+        await Swal.fire({
+            title: 'Success!',
+            text: 'Postare creata cu succes!',
+            icon: 'success',
+            confirmButtonText: 'Ok',
+        })
     } catch(e) {
         dispatch(createPostErrorAction(e));
 
-        Swal.fire({
+       await Swal.fire({
             title: 'Error!',
-            text: 'There was an error on creating a post!',
-            type: 'error',
+            text: 'A aparut o eroare la crearea unei postari!',
+            icon: 'error',
             confirmButtonText: 'Ok',
         })
     }

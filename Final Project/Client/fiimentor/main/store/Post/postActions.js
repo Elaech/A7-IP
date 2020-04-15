@@ -1,6 +1,5 @@
 import {Action} from 'redux';
-import { User } from '../../core/domain/User';
-import type { UserLogged } from '../../../global';
+import {Postare} from '../../core/domain/Postare';
 
 export const PostActions = {
   CREATE_POST : 'CREATE_POST',
@@ -15,7 +14,6 @@ export interface CreatePostAction extends Action{
 
 export interface CreatePostSuccessAction extends Action{
   type: PostActions.CREATE_POST_SUCCESS;
-  payload: Postare;
 };
 
 export interface CreatePostErrorAction extends Action {
@@ -28,9 +26,8 @@ export const createPostAction = (): CreatePostAction => ({
   type: PostActions.CREATE_POST,
 });
 
-export const createPostSuccessAction = (payload: Postare): CreatePostSuccessAction => ({
+export const createPostSuccessAction = (): CreatePostSuccessAction => ({
   type: PostActions.CREATE_POST_SUCCESS,
-  payload,
 });
 
 export const createPostErrorAction = (payload?: Error): CreatePostErrorAction => ({
