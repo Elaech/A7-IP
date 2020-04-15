@@ -1,42 +1,11 @@
 import { User } from "../models/entities/User";
-import { Connection, InsertResult, DeleteResult } from "typeorm";
-import { IReadRepository } from "./IReadRepository";
-import { IWriteRepository } from "./IWriteRepository";
+import { ReadWriteRepository } from "./ReadWriteRepository";
+import {UpdateResult} from "typeorm";
 
-export class UserRepository implements IReadRepository<User>, IWriteRepository<User>{
+export class UserRepository extends ReadWriteRepository<User>{
 
-    private connection: Connection;
-
-    constructor(conn: Connection) {
-        this.connection = conn;
-    }
-
-
-    async getAll(): Promise<User[]> {
-        return await this.connection.manager.find(User);
-    }
-
-    async getById(id: number): Promise<User[]> {
-        return await this.connection.manager.
-            find(User, { where: { id: id } });
-    }
-
-    async create(typeEntity: User): Promise<InsertResult> {
-        return await this.connection.manager
-            .createQueryBuilder()
-            .insert()
-            .into(User)
-            .values(typeEntity)
-            .execute();
-    }
-    
-    async delete(id: number): Promise<DeleteResult> {
-        return await this.connection.manager
-            .createQueryBuilder()
-            .delete()
-            .from(User)
-            .where("id=:id", { id: id })
-            .execute();
+    constructor() {
+        super(User);
     }
 
     async getByUsername(usernameParameter: string): Promise<User[]> {
@@ -44,4 +13,18 @@ export class UserRepository implements IReadRepository<User>, IWriteRepository<U
             .find(User, { where: { username: usernameParameter } })
     }
 
+    async getBySerialNumber(serialNumber: string): Promise<User[]> {
+        return await this.connection.manager
+            .find(User, { where: { serialNumber: serialNumber } })
+    }
+
+    async setRole( role: string, id: number): Promise<UpdateResult>{
+        return await this.connection.manager.update(User,{ id: id}, {role: role});
+    }
+
+
+    async getByRole(role: string): Promise<User[]> {
+        return await this.connection.manager
+            .find(User, { where: { role: role } });
+    }
 }

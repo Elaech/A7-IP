@@ -8,7 +8,14 @@ import {
 
 import {Context} from '../../Context';
 import type { RegisterUserRequest } from '../../core/services/ApiService';
-import type { UserLogged } from '../../../global';
+import {User} from '../../core/domain/User';
+import {setUserTokenThunk} from './setUserTokenThunk';
+import {errorResponse} from '../../services/AxiosService';
+
+interface Payload {
+    token: string;
+    User: User;
+}
 
 export  const registerUserThunk = (userCredentials: RegisterUserRequest)=> async(
     dispatch: Dispatch
@@ -16,16 +23,18 @@ export  const registerUserThunk = (userCredentials: RegisterUserRequest)=> async
     try{
         dispatch(registerUserAction());
 
-        const user: UserLogged = await Context.apiService.registerUser(userCredentials);
+        const payload: Payload = await Context.apiService.registerUser(userCredentials);
 
-        dispatch(registerUserSuccessAction(user));
+        await setUserTokenThunk(payload.token)(dispatch);
+
+        dispatch(registerUserSuccessAction(User.create(payload.User)));
     } catch(e) {
         dispatch(registerUserErrorAction(e));
 
         Swal.fire({
             title: 'Error!',
-            text: 'There was an error on register!',
-            type: 'error',
+            text: ` ${errorResponse.status} `,
+            icon: 'error',
             confirmButtonText: 'Ok',
         })
     }

@@ -3,6 +3,7 @@ import HttpStatus from 'http-status-codes';
 
 import users from "./users";
 import auth from "./auth";
+import post from "./post";
 
 const router = Router();
 
@@ -14,5 +15,6 @@ router.get('/', (req: any, res: any) => {
 
 router.use('/users', users);
 router.use('/auth', auth);
+router.use('/post',post);
 
 export = router;
