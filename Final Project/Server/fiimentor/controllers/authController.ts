@@ -1,5 +1,4 @@
 import HttpStatus from "http-status-codes";
-import {getConnection} from 'typeorm';
 import {createToken} from '../utils';
 import {UserRepository} from '../Repositories/UserRepository'
 import {ProfessorRepository} from "../Repositories/ProfessorRepository";
@@ -153,7 +152,7 @@ async function register(req: any, res: any) {
         if (username.toString().length < 5 || username.toString().length > 50) {
             return res.status(HttpStatus.UNAUTHORIZED).json({
                 success: false,
-                error: "Username not valid",
+                error: "Username is not the right length. It must contain 5-50 characters",
             });
         }
         newUser.username = username;
@@ -161,7 +160,7 @@ async function register(req: any, res: any) {
         if (password.toString().length < 5 || password.toString().length > 50) {
             return res.status(HttpStatus.UNAUTHORIZED).json({
                 success: false,
-                error: "Password not valid",
+                error: "Password is not the right length. It must contain 5-50 characters.",
             });
         }
 
@@ -183,7 +182,7 @@ async function register(req: any, res: any) {
         if (firstName.toString().length < 3 || firstName.toString().length > 50) {
             return res.status(HttpStatus.UNAUTHORIZED).json({
                 success: false,
-                error: "First Name not valid",
+                error: "First Name not the right length. It must contain 3-50 characters",
             });
         }
         newUser.firstName = firstName;
@@ -191,7 +190,7 @@ async function register(req: any, res: any) {
         if (lastName.toString().length < 3 || lastName.toString().length > 50) {
             return res.status(HttpStatus.UNAUTHORIZED).json({
                 success: false,
-                error: "Last Name not valid",
+                error: "Last Name not the right length. It must contain 3-50 characters",
             });
         }
         newUser.lastName = lastName;
@@ -224,7 +223,6 @@ async function register(req: any, res: any) {
 
         const userBySerialNumber = await userRepository.getBySerialNumber(newUser.serialNumber);
         if (userBySerialNumber.length != 0) {
-            await getConnection().close();
             return res.status(HttpStatus.CONFLICT).json({
                 success: false,
                 error: "Serial Number is taken"
@@ -232,10 +230,14 @@ async function register(req: any, res: any) {
         }
 
         if (await userRepository.create(newUser) === null) {
-            throw (error);
+            return res.status(HttpStatus.CONFLICT).json({
+                success: false,
+                error: "Could not create new User in data base"
+            });
         }
 
         const token = await createToken(newUser, process.env.JWT_SECRET);
+
         return res.status(HttpStatus.OK).json({
             token: token,
             User: newUser
@@ -244,6 +246,7 @@ async function register(req: any, res: any) {
     } catch (error) {
         return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
             success: false,
+
         });
     }
 }
