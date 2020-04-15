@@ -1,6 +1,5 @@
 import Head from 'next/head'
 import React from 'react'
-import LoginPageLayout from '../main/components/LoginPageLayout/LoginPageLayout'
 
 const Home = () => (
     <>
@@ -13,7 +12,6 @@ const Home = () => (
                 crossOrigin="anonymous"
             />
         </Head>
-        <LoginPageLayout/>
     </>
 );
 export default Home

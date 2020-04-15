@@ -11,4 +11,11 @@ export class GroupeRepository extends ReadWriteRepository<Groupe> {
         return await this.connection.manager.
             find(Groupe, { where: { title: titleParameter } });
     }
+
+    async  getGroupeFaculty(): Promise<Groupe[]> {
+        return await this.connection.manager.
+        find(Groupe, { where: { ownerId: 0 } });
+    }
+
+
 }
