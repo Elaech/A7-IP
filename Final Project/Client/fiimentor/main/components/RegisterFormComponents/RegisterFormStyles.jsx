@@ -3,14 +3,11 @@ import {CSSProperties} from 'react';
 import { font } from '../../globalStyledVariables';
 
 export const RegisterFormContainer = styled.div`
-    width: 30%;
+    width: 90%;
     font: 15px Spectral;
-    margin-left: 1rem;
-    border:#D4D4CE 1px solid;
-    border-radius: 20px;
     background: #F3F9FB;
+    margin-left: 1rem;
     padding: 25px 25px 25px 25px;
-    box-shadow: 1px 2px 5px 2px #D4D4CE;
     font-face: ${font.face};
     font-family: ${font.family};
 `;

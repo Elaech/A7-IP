@@ -6,7 +6,6 @@ import {
   Button,
 } from '@material-ui/core';
 import { PostFormContainer, buttonStyles, TitleContainer, autoCompleteStyles } from './PostFormStyles';
-import { Mesaj } from '../../core/domain/Mesaj'
 import { TextAreaInput } from '../Generics/TextAreaInput';
 import { TextInput } from '../Generics/TextInput';
 import { Checkbox } from '../Generics/CheckBox';
@@ -19,6 +18,7 @@ import ListSubheader from '@material-ui/core/ListSubheader';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import { Label } from '@material-ui/icons';
+import {Postare} from '../../core/domain/Postare';
 
 interface PostFormValues {
   contacts?: string[];
@@ -60,8 +60,8 @@ const validationSchema: Yup.Schema<PostFormValues> = Yup.object().shape({
   contacts: Yup.string()
     .required('Alege contactele!'),
   content: Yup.string()
-    .min(Mesaj.contentContraint.min)
-    .max(Mesaj.contentContraint.max)
+    .min(Postare.contentConstraint.min)
+    .max(Postare.contentConstraint.max)
     .required('Mesajul nu poate fi gol'),
   isAnonymous: Yup.boolean(),
 });
@@ -91,13 +91,13 @@ class PostForm extends React.Component {
 
   handleChange3 = (event, selectedOption2) => {
     this.setState({ selectedOption3: selectedOption2 })
-    
+
   }
 
   render() {
     const filteredOptions = options2.filter((o) => o.link === this.state.selectedOption.value)
     const filteredOptions2 = options3.filter((o) => o.link === this.state.selectedOption2.value)
-    
+
     return (
       <PostFormContainer>
         <Formik
@@ -150,7 +150,7 @@ class PostForm extends React.Component {
                     />
                   )}
                 />
-                {(this.state.selectedOption2.value === 'Profesor') || 
+                {(this.state.selectedOption2.value === 'Profesor') ||
                 (this.state.selectedOption2.value === 'Mentorat') ?
                   <Autocomplete
                     style={autoCompleteStyles}

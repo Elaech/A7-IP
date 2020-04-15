@@ -1,4 +1,5 @@
-import { Mesaj } from '../domain/Mesaj';
+import { Postare } from '../domain/Postare';
+//import { Mesaj } from '../domain/Mesaj';
 import { Tutore } from '../domain/Tutore';
 import { Profesor } from '../domain/Profesor';
 import { Student } from '../domain/Student';
@@ -11,8 +12,7 @@ export interface RegisterUserRequest {
   serialNumber: string;
   username: string;
   password: string;
-  role: string;
-  email?: string;
+  email: string;
 }
 
 export interface LoginUserRequest {
@@ -23,6 +23,14 @@ export interface LoginUserRequest {
 export interface CreateMessageRequest {
   senderId: number;
   receiverId: number[];
+  content: string;
+  isAnonymous: boolean;
+}
+
+export interface CreatePostRequest {
+  senderId: number;
+  receiverId: number[];
+  title: string;
   content: string;
   isAnonymous: boolean;
 }
@@ -43,4 +51,8 @@ export interface ApiService {
   createMessage(req: CreateMessageRequest): Promise<void>;
 
   getMessages():Promise<Mesaj[]>;
+
+  createPost(req: CreatePostRequest): Promise<void>;
+
+  getPosts():Promise<Postare[]>;
 }
