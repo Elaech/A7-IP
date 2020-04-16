@@ -1,5 +1,5 @@
 import React from 'react';
-import { Field, Formik, FormikProps } from 'formik';
+import {Field, Formik, FormikProps} from 'formik';
 import * as Yup from 'yup';
 import {
   FormGroup,
@@ -9,52 +9,57 @@ import { PostFormContainer, buttonStyles, TitleContainer, autoCompleteStyles } f
 import { TextAreaInput } from '../Generics/TextAreaInput';
 import { TextInput } from '../Generics/TextInput';
 import { Checkbox } from '../Generics/CheckBox';
-import CreateSvgIcon from "@material-ui/core/utils"
-import TextField from "@material-ui/core/TextField"
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import ListSubheader from '@material-ui/core/ListSubheader';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import { Label } from '@material-ui/icons';
+
+
 import {Postare} from '../../core/domain/Postare';
+import {SelectOption} from '../Generics/Select/SelectOption';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import TextField from '@material-ui/core/TextField';
 
 interface PostFormValues {
-  contacts?: string[];
+  contacts: SelectOption[];
+  title: string;
   content: string;
   isAnonymous: boolean;
 }
 
+interface State {
+  option1: SelectOption;
+  option2: SelectOption;
+  option3: SelectOption;
+}
+
 const initialValues: PostFormValues = {
-  contacts: [],
+  contacts: [SelectOption.create()],
+  title: '',
   content: '',
   isAnonymous: false,
 };
 
-const options = [
+const options: SelectOption[] = [
   { name: 'Profesori', label: 'Profesori', value: 'Profesori' },
   { name: 'Grup', label: 'Grup', value: 'Grup' },
   { name: 'Toti utilizatorii', label: 'Toti utilizatorii', value: 'Toti utilizatorii' },
+    ];
+
+const options2: SelectOption[] = [
+  { name: 'Profesor', label: 'Profesor', value: 'Profesor', parentName: 'Profesori' },
+  { name: 'Mentor', label: 'Mentor', value: 'Mentor', parentName: 'Profesori' },
+  { name: 'Toti profesorii', label: 'Toti profesorii', value: 'Toti profesorii', parentName: 'Profesori' }
+  ];
+
+const options3: SelectOption[] = [
+  { name: 'Mentorat', label: 'Mentorat', value: 'Mentorat', parentName: 'Grup' },
+  { name: 'An', label: 'An', value: 'An', parentName: 'An si Facultate' },
+  { name: 'Litera', label: 'Litera', value: 'Litera', parentName: 'An si Facultate' },
+  { name: '1', label: '1', value: '1', parentName: 'An' },
+  { name: '2', label: '2', value: '2', parentName: 'An' },
+  { name: '3', label: '3', value: '3', parentName: 'An' },
+  { name: 'A', label: 'A', value: 'A', parentName: 'Litera' },
+  { name: 'B', label: 'B', value: 'B', parentName: 'Litera' },
+  { name: 'E', label: 'E', value: 'E', parentName: 'Litera' },
 ];
 
-const options2 = [
-  { name: 'Profesor', label: 'Profesor', value: 'Profesor', link: 'Profesori' },
-  { name: 'Mentor', label: 'Mentor', value: 'Mentor', link: 'Profesori' },
-  { name: 'Toti profesorii', label: 'Toti profesorii', value: 'Toti profesorii', link: 'Profesori' },
-  { name: 'An si Facultate', label: 'An si Facultate', value: 'An si Facultate', link: 'Grup' },
-  { name: 'Mentorat', label: 'Mentorat', value: 'Mentorat', link: 'Grup' }
-];
-
-const options3 = [
-  { name: 'An', label: 'An', value: 'An', link: 'An si Facultate' },
-  { name: 'Litera', label: 'Litera', value: 'Litera', link: 'An si Facultate' },
-  { name: 'Numar', label: 'Numar', value: 'Numar', link: 'An si Facultate' },
-];
-
-const options4 = [
-  { name: 'Exemplu', label: 'Exemplu', value: 'Exemplu'},
-];
 
 const validationSchema: Yup.Schema<PostFormValues> = Yup.object().shape({
   contacts: Yup.string()
@@ -66,38 +71,35 @@ const validationSchema: Yup.Schema<PostFormValues> = Yup.object().shape({
   isAnonymous: Yup.boolean(),
 });
 
-class PostForm extends React.Component {
+
+class PostForm extends React.Component<{},State> {
+
   constructor() {
     super();
-    this.state = {
-      selectedOption: {},
-      selectedOption2: {},
-      selectedOption3: {},
-    };
-  }
 
+    this.state = {
+      option1: SelectOption.create(),
+      option2: SelectOption.create(),
+      option3: SelectOption.create(),
+    };
+    this.handleChange1 = this.handleChange1.bind(this);
+  }
 
   handleSubmit(values: PostFormValues) {
     console.log(values);
   }
 
-  handleChange1 = (event, selectedOption) => {
-    this.setState({ selectedOption })
+   handleChange1 = (event) => {
+    console.log(event.target.innerText);
+    const value = event.target.innerText;
+    this.setState({option1: SelectOption.create({name: value, label: value, value: value})});
   };
 
-  handleChange2 = (event, selectedOption) => {
-    this.setState({ selectedOption2: selectedOption })
-  }
-
-  handleChange3 = (event, selectedOption2) => {
-    this.setState({ selectedOption3: selectedOption2 })
-
-  }
+  handleChange2 = (selectedOption: SelectOption) => {
+    this.setState({options2: selectedOption})
+  };
 
   render() {
-    const filteredOptions = options2.filter((o) => o.link === this.state.selectedOption.value)
-    const filteredOptions2 = options3.filter((o) => o.link === this.state.selectedOption2.value)
-
     return (
       <PostFormContainer>
         <Formik
@@ -106,86 +108,48 @@ class PostForm extends React.Component {
           onSubmit={this.handleSubmit}
         >
           {(formikProps: FormikProps<PostFormValues>) => {
-            const { handleSubmit } = formikProps;
+            const {
+              handleSubmit,
+                } = formikProps;
 
             return (
               <FormGroup onSubmit={handleSubmit}>
                 <TitleContainer>
                   <h2>Creare postare</h2>
                 </TitleContainer>
-                <h3>Destinatari:</h3>
                 <Autocomplete
-                  style={autoCompleteStyles}
-                  id="search-contacts"
-                  options={options}
-                  getOptionLabel={(option) => option.name}
-                  onChange={this.handleChange1}
-                  value={this.state.selectedOption.value}
-                  filterSelectedOptions
-                  disableClearable
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Optiune 1:"
-                      variant="standard"
-                      placeholder="Către..."
-                    />
-                  )}
-                />
-                <Autocomplete
-                  style={autoCompleteStyles}
-                  id="search-contacts2"
-                  options={filteredOptions}
-                  getOptionLabel={(option) => option.name}
-                  onChange={this.handleChange2}
-                  value={this.state.selectedOption2.value}
-                  filterSelectedOptions
-                  disableClearable
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Optiune 2:"
-                      variant="standard"
-                      placeholder="Către..."
-                    />
-                  )}
-                />
-                {(this.state.selectedOption2.value === 'Profesor') ||
-                (this.state.selectedOption2.value === 'Mentorat') ?
-                  <Autocomplete
-                    style={autoCompleteStyles}
-                    id="search-name"
-                    options={options4}
+                    id="selectDestinatar"
+                    options={options}
+                    autoComplete
+                    style={{marginBottom: '2rem'}}
                     getOptionLabel={(option) => option.name}
-                    filterSelectedOptions
-                    disableClearable
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        label="Alege:"
-                        variant="standard"
-                        placeholder="Către..."
-                      />
-                    )}
-                  /> : null}
-                <Autocomplete
-                  style={autoCompleteStyles}
-                  id="search-contacts3"
-                  options={filteredOptions2}
-                  getOptionLabel={(option) => option.name}
-                  onChange={this.handleChange3}
-                  value={this.state.selectedOption3.value}
-                  filterSelectedOptions
-                  disableClearable
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Optiune 3:"
-                      variant="standard"
-                      placeholder="Către..."
-                    />
-                  )}
+                    onInputChange={this.handleChange1}
+                    renderInput={
+                      (params) =>
+                          <TextField
+                              {...params}
+                              label="Vizibilitate"
+                          />
+                    }
                 />
+
+                {(this.state.option1.value === 'Profesori')
+                  &&
+                (<Autocomplete
+                    id="selectDestinatar2"
+                    options={options2}
+                    style={{marginBottom: '2rem'}}
+                    getOptionLabel={(option) => option.name}
+                    onChange={this.handleChange2}
+                    renderInput={
+                      (params) =>
+                          <TextField
+                              {...params}
+                              label="Select2"
+                          />
+                    }
+                />)
+                }
                 <Field
                   name="title"
                   label="Titlu postare:"
@@ -199,11 +163,10 @@ class PostForm extends React.Component {
                   component={TextAreaInput}
                 />
                 <Field
-                  name="anonymous"
+                  name="isAnonymous"
                   label="Trimite drept anonim"
                   component={Checkbox}
                 />
-
                 <Button
                   type="submit"
                   style={buttonStyles}
