@@ -14,8 +14,13 @@ import { Checkbox } from '../Generics/CheckBox';
 import {Postare} from '../../core/domain/Postare';
 import {SelectOption} from '../Generics/Select/SelectOption';
 import {Select} from '../Generics/Select/Select';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import TextField from '@material-ui/core/TextField';
+import {options1, options21, options22, options321, options322, options333} from './SelectOptions';
+import {Profesor} from '../../core/domain/Profesor';
+import type {UserState} from '../../store/User/userReducer';
+import type {UserToken} from '../../store/User/tokenReducer';
+import type {AppState} from '../../store/AppState';
+import {connect} from 'react-redux';
+import {getProfesoriThunk} from '../../store/Profesor/getProfesoriThunk';
 
 interface PostFormValues {
   contacts: SelectOption[];
@@ -24,11 +29,20 @@ interface PostFormValues {
   isAnonymous: boolean;
 }
 
-interface State {
-  option1: SelectOption;
-  option2: SelectOption;
-  option3: SelectOption;
+interface StateProps {
+ profesori: Profesor[];
 }
+
+interface DispatchProps {
+  getProfesori(token: string): void;
+}
+
+interface OwnProps {
+  user: UserState;
+  token: UserToken;
+}
+
+type Props = StateProps & DispatchProps & OwnProps;
 
 const initialValues: PostFormValues = {
   contacts: [SelectOption.create()],
@@ -36,28 +50,6 @@ const initialValues: PostFormValues = {
   content: '',
   isAnonymous: false,
 };
-
-const options: SelectOption[] = [
-  { name: 'Profesori', label: 'Profesori', value: 'Profesori' },
-  { name: 'Grup', label: 'Grup', value: 'Grup' },
-  { name: 'Toti utilizatorii', label: 'Toti utilizatorii', value: 'Toti utilizatorii' },
-];
-const options2: SelectOption[] =[
-  { name: 'Profesor', label: 'Profesor', value: 'Profesor', parentName: 'Profesori' },
-  { name: 'Mentor', label: 'Mentor', value: 'Mentor', parentName: 'Profesori' },
-  { name: 'Toti profesorii', label: 'Toti profesorii', value: 'Toti profesorii', parentName: 'Profesori' },
-];
-const options3= [
-  { name: 'Mentorat', label: 'Mentorat', value: 'Mentorat', parentName: 'Grup' },
-  { name: 'An', label: 'An', value: 'An', parentName: 'An si Facultate' },
-  { name: 'Litera', label: 'Litera', value: 'Litera', parentName: 'An si Facultate' },
-  { name: '1', label: '1', value: '1', parentName: 'An' },
-  { name: '2', label: '2', value: '2', parentName: 'An' },
-  { name: '3', label: '3', value: '3', parentName: 'An' },
-  { name: 'A', label: 'A', value: 'A', parentName: 'Litera' },
-  { name: 'B', label: 'B', value: 'B', parentName: 'Litera' },
-  { name: 'E', label: 'E', value: 'E', parentName: 'Litera' },
-];
 
 
 const validationSchema: Yup.Schema<PostFormValues> = Yup.object().shape({
@@ -71,32 +63,18 @@ const validationSchema: Yup.Schema<PostFormValues> = Yup.object().shape({
 });
 
 
-class PostForm extends React.Component<{},State> {
+class UnconnectedPostForm extends React.Component<Props> {
 
-  constructor() {
-    super();
 
-    this.state = {
-      option1: SelectOption.create(),
-      option2: SelectOption.create(),
-      option3: SelectOption.create(),
-    };
-    this.handleChange1 = this.handleChange1.bind(this);
+  componentDidMount(): void {
+    const {getProfesori, token} = this.props;
+
+    getProfesori(token);
   }
 
   handleSubmit(values: PostFormValues) {
     console.log(values);
   }
-
-   handleChange1 = (event) => {
-    console.log(event.target.innerText);
-    const value = event.target.innerText;
-    this.setState({option1: SelectOption.create({name: value, label: value, value: value})});
-  };
-
-  handleChange2 = (selectedOption: SelectOption) => {
-    this.setState({options2: selectedOption})
-  };
 
   render() {
     return (
@@ -120,21 +98,56 @@ class PostForm extends React.Component<{},State> {
                 <FastField
                     label="Vizibilitate"
                     name="vizibility1"
-                    options={options}
+                    options={options1}
                     closeMenuOnSelect
                     component={Select}
                 />
+                {vizibility1!== undefined && vizibility1.name === 'Profesori' &&
+                (
+                    <FastField
+                        label="Selecteaza Profesor"
+                        name="vizibility3.1"
+                        options={options21}
+                        closeMenuOnSelect
+                        component={Select}
+                    />
+                )
+                }
 
-                {vizibility1!==undefined && vizibility1.name === 'Profesori' &&
+                {vizibility1!==undefined && vizibility1.name === 'Grup' &&
                 (<FastField
-                    label="Vizibilitate2"
+                    label="Selecteaza grup"
                     name="vizibility2"
-                    options={options2}
+                    options={options22}
                     closeMenuOnSelect
                     component={Select}
                 />)
                 }
-                {vizibility1!== undefined && vizibility1.name === 'Mentor'}
+                {vizibility2!== undefined && vizibility2.name === 'Grup Facultate' &&
+                (<div>
+                    <FastField
+                    label="An"
+                    name="vizibility3.1"
+                    options={options321}
+                    closeMenuOnSelect
+                    component={Select}
+                />
+                <FastField
+                    label="Semian"
+                    name="vizibility3.2"
+                    options={options322}
+                    closeMenuOnSelect
+                    component={Select}
+                />
+                <FastField
+                    label="Grupa"
+                    name="vizibility3.3"
+                    options={options333}
+                    closeMenuOnSelect
+                    component={Select}
+                />
+                </div>)
+                }
                 <Field
                   name="title"
                   label="Titlu postare:"
@@ -169,4 +182,14 @@ class PostForm extends React.Component<{},State> {
   }
 }
 
-export default PostForm;
+const mapStateToProps = ({profesori}: AppState): StateProps => ({
+  profesori,
+});
+
+const mapDispatchToProps: DispatchProps = {
+  getProfesori: getProfesoriThunk,
+};
+
+export const PostForm = connect(mapStateToProps, mapDispatchToProps)(UnconnectedPostForm);
+
+

@@ -48,9 +48,9 @@ export interface ApiService {
 
   getTutore(tutoreId: string): Promise<Tutore>;
 
-  createMessage(req: CreateMessageRequest): Promise<void>;
+  getAllProfesori(): Promise<Profesor[]>;
 
-  getMessages():Promise<Mesaj[]>;
+  getAllMentoratGroups(): Promise<>
 
   createPost(req: CreatePostRequest): Promise<void>;
 
