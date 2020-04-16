@@ -1,5 +1,4 @@
 import HttpStatus from "http-status-codes";
-import {getConnection} from 'typeorm';
 import {createToken} from '../utils';
 import {UserRepository} from '../Repositories/UserRepository'
 import {ProfessorRepository} from "../Repositories/ProfessorRepository";
