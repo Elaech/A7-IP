@@ -1,100 +1,185 @@
-import { FormikProps } from 'formik';
-import * as _ from 'lodash';
-import React, { FC, FormEvent } from 'react';
-import { FormFeedback, FormGroup, Input, Label } from 'reactstrap';
+import { FieldProps } from 'formik';
+import React, { CSSProperties, FC } from 'react';
+import { default as ReactSelect } from 'react-select/';
+import { FormFeedback, FormGroup, Label } from 'reactstrap';
+
 
 import { SelectOption } from './SelectOption';
-import {labelStyle} from '../../RegisterFormComponents/RegisterFormStyles';
 
-const inputStyles = {
-  backgroundColor: `rgba(255, 255, 255, 0)`,
-  border: `1px solid #000000`,
-  width: `100%`,
-  height: `2.5rem`,
-    display: 'block',
-    padding: '1rem',
-    marginBottom: '1rem',
-
-};
-
-interface Props {
+interface Props extends FieldProps {
     index: number;
     label: string;
-    name: string;
-    value: SelectOption;
+    groupOptions: boolean;
+    parentOptions: boolean;
+    isMulti: boolean;
+    closeMenuOnSelect: boolean;
+    errorMessage: string;
     options: SelectOption[];
-    placeholder?: string;
-    formikProps: FormikProps<any>;
+    onChange?: any;
     groupClassName?: string;
     inputClassName?: string;
-
-    onChange(selectedCategory: SelectOption, selectedIndex: number): void;
+    placeholder?: string;
 }
+
 
 export const Select: FC<Props> = (props: Props) => {
     const {
-        index,
-        label,
-        name,
-        value,
         options,
+        label,
+        groupOptions,
+        parentOptions,
+        isMulti,
+        closeMenuOnSelect,
+        errorMessage,
         groupClassName,
         inputClassName,
-        formikProps: {
-            setFieldValue,
-            setFieldTouched,
-            handleBlur,
-            errors,
-            touched,
-            initialValues,
-        },
-        onChange,
+        field: { name, onBlur, value },
+        form: { touched, errors, setFieldValue, initialValues, values },
         placeholder,
     } = props;
 
-    const invalid = !!(
-        _.get(errors, `contacts.[${index}]`) &&
-        _.get(touched, `contacts.[${index}]`)
-    );
+    const customStyles = {
+        control: (provided: CSSProperties, state: any) => {
+            const red = '#dc3545';
+            const blue = '#80bdff';
+            const grey = '#ced4da';
+            const shadow = '0 0 0 0.2rem rgba(0, 123, 255, 0.25)';
 
-    const errorMessage = _.get(errors, `contacts.[${index}].name`) || '';
+            const isInvalid: boolean = !!(touched[name] && errors[name]);
 
-    const handleChange = (e: FormEvent<HTMLInputElement>) => {
-        const emptyOption = SelectOption.create({
-            parentName: value.parentName,
-        });
-        const option =
-            options.find((o: SelectOption) => o.name === e.currentTarget.value) ||
-            emptyOption;
+            const borderColor = isInvalid ? red : state.isFocused ? blue : grey;
 
-        setFieldTouched(name, true);
-        setFieldValue(name, option);
+            const borderColorHover = isInvalid ? red : state.isFocused ? blue : grey;
 
-        onChange(option, index);
+            const boxShadow = isInvalid
+                ? 'none'
+                : state.isFocused
+                    ? shadow
+                    : provided.boxShadow;
+
+            return {
+                ...provided,
+                borderColor,
+                boxShadow,
+                '&:hover': {
+                    borderColor: borderColorHover,
+                },
+            };
+        },
+    };
+
+    const toOption = (o: SelectOption): SelectOption => ({
+        ...o,
+        label: o.label || o.name,
+        parentName: o.parentName,
+        value: o.name,
+    });
+
+    const toGroup = (opts: SelectOption[]) => (o: SelectOption) => {
+        return {
+            label: o.label || o.name,
+            options: SelectOption.children(o, opts).map(toOption),
+        };
+    };
+
+    const makeOptions = () => {
+        if (parentOptions) {
+            const parents: SelectOption[] = SelectOption.parents(options);
+            if (groupOptions) {
+                return [
+                    ...parents
+                        .filter(parent => !SelectOption.hasChildren(parent, options))
+                        .map(toOption),
+                    ...parents
+                        .filter(parent => SelectOption.hasChildren(parent, options))
+                        .map(toGroup(options)),
+                ];
+            }
+            return parents.map(toOption);
+        }
+        return options.map(toOption);
+    };
+
+    const makeDefaultOptions = () => {
+        const initialValue = initialValues[name];
+        if (isMulti) {
+            if (parentOptions) {
+                const parents: SelectOption[] = SelectOption.parents(initialValue);
+                if (groupOptions) {
+                    return [
+                        ...parents
+                            .filter(parent => !SelectOption.hasChildren(parent, initialValue))
+                            .map(toOption),
+                        ...parents
+                            .filter(parent => SelectOption.hasChildren(parent, initialValue))
+                            .map(parent => SelectOption.children(parent, initialValue))
+                            .flat()
+                            .map(toOption),
+                    ];
+                }
+                return parents.map(toOption);
+            }
+            return initialValue.map(toOption);
+        }
+        return initialValue;
+    };
+
+    const handleChange = (selectedOptions) => {
+        if (selectedOptions) {
+            if (isMulti) {
+                const newSelectedOptions: SelectOption[] = [];
+
+                selectedOptions.forEach((o: SelectOption) => {
+                    newSelectedOptions.push(o);
+
+                    if (o.parentName) {
+                        const parent: SelectOption | undefined = SelectOption.find(
+                            o.parentName,
+                            options,
+                        );
+
+                        if (parent && !SelectOption.find(parent.name, newSelectedOptions)) {
+                            newSelectedOptions.push(parent);
+                        }
+                    }
+                });
+                setFieldValue(name, newSelectedOptions);
+            } else {
+                setFieldValue(name, selectedOptions);
+            }
+        } else {
+            setFieldValue(name, []);
+        }
+    };
+
+    const getValue = (): SelectOption | undefined => {
+        if (isMulti) {
+            return value.map(toOption);
+        }
+        return value ? toOption(value) : undefined;
     };
 
     return (
         <FormGroup className={groupClassName}>
-            <Label style={labelStyle}>{label}</Label>
-            <Input
-                type="select"
+            <Label for={name}>{label}</Label>
+            <ReactSelect
+                value={getValue()}
+                className={inputClassName}
                 id={name}
                 name={name}
-                style={inputStyles}
-                invalid={invalid}
-                value={value.name}
+                styles={customStyles}
+                placeholder={placeholder || 'Please select'}
+                options={makeOptions()}
                 onChange={handleChange}
-                onBlur={handleBlur}
-                defaultValue={initialValues[name]}
-            >
-                <option value="">{placeholder || 'Please select'}</option>
-                {options.map((o: SelectOption) => (
-                    <option key={o.name} value={o.name}>
-                        {o.label}
-                    </option>
-                ))}
-            </Input>
-            {invalid && <FormFeedback>{errorMessage}</FormFeedback>}
+                onBlur={onBlur}
+                defaultValue={makeDefaultOptions()}
+                isMulti={isMulti}
+                closeMenuOnSelect={closeMenuOnSelect || false}
+            />
+            {touched[name] && errors[name] && (
+                <div className={`is-invalid form-control`}>&nbsp;</div>
+            )}
+            <FormFeedback>{errorMessage ? errorMessage : errors[name]}</FormFeedback>
         </FormGroup>
     );
 };

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Field, Formik, FormikProps} from 'formik';
+import {FastField, Field, Formik, FormikProps} from 'formik';
 import * as Yup from 'yup';
 import {
   FormGroup,
@@ -13,6 +13,7 @@ import { Checkbox } from '../Generics/CheckBox';
 
 import {Postare} from '../../core/domain/Postare';
 import {SelectOption} from '../Generics/Select/SelectOption';
+import {Select} from '../Generics/Select/Select';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
 
@@ -40,15 +41,13 @@ const options: SelectOption[] = [
   { name: 'Profesori', label: 'Profesori', value: 'Profesori' },
   { name: 'Grup', label: 'Grup', value: 'Grup' },
   { name: 'Toti utilizatorii', label: 'Toti utilizatorii', value: 'Toti utilizatorii' },
-    ];
-
-const options2: SelectOption[] = [
+];
+const options2: SelectOption[] =[
   { name: 'Profesor', label: 'Profesor', value: 'Profesor', parentName: 'Profesori' },
   { name: 'Mentor', label: 'Mentor', value: 'Mentor', parentName: 'Profesori' },
-  { name: 'Toti profesorii', label: 'Toti profesorii', value: 'Toti profesorii', parentName: 'Profesori' }
-  ];
-
-const options3: SelectOption[] = [
+  { name: 'Toti profesorii', label: 'Toti profesorii', value: 'Toti profesorii', parentName: 'Profesori' },
+];
+const options3= [
   { name: 'Mentorat', label: 'Mentorat', value: 'Mentorat', parentName: 'Grup' },
   { name: 'An', label: 'An', value: 'An', parentName: 'An si Facultate' },
   { name: 'Litera', label: 'Litera', value: 'Litera', parentName: 'An si Facultate' },
@@ -110,6 +109,7 @@ class PostForm extends React.Component<{},State> {
           {(formikProps: FormikProps<PostFormValues>) => {
             const {
               handleSubmit,
+                values: {vizibility1, vizibility2, vizibility3}
                 } = formikProps;
 
             return (
@@ -117,39 +117,24 @@ class PostForm extends React.Component<{},State> {
                 <TitleContainer>
                   <h2>Creare postare</h2>
                 </TitleContainer>
-                <Autocomplete
-                    id="selectDestinatar"
+                <FastField
+                    label="Vizibilitate"
+                    name="vizibility1"
                     options={options}
-                    autoComplete
-                    style={{marginBottom: '2rem'}}
-                    getOptionLabel={(option) => option.name}
-                    onInputChange={this.handleChange1}
-                    renderInput={
-                      (params) =>
-                          <TextField
-                              {...params}
-                              label="Vizibilitate"
-                          />
-                    }
+                    closeMenuOnSelect
+                    component={Select}
                 />
 
-                {(this.state.option1.value === 'Profesori')
-                  &&
-                (<Autocomplete
-                    id="selectDestinatar2"
+                {vizibility1!==undefined && vizibility1.name === 'Profesori' &&
+                (<FastField
+                    label="Vizibilitate2"
+                    name="vizibility2"
                     options={options2}
-                    style={{marginBottom: '2rem'}}
-                    getOptionLabel={(option) => option.name}
-                    onChange={this.handleChange2}
-                    renderInput={
-                      (params) =>
-                          <TextField
-                              {...params}
-                              label="Select2"
-                          />
-                    }
+                    closeMenuOnSelect
+                    component={Select}
                 />)
                 }
+                {vizibility1!== undefined && vizibility1.name === 'Mentor'}
                 <Field
                   name="title"
                   label="Titlu postare:"
