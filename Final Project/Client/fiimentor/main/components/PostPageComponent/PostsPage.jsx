@@ -1,15 +1,14 @@
 import React from 'react';
 import {FormContainer, TitleContainer} from './PostPageStyle';
-import PostForm from '../PostFormComponents/PostForm';
-import type {UserState} from '../../store/User/userReducer';
-import type {UserToken} from '../../store/User/tokenReducer';
+import {PostForm} from '../PostFormComponents/PostForm';
+import type {UserLogged} from '../../../global';
 
+interface  PostsPageProps {
+    user: UserLogged;
+    token: string;
 
-interface PostPageProps {
-    user: UserState,
-    token: UserToken,
 }
-class PostsPage extends React.Component<PostPageProps> {
+class PostsPage extends React.Component<PostsPageProps> {
     render() {
         return (
             <>
@@ -17,7 +16,7 @@ class PostsPage extends React.Component<PostPageProps> {
                     <h2><b> Postari</b></h2>
                 </TitleContainer>
                 <FormContainer>
-                    <PostForm user={this.props.user} token={this.props.token}/>
+                    <PostForm user={this.props.user.user} token={this.props.user.token}/>
 
                 </FormContainer>
             </>

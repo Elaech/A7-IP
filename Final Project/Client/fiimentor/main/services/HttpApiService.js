@@ -32,7 +32,7 @@ export class HttpApiService implements ApiService{
     this.axiosServiceToken = new AxiosService({
       baseURL: 'http://localhost:8000',
       headers: {
-        Authorization: `${authorizer}`,
+        Authorization: `Bearer ${authorizer}`,
       },
     });
   }
@@ -56,7 +56,7 @@ export class HttpApiService implements ApiService{
     return this.axiosService.get(`/user/${profesorId}`);
   }
 
-  async getProfesors(autorizer: string): Promise<Profesor[]> {
+  async getProfesori(autorizer: string): Promise<Profesor[]> {
     this.setUserAuthorizer(autorizer);
     return this.axiosServiceToken.get('api/professor/professor_list');
   }

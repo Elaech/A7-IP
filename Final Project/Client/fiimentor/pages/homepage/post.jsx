@@ -11,11 +11,11 @@ const Post= (user, token) => (
     </>
 );
 
-Post.getInitialProps = async ({ reduxStore, query }: any) => {
+Post.getInitialProps = async ({ reduxStore}) => {
     const user = reduxStore.getState().User;
     const token = reduxStore.getState().Token;
-
     return {user, token};
+
     };
 
 export default Post;

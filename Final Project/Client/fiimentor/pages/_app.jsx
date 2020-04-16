@@ -1,8 +1,7 @@
-import React from 'react';
-import { Provider } from 'react-redux';
-import App from 'next/app';
-import withRedux from 'next-redux-wrapper';
-import { initializeStore } from '../main/store/store';
+import App from 'next/app'
+import React from 'react'
+import withReduxStore from '../main/WithReduxStore'
+import { Provider } from 'react-redux'
 import {Context} from '../main/Context';
 import swal from "sweetalert2";
 import {HttpApiService} from '../main/services/HttpApiService';
@@ -15,25 +14,16 @@ Context.initialize({
     routerService: Router,
 });
 
-export default withRedux(initializeStore)(
   class FiiMentorApp extends App {
-    static async getInitialProps({ Component, ctx }) {
-      return {
-        pageProps: {
-          ...(Component.getInitialProps
-            ? await Component.getInitialProps(ctx)
-            : {})
-        }
-      };
-    }
 
-    render() {
-      const { Component, pageProps, store } = this.props;
-      return (
-          <Provider store={store}>
-            <Component {...pageProps} />
-          </Provider>
-      );
-    }
+      render() {
+          const { Component, pageProps, reduxStore } = this.props;
+          return (
+                  <Provider store={reduxStore}>
+                      <Component {...pageProps} />
+                  </Provider>
+          )
+      }
   }
-);
+
+export default withReduxStore(FiiMentorApp)

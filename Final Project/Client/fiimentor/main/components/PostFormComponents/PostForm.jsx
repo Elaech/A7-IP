@@ -16,11 +16,10 @@ import {SelectOption} from '../Generics/Select/SelectOption';
 import {Select} from '../Generics/Select/Select';
 import {options1, options21, options22, options321, options322, options333} from './SelectOptions';
 import {Profesor} from '../../core/domain/Profesor';
-import type {UserState} from '../../store/User/userReducer';
-import type {UserToken} from '../../store/User/tokenReducer';
 import type {AppState} from '../../store/AppState';
 import {connect} from 'react-redux';
 import {getProfesoriThunk} from '../../store/Profesor/getProfesoriThunk';
+import type {UserLogged} from '../../../global';
 
 interface PostFormValues {
   contacts: SelectOption[];
@@ -38,8 +37,8 @@ interface DispatchProps {
 }
 
 interface OwnProps {
-  user: UserState;
-  token: UserToken;
+  user: UserLogged;
+  token: string;
 }
 
 type Props = StateProps & DispatchProps & OwnProps;
@@ -69,15 +68,26 @@ class UnconnectedPostForm extends React.Component<Props> {
   componentDidMount(): void {
     const {getProfesori, token} = this.props;
 
-    getProfesori(token);
+    if(token){
+      getProfesori(token.toString());
+    }
   }
 
+    mapProfesori =()=> this.props.profesori? this.props.profesori.map((value)=>(
+        SelectOption.create({
+            name: value.firstName+' ' + value.lastName,
+            value: value.userId,
+            label: value.firstName+' ' + value.lastName,
+            parentName: 'Profesor',
+        })
+    )): {};
   handleSubmit(values: PostFormValues) {
     console.log(values);
   }
 
   render() {
     return (
+
       <PostFormContainer>
         <Formik
           initialValues={initialValues}
@@ -106,8 +116,19 @@ class UnconnectedPostForm extends React.Component<Props> {
                 (
                     <FastField
                         label="Selecteaza Profesor"
-                        name="vizibility3.1"
+                        name="vizibility2"
                         options={options21}
+                        closeMenuOnSelect
+                        component={Select}
+                    />
+                )
+                }
+                {vizibility2!==undefined && vizibility2.name==='Profesor' &&
+                (
+                    <FastField
+                        label="Alege Profesorii"
+                        name="vizibility2"
+                        options={this.mapProfesori()}
                         closeMenuOnSelect
                         component={Select}
                     />

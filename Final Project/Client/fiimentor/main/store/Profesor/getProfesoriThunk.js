@@ -8,10 +8,10 @@ import {
 
 import {Context} from '../../Context';
 import {errorResponse} from '../../services/AxiosService';
-import type {UserToken} from '../User/tokenReducer';
+import {Profesor} from '../../core/domain/Profesor';
 
 
-export  const getProfesoriThunk = (authorizer: UserToken)=> async(
+export  const getProfesoriThunk = (authorizer: string)=> async(
     dispatch: Dispatch
 )=>{
     try{
@@ -19,16 +19,20 @@ export  const getProfesoriThunk = (authorizer: UserToken)=> async(
         dispatch(getProfesoriAction());
 
 
-        const payload = await Context.apiService.registerUser(authorizer);
+        const payload = await Context.apiService.getProfesori(authorizer);
 
 
-        dispatch(getProfesoriSuccessAction(payload));
+        dispatch(getProfesoriSuccessAction(payload.professorsArray.map(value => Profesor.createProfesor({
+            firstName: value.FirstName,
+            lastName: value.LastName,
+            id: value.UserId,
+        }))));
     } catch(e) {
         dispatch(getProfesoriErrorAction(e));
 
         await Swal.fire({
             title: 'Error!',
-            text: ` ${errorResponse.status} `,
+            text: ` ${errorResponse} `,
             icon: 'error',
             confirmButtonText: 'Ok',
         })
