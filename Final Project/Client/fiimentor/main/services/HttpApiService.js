@@ -60,6 +60,11 @@ export class HttpApiService implements ApiService{
     this.setUserAuthorizer(autorizer);
     return this.axiosServiceToken.get('api/professor/professor_list');
   }
+  
+  async getGrupeMentorat(autorizer: string): Promise<any> {
+    this.setUserAuthorizer(autorizer);
+    return this.axiosServiceToken.get('api/groupe/tutor_groupe_list');
+  }
 
   async getTutore(tutoreId: number): Promise<Tutore> {
     return this.axiosService.get(`/user/${tutoreId}`);
