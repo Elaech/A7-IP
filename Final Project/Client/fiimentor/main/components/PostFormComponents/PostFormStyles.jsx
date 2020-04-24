@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import { FormatAlignCenter } from '@material-ui/icons';
-import { Checkbox } from '@material-ui/core';
+import {CSSProperties} from 'react';
+
 
 export const PostFormContainer = styled.div`
     font: 15px Spectral;

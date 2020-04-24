@@ -1,12 +1,13 @@
-import React from 'react';
-import { Provider } from 'react-redux';
-import App from 'next/app';
-import withRedux from 'next-redux-wrapper';
-import { initializeStore } from '../main/store/store';
+import App, { AppContext, AppProps } from 'next/app';
+import React from 'react'
+import withReduxStore from '../main/WithReduxStore'
+import { Provider } from 'react-redux'
 import {Context} from '../main/Context';
 import swal from "sweetalert2";
 import {HttpApiService} from '../main/services/HttpApiService';
 import Router from 'next/router';
+import { Store } from 'redux';
+import type {AppState} from '../main/store/AppState';
 
 
 Context.initialize({
@@ -15,25 +16,29 @@ Context.initialize({
     routerService: Router,
 });
 
-export default withRedux(initializeStore)(
-  class FiiMentorApp extends App {
-    static async getInitialProps({ Component, ctx }) {
-      return {
-        pageProps: {
-          ...(Component.getInitialProps
-            ? await Component.getInitialProps(ctx)
-            : {})
-        }
-      };
-    }
+  class FiiMentorApp extends App<AppProps & { reduxStore: Store<AppState> }> {
+      static async getInitialProps({ Component, ctx }: AppContext) {
+          let pageProps = {};
 
-    render() {
-      const { Component, pageProps, store } = this.props;
-      return (
-          <Provider store={store}>
-            <Component {...pageProps} />
-          </Provider>
-      );
-    }
+          if (ctx.res) {
+              ctx.res.setHeader('Cache-Control', 'max-age=0');
+          }
+
+          if (Component.getInitialProps) {
+              pageProps = await Component.getInitialProps(ctx);
+          }
+
+          return { pageProps };
+      }
+
+      render() {
+          const { Component, pageProps, reduxStore } = this.props;
+          return (
+                  <Provider store={reduxStore}>
+                      <Component {...pageProps} />
+                  </Provider>
+          )
+      }
   }
-);
+
+export default withReduxStore(FiiMentorApp)

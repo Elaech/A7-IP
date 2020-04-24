@@ -6,11 +6,13 @@ export class Profesor extends User {
   }
 
   academicRank: string;
+  professorId: number;
 
   constructor(profesor: Partial<Profesor> = {}) {
     super(profesor);
-    const { academicRank } = profesor;
+    const { academicRank, professorId } = profesor;
 
     this.academicRank = academicRank || '';
+    this.professorId = professorId;
   }
 }
