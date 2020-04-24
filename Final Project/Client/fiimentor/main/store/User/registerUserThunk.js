@@ -27,7 +27,12 @@ export  const registerUserThunk = (userCredentials: RegisterUserRequest)=> async
 
         await setUserTokenThunk(payload.token)(dispatch);
 
-        dispatch(registerUserSuccessAction(User.create(payload.User)));
+        const user = User.create(payload.User)
+        dispatch(registerUserSuccessAction(user));
+        localStorage.setItem('user', user);
+
+
+        await Context.routerService.push('/homepage/post');
     } catch(e) {
         dispatch(registerUserErrorAction(e));
 

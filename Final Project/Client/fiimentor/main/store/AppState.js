@@ -4,8 +4,8 @@ import type {UserToken} from './User/tokenReducer';
 import type {ProfesoriState} from './Profesor/profesorReducer';
 
 export interface AppState {
-  User: UserState;
-  Token: UserToken;
+  user: UserState;
+  token: UserToken;
   profesori: ProfesoriState;
 };
 

@@ -14,6 +14,7 @@ export  const setUserTokenThunk = (userToken?: string)=> async(
 
         if(userToken) {
             dispatch(setUserTokenSuccessAction(userToken));
+            localStorage.setItem('userToken', userToken);
         } else{
             dispatch(setUserTokenErrorAction());
         }

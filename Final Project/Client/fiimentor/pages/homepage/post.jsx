@@ -1,21 +1,19 @@
 import Head from 'next/head'
 import React from 'react'
-import PostsPage from '../../main/components/PostPageComponent/PostsPage';
+import {FormContainer, TitleContainer} from '../../main/components/PostPageComponent/PostPageStyle';
+import {PostForm} from '../../main/components/PostFormComponents/PostForm';
 
-const Post= (user, token) => (
-    <>
-        <Head>
-            <title>FIIMentor</title>
-        </Head>
-        <PostsPage user={user} token={token}/>
-    </>
+const Post= () => (
+
+        <>
+            <TitleContainer>
+                <h2><b> Postari</b></h2>
+            </TitleContainer>
+            <FormContainer>
+                <PostForm/>
+
+            </FormContainer>
+        </>
 );
-
-Post.getInitialProps = async ({ reduxStore}) => {
-    const user = reduxStore.getState().User;
-    const token = reduxStore.getState().Token;
-    return {user, token};
-
-    };
 
 export default Post;

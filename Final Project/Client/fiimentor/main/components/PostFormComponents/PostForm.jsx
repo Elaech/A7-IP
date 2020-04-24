@@ -1,12 +1,12 @@
 import React from 'react';
 import {FastField, Field, Formik, FormikProps} from 'formik';
 import * as Yup from 'yup';
-import {Button, FormGroup,} from '@material-ui/core';
+import {Button} from '@material-ui/core';
 import {buttonStyles, PostFormContainer, TitleContainer} from './PostFormStyles';
 import {TextAreaInput} from '../Generics/TextAreaInput';
 import {TextInput} from '../Generics/TextInput';
 import {Checkbox} from '../Generics/CheckBox';
-
+import {FormGroup} from '../LoginFormComponents/LoginFormStyles';
 
 import {Postare} from '../../core/domain/Postare';
 import {SelectOption} from '../Generics/Select/SelectOption';
@@ -16,11 +16,18 @@ import {Profesor} from '../../core/domain/Profesor';
 import type {AppState} from '../../store/AppState';
 import {connect} from 'react-redux';
 import {getProfesoriThunk} from '../../store/Profesor/getProfesoriThunk';
-import type {UserLogged} from '../../../global';
 import {Context} from '../../Context';
+import type {CreatePostRequest} from '../../core/services/ApiService';
+import {createAPostThunk} from '../../store/Post/createAPostThunk';
+import type {UserToken} from '../../store/User/tokenReducer';
+import {setUserTokenThunk} from '../../store/User/setUserTokenThunk';
+
+
 
 interface PostFormValues {
-    contacts: SelectOption[];
+    vizibility1: SelectOption;
+    vizibility2: SelectOption;
+    vizibility3: SelectOption;
     title: string;
     content: string;
     isAnonymous: boolean;
@@ -28,18 +35,17 @@ interface PostFormValues {
 
 interface StateProps {
     profesori: Profesor[];
+    token: UserToken;
 }
 
 interface DispatchProps {
     getProfesori(token: string): void;
+    setUserToken(token: string): void;
+    createPost(post: CreatePostRequest): void;
 }
 
-interface OwnProps {
-    user: UserLogged;
-    token: string;
-}
 
-type Props = StateProps & DispatchProps & OwnProps;
+type Props = StateProps & DispatchProps;
 
 const initialValues: PostFormValues = {
     contacts: [SelectOption.create()],
@@ -49,6 +55,7 @@ const initialValues: PostFormValues = {
 };
 
 let grupeMentorat= {};
+let user;
 
 const validationSchema: Yup.Schema<PostFormValues> = Yup.object().shape({
     contacts: Yup.string()
@@ -64,43 +71,142 @@ const validationSchema: Yup.Schema<PostFormValues> = Yup.object().shape({
 class UnconnectedPostForm extends React.Component<Props> {
 
     async componentDidMount(): void {
-        const {getProfesori, token} = this.props;
+        const {getProfesori, setUserToken } = this.props;
 
-        if (token) {
-            getProfesori(token.toString());
-            grupeMentorat = await Context.apiService.getGrupeMentorat(token.toString());
+        const tokenLS = localStorage.getItem('userToken');
+        await  setUserToken(tokenLS);
+
+        user = localStorage.getItem('user');
+
+        if (tokenLS) {
+           await getProfesori(tokenLS.toString());
+            grupeMentorat = await Context.apiService.getGrupeMentorat(tokenLS.toString());
             grupeMentorat = grupeMentorat.list.slice();
-            console.log(grupeMentorat);
         }
 
 
     }
 
-    mapProfesori = () => this.props.profesori ? this.props.profesori.map((value) => (
+    mapProfesori = () => this.props.profesori ? this.props.profesori.map((profesor) => (
         SelectOption.create({
-            name: value.firstName + ' ' + value.lastName,
-            value: value.userId,
-            label: value.firstName + ' ' + value.lastName,
+            name: profesor.professorId,
+            value: profesor.professorId,
+            label: profesor.firstName + ' ' + profesor.lastName,
             parentName: 'Profesor',
         })
     )) : {};
 
-    mapGrupeMentorat = () => grupeMentorat ? grupeMentorat.map((value) => (
+    mapGrupeMentorat = () => grupeMentorat ? grupeMentorat.map((grup) => (
         SelectOption.create({
-            name: value.title,
-            label: value.title,
+            name: grup.ownerId,
+            label: grup.title,
             parentName: 'Grup Mentorat',
-            value: value.ownerId,
+            value: grup.ownerId,
         })
     )) : {};
 
-    handleSubmit(values: PostFormValues) {
-        console.log(values);
+    handleSubmit = (values: PostFormValues)=> {
+        const{createPost} = this.props;
+        console.log(values.vizibility1);
+        const {
+            vizibility1,
+            vizibility2,
+            vizibility31,
+            vizibility32,
+            vizibility33,
+            title,
+            content,
+            isAnonymous,
+        } = values;
+
+
+        if(vizibility1.label === 'Toti utilizatorii') {
+            const postRequest: CreatePostRequest = {
+                isAnonymous,
+                recipients: 'All',
+                title,
+                content,
+            };
+
+            createPost(postRequest);
+        } else {
+            if(vizibility1.label === 'Profesori') {
+                    if(vizibility2.label === 'Toti Profesorii' ) {
+                        const postRequest: CreatePostRequest = {
+                            recipients : 'Professors',
+                            professors : {
+                                recipient: 'All',
+                            },
+                            content,
+                            title,
+                            isAnonymous,
+                        };
+
+                        createPost(postRequest);
+                    } else {
+                        if(vizibility2.label === 'Tutore') {
+                            const postRequest: CreatePostRequest = {
+                                recipients: 'Professors',
+                                professors: {
+                                    recipient: 'Tutor',
+                                },
+                                content,
+                                title,
+                                isAnonymous,
+                            };
+
+                            createPost(postRequest);
+                        } else if(vizibility2.parentName === 'Profesor') {
+                            const postRequest: CreatePostRequest = {
+                                recipients: 'Professors',
+                                professors: {
+                                    recipient: 'Professor',
+                                    professorId: vizibility2.value,
+                                },
+                                content,
+                                title,
+                                isAnonymous,
+                            };
+
+                            createPost(postRequest);
+                        }
+                    }
+            } else {
+                if(vizibility1.label === 'Grup') {
+                    if(vizibility2.label === 'Grup Facultate') {
+                        const postRequest: CreatePostRequest = {
+                            recipients: 'Groupe',
+                            groupe: {
+                                year: vizibility31.value,
+                                letter: vizibility32.value,
+                                number: vizibility33.value,
+                            },
+                            content,
+                            title,
+                            isAnonymous,
+                        };
+
+                        createPost(postRequest);
+                    } else if(vizibility2.label === 'Grup Mentorat') {
+                        const postRequest: CreatePostRequest = {
+                            recipients: 'Groupe',
+                            groupe: {
+                               groupeId: vizibility31.value,
+                            },
+                            content,
+                            title,
+                            isAnonymous,
+                        };
+
+                        createPost(postRequest);
+                    }
+                }
+            }
+        }
     }
 
     render() {
         return (
-
             <PostFormContainer>
                 <Formik
                     initialValues={initialValues}
@@ -125,7 +231,7 @@ class UnconnectedPostForm extends React.Component<Props> {
                                     closeMenuOnSelect
                                     component={Select}
                                 />
-                                {vizibility1 !== undefined && vizibility1.name === 'Profesori' &&
+                                {vizibility1  && vizibility1.label === 'Profesori' &&
                                 (<div>
                                     <FastField
                                         label="Selecteaza Profesor"
@@ -134,7 +240,7 @@ class UnconnectedPostForm extends React.Component<Props> {
                                         closeMenuOnSelect
                                         component={Select}
                                     />
-                                    {vizibility2 !== undefined && vizibility2.name === 'Profesor' &&
+                                    {vizibility2 && vizibility2.label === 'Profesor' &&
                                     (
                                         <FastField
                                             label="Alege Profesorii"
@@ -149,7 +255,7 @@ class UnconnectedPostForm extends React.Component<Props> {
                                 }
 
 
-                                {vizibility1 !== undefined && vizibility1.name === 'Grup' &&
+                                {vizibility1  && vizibility1.label === 'Grup' &&
                                 (<div>
                                         <FastField
                                             label="Selecteaza grup"
@@ -158,7 +264,7 @@ class UnconnectedPostForm extends React.Component<Props> {
                                             closeMenuOnSelect
                                             component={Select}
                                         />
-                                        {vizibility2 !== undefined && vizibility2.name === 'Grup Mentorat' &&
+                                        {vizibility2  && vizibility2.label === 'Grup Mentorat' &&
                                         (<FastField
                                             label="Selecteaza grup"
                                             name="vizibility31"
@@ -167,7 +273,7 @@ class UnconnectedPostForm extends React.Component<Props> {
                                             component={Select}
                                         />)
                                         }
-                                        {vizibility2 !== undefined && vizibility2.name === 'Grup Facultate' &&
+                                        {vizibility2 && vizibility2.label === 'Grup Facultate' &&
                                         (<div>
                                             <FastField
                                                 label="An"
@@ -209,11 +315,14 @@ class UnconnectedPostForm extends React.Component<Props> {
                                     placeholder="Scrie..."
                                     component={TextAreaInput}
                                 />
-                                <Field
-                                    name="isAnonymous"
-                                    label="Trimite drept anonim"
-                                    component={Checkbox}
-                                />
+                                {user && user.role === 'student'
+                                &&
+                                    <Field
+                                        name="isAnonymous"
+                                        label="Trimite drept anonim"
+                                        component={Checkbox}
+                                    />
+                                }
                                 <Button
                                     type="submit"
                                     style={buttonStyles}
@@ -237,6 +346,8 @@ const mapStateToProps = ({profesori}: AppState): StateProps => ({
 
 const mapDispatchToProps: DispatchProps = {
     getProfesori: getProfesoriThunk,
+    setUserToken: setUserTokenThunk,
+    createPost: createAPostThunk,
 };
 
 export const PostForm = connect(mapStateToProps, mapDispatchToProps)(UnconnectedPostForm);

@@ -10,6 +10,7 @@ interface  PostsPageProps {
 }
 class PostsPage extends React.Component<PostsPageProps> {
     render() {
+        console.log(this.props);
         return (
             <>
                 <TitleContainer>

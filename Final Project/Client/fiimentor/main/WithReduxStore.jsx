@@ -27,24 +27,30 @@ export default App => {
             // Provide the store to getInitialProps of pages
             appContext.ctx.reduxStore = reduxStore;
 
-            let appProps = {}
+            let appProps;
             if (typeof App.getInitialProps === 'function') {
                 appProps = await App.getInitialProps(appContext)
+
+
+                return {
+                    ...appProps,
+                    initialReduxState: reduxStore.getState(),
+                }
             }
 
             return {
-                ...appProps,
+                pageProps: undefined,
                 initialReduxState: reduxStore.getState(),
-            }
+            };
         }
 
         constructor(props) {
             super(props)
-            this.reduxStore = getOrCreateStore(props.initialReduxState)
+            this.reduxStore = getOrCreateStore(props.initialReduxState);
         }
 
         render() {
-            return <App {...this.props} reduxStore={this.reduxStore} />
+            return <App {...this.props} reduxStore={this.reduxStore}/>
         }
     }
 }

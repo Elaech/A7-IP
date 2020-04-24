@@ -1,7 +1,6 @@
 import {AxiosService} from './AxiosService';
 import {
   ApiService,
-  CreateMessageRequest,
   LoginUserRequest,
   RegisterUserRequest,
 } from '../core/services/ApiService';
@@ -11,6 +10,7 @@ import { Profesor } from '../core/domain/Profesor';
 import { Tutore } from '../core/domain/Tutore';
 import { Postare } from '../core/domain/Postare';
 import type { UserLogged } from '../../global';
+import type {CreatePostRequest} from '../core/services/ApiService';
 
 export class HttpApiService implements ApiService{
   axiosService: AxiosService;
@@ -60,7 +60,7 @@ export class HttpApiService implements ApiService{
     this.setUserAuthorizer(autorizer);
     return this.axiosServiceToken.get('api/professor/professor_list');
   }
-  
+
   async getGrupeMentorat(autorizer: string): Promise<any> {
     this.setUserAuthorizer(autorizer);
     return this.axiosServiceToken.get('api/groupe/tutor_groupe_list');
@@ -70,7 +70,7 @@ export class HttpApiService implements ApiService{
     return this.axiosService.get(`/user/${tutoreId}`);
   }
   async createPost(req: CreatePostRequest): Promise<void> {
-    return this.axiosService.post('/post',req);
+    return this.axiosServiceToken.post('api/post',req);
   }
 
   async getPosts(): Promise<Postare[]> {

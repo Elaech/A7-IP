@@ -7,17 +7,19 @@ import {
 } from './postActions';
 
 import {Context} from '../../Context';
+import type {CreatePostRequest} from '../../core/services/ApiService';
 
 
-export  const createAPostThunk = (postContent)=> async(
+export  const createAPostThunk = (postContent: CreatePostRequest)=> async(
     dispatch: Dispatch
 )=>{
     try{
         dispatch(createPostAction());
 
         const post = await Context.apiService.createPost(postContent);
+        console.log(post);
 
-        dispatch(createPostSuccessAction(post));
+        dispatch(createPostSuccessAction());
 
         await Swal.fire({
             title: 'Success!',

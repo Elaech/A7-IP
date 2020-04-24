@@ -21,11 +21,11 @@ export  const getProfesoriThunk = (authorizer: string)=> async(
 
         const payload = await Context.apiService.getProfesori(authorizer);
 
-
         dispatch(getProfesoriSuccessAction(payload.professorsArray.map(value => Profesor.createProfesor({
             firstName: value.FirstName,
             lastName: value.LastName,
             id: value.UserId,
+            professorId: value.id,
         }))));
     } catch(e) {
         dispatch(getProfesoriErrorAction(e));

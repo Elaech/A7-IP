@@ -1,10 +1,25 @@
 import {Postare} from '../domain/Postare';
-//import { Mesaj } from '../domain/Mesaj';
 import {Tutore} from '../domain/Tutore';
 import {Profesor} from '../domain/Profesor';
 import {Student} from '../domain/Student';
 import {User} from '../domain/User';
 import type {UserLogged} from '../../../global';
+
+
+type RecipientsPost = 'All' | 'Professors' | 'Groupe';
+
+interface ProfessorsPost {
+    recipient: string;
+    professorId?: number;
+}
+
+interface GroupePost {
+    year?: number;
+    letter?: string;
+    number?: number;
+    groupeId?: number;
+}
+
 
 export interface RegisterUserRequest {
     firstName: string;
@@ -28,11 +43,12 @@ export interface CreateMessageRequest {
 }
 
 export interface CreatePostRequest {
-    senderId: number;
-    receiverId: number[];
+    recipients: RecipientsPost;
     title: string;
     content: string;
     isAnonymous: boolean;
+    professors?: ProfessorsPost;
+    groupe?: GroupePost;
 }
 
 export interface ApiService {
