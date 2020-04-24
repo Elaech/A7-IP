@@ -1,7 +1,8 @@
-import HttpStatus from 'http-status-codes';
-import {Router} from "express";
 
-import {login, register, registerRole} from "../controllers";
+import HttpStatus from 'http-status-codes';
+import {getGroupeList} from "../controllers";
+import {Router} from "express";
+import {tutorGroupeList} from "../controllers";
 
 const router = Router();
 
@@ -12,8 +13,7 @@ router.get('/', (req: any, res: any) => {
     });
 });
 
-router.post('/login', login);
-router.post('/register', register);
-router.post('/register/role', registerRole);
+router.get('/tutor_groupe_list', tutorGroupeList);
+router.get('/faculty_groupe_list',getGroupeList);
 
-export = router;
+export=router;

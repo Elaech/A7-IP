@@ -1,50 +1,47 @@
-import { FieldProps } from 'formik';
-import React, { FC } from 'react';
-import {
-  TextField,
-  FormGroup,
-  InputLabel,
-  FormHelperText,
-} from '@material-ui/core';
-import styled from 'styled-components';
+import {FieldProps} from 'formik';
+import React, {FC} from 'react';
+import {FormGroup, FormHelperText, InputLabel, TextareaAutosize} from '@material-ui/core';
 
+import {labelStyle} from '../RegisterFormComponents/RegisterFormStyles';
+
+const textAreaStyle = {
+    background: 'none',
+};
 
 interface Props extends FieldProps {
-  name: string;
-  label: string;
-  placeholder?: string;
-  groupClassName?: string;
-  inputClassName?: string;
-  disabled?: boolean;
+    name: string;
+    label: string;
+    placeholder?: string;
+    groupClassName?: string;
+    inputClassName?: string;
+    disabled?: boolean;
 }
 
 export const TextAreaInput: FC<Props> = (props: Props) => {
-  const {
-    label,
-    placeholder,
-    field,
-    groupClassName,
-    disabled,
-    inputClassName,
-    form: { errors },
-  } = props;
+    const {
+        label,
+        placeholder,
+        field,
+        groupClassName,
+        form: {errors},
+    } = props;
 
-  const { name } = field;
+    const {name} = field;
 
-  return (
-    <FormGroup className={groupClassName}>
-      <InputLabel>{label}</InputLabel>
-      <TextField
-        {...field}
-        id={name}
-        type="text"
-        className={inputClassName}
-        placeholder={placeholder}
-        variant="filled"
-      />
-      <FormHelperText error>
-        {errors[name]}
-      </FormHelperText>
-    </FormGroup>
-  );
+    return (
+        <FormGroup className={groupClassName}>
+            <InputLabel style={labelStyle}>{label}</InputLabel>
+            <TextareaAutosize
+                {...field}
+                id={name}
+                style={textAreaStyle}
+                placeholder={placeholder}
+                variant="filled"
+                rowsMin={6}
+            />
+            <FormHelperText error>
+                {errors[name]}
+            </FormHelperText>
+        </FormGroup>
+    );
 };
