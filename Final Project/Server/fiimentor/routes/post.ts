@@ -2,7 +2,8 @@ import HttpStatus from 'http-status-codes';
 import {Router} from "express";
 
 
-import {createPost} from "../controllers"
+
+import {createPost,getPostByPostId} from "../controllers"
 
 const router = Router();
 
@@ -14,6 +15,7 @@ router.get('/', (req: any, res: any) => {
 });
 
 router.post('/', createPost);
+router.get('/:postId',getPostByPostId);
 
 
 export = router;
