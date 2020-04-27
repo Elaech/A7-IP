@@ -1,13 +1,13 @@
 import Head from 'next/head'
 import React from 'react'
-import LoginPageLayout from '../main/components/LoginPageLayout/LoginPageLayout';
+import ViewPosts from '../main/components/ViewPostsComponent/ViewPosts';
 
 const Home = () => (
     <>
     <Head>
       <title>FIIMentor</title>
     </Head>
-    <LoginPageLayout/>
+    <ViewPosts/>
     </>
 );
 export default Home
