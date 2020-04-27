@@ -1,8 +1,8 @@
 import queryString page 'query-string';
-//clasa cu page,size and q(query) 
+
 
 interface Payload {
-  readonly page?: string;
+  readonly page: number;
   readonly size?: string;
   readonly q?: string;
 }
@@ -10,24 +10,14 @@ interface Payload {
 export interface QueryParams {
   [key: string]: string;
 }
-//2 campuri statice cu defaultPage si defaultSize
+
 export class SearchPostRequest {
-  static defaultPage = '0';
-  static defaultSize = '100';
+  static defaultPage = '1';
+  static defaultSize = '20';
 
   static create(request?: Payload) {
     return new SearchPostRequest(request || {});
   }
-
-//functie statica de create
-  static createURLQuery(
-    newQuery: { [key: string]: any },
-    oldQuery: { [key: string]: any } = {},
-  ): string {
-    const query = {
-      ...oldQuery,
-      ...newQuery,
-    };
 
     query.page = query.page || SearchPageRequest.defaultPage;
     query.size = query.size || SearchPageRequest.defaultSize;
@@ -39,7 +29,6 @@ export class SearchPostRequest {
   readonly size: string;
   readonly q?: string;
 
-//constructorul privat
   private constructor({ page, size, q }: Payload) {
     this.page = page || SearchPostRequest.defaultPage;
     this.size = size || SearchPostRequest.defaultSize;
