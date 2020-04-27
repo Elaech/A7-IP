@@ -3,7 +3,7 @@ import {Router} from "express";
 
 
 
-import {getPMessageByPMessageId} from "../controllers"
+import {getPrivateMessageByPrivateMessageId} from "../controllers"
 
 const router = Router();
 
@@ -14,7 +14,7 @@ router.get('/', (req: any, res: any) => {
     });
 });
 
-router.get('/:pMessageId',getPMessageByPMessageId);
+router.get('/:pMessageId',getPrivateMessageByPrivateMessageId);
 
 
 export = router;

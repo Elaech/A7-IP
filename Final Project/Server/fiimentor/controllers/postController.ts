@@ -211,21 +211,21 @@ async function getPostByPostId(req: any, res: any) {
 
 }
 
-async function getPMessageByPMessageId(req: any, res: any) {
+async function getPrivateMessageByPrivateMessageId(req: any, res: any) {
     const pMessagetId: number = req.params.pMessageId;
     const userId: number = req.user.payload.id;
 
     const privateMessageRepository = new PrivateMessageRepository();
     const pMessage = await privateMessageRepository.getById(pMessagetId);
 
-    if(pMessage[0].senderId == userId || pMessage[0].receiverId == userId){
+    if(pMessage[0].senderId === userId || pMessage[0].receiverId === userId){
 
         const userRepository = new UserRepository();
         let user = await userRepository.getById(pMessage[0].receiverId);
 
-        const index = pMessage[0].content.indexOf('\n');
-        const title = pMessage[0].content.substring(0,index);
-        const content = pMessage[0].content.substring(index+1);
+        const index: number = pMessage[0].content.indexOf('\n');
+        const title: string= pMessage[0].content.substring(0,index);
+        const content: string = pMessage[0].content.substring(index+1);
 
         const response = {
             success: true,
@@ -234,7 +234,7 @@ async function getPMessageByPMessageId(req: any, res: any) {
             author : "",
             receiver: `${user[0].lastName} ${user[0].firstName}`,
             timestamp : pMessage[0].time,
-            IsAnonymous:false
+            IsAnonymous: pMessage[0].isAnonymous
         }
 
         user = await userRepository.getById(pMessage[0].senderId);
@@ -251,4 +251,4 @@ async function getPMessageByPMessageId(req: any, res: any) {
 }
 
 
-export { createPost, getPostByPostId, getPMessageByPMessageId }
+export { createPost, getPostByPostId, getPrivateMessageByPrivateMessageId }
