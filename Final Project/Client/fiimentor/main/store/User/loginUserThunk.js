@@ -31,14 +31,22 @@ export  const loginUserThunk = (userCredentials: LoginUserRequest)=> async(
      await setUserTokenThunk(payload.token)(dispatch);
 
      if(payload.payload.role === 'student') {
-       dispatch(loginUserSuccessAction(Student.createStudent(payload.payload)));
+       const user=Student.createStudent(payload.payload);
+       dispatch(loginUserSuccessAction(user));
+       localStorage.setItem('user', user)
      } else {
        if(payload.payload.groupId) {
-         dispatch(loginUserSuccessAction(Tutore.createTutore(payload.payload)));
+         const user = Tutore.createTutore(payload.payload);
+         dispatch(loginUserSuccessAction(user));
+         localStorage.setItem('user', user);
        } else {
-         dispatch(loginUserSuccessAction(Profesor.createProfesor(payload.payload)));
+         const user = Profesor.createProfesor(payload.payload);
+         dispatch(loginUserSuccessAction(user));
+         localStorage.setItem('user', user);
        }
      }
+
+     await Context.routerService.push('/homepage/post');
 
    } catch(e) {
      dispatch(loginUserErrorAction(e));

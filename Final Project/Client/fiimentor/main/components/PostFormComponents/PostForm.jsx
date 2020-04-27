@@ -1,224 +1,355 @@
 import React from 'react';
-import { Field, Formik, FormikProps } from 'formik';
+import {FastField, Field, Formik, FormikProps} from 'formik';
 import * as Yup from 'yup';
-import {
-  FormGroup,
-  Button,
-} from '@material-ui/core';
-import { PostFormContainer, buttonStyles, TitleContainer, autoCompleteStyles } from './PostFormStyles';
-import { TextAreaInput } from '../Generics/TextAreaInput';
-import { TextInput } from '../Generics/TextInput';
-import { Checkbox } from '../Generics/CheckBox';
-import CreateSvgIcon from "@material-ui/core/utils"
-import TextField from "@material-ui/core/TextField"
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import ListSubheader from '@material-ui/core/ListSubheader';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import { Label } from '@material-ui/icons';
+import {Button} from '@material-ui/core';
+import {buttonStyles, PostFormContainer, TitleContainer} from './PostFormStyles';
+import {TextAreaInput} from '../Generics/TextAreaInput';
+import {TextInput} from '../Generics/TextInput';
+import {Checkbox} from '../Generics/CheckBox';
+import {FormGroup} from '../LoginFormComponents/LoginFormStyles';
+
 import {Postare} from '../../core/domain/Postare';
+import {SelectOption} from '../Generics/Select/SelectOption';
+import {Select} from '../Generics/Select/Select';
+import {options1, options21, options22, options321, options322, options333} from './SelectOptions';
+import {Profesor} from '../../core/domain/Profesor';
+import type {AppState} from '../../store/AppState';
+import {connect} from 'react-redux';
+import {getProfesoriThunk} from '../../store/Profesor/getProfesoriThunk';
+import {Context} from '../../Context';
+import type {CreatePostRequest} from '../../core/services/ApiService';
+import {createAPostThunk} from '../../store/Post/createAPostThunk';
+import type {UserToken} from '../../store/User/tokenReducer';
+import {setUserTokenThunk} from '../../store/User/setUserTokenThunk';
+
+
 
 interface PostFormValues {
-  contacts?: string[];
-  content: string;
-  isAnonymous: boolean;
+    vizibility1: SelectOption;
+    vizibility2: SelectOption;
+    vizibility3: SelectOption;
+    title: string;
+    content: string;
+    isAnonymous: boolean;
 }
+
+interface StateProps {
+    profesori: Profesor[];
+    token: UserToken;
+}
+
+interface DispatchProps {
+    getProfesori(token: string): void;
+    setUserToken(token: string): void;
+    createPost(post: CreatePostRequest): void;
+}
+
+
+type Props = StateProps & DispatchProps;
 
 const initialValues: PostFormValues = {
-  contacts: [],
-  content: '',
-  isAnonymous: false,
+    contacts: [SelectOption.create()],
+    title: '',
+    content: '',
+    isAnonymous: false,
 };
 
-const options = [
-  { name: 'Profesori', label: 'Profesori', value: 'Profesori' },
-  { name: 'Grup', label: 'Grup', value: 'Grup' },
-  { name: 'Toti utilizatorii', label: 'Toti utilizatorii', value: 'Toti utilizatorii' },
-];
-
-const options2 = [
-  { name: 'Profesor', label: 'Profesor', value: 'Profesor', link: 'Profesori' },
-  { name: 'Mentor', label: 'Mentor', value: 'Mentor', link: 'Profesori' },
-  { name: 'Toti profesorii', label: 'Toti profesorii', value: 'Toti profesorii', link: 'Profesori' },
-  { name: 'An si Facultate', label: 'An si Facultate', value: 'An si Facultate', link: 'Grup' },
-  { name: 'Mentorat', label: 'Mentorat', value: 'Mentorat', link: 'Grup' }
-];
-
-const options3 = [
-  { name: 'An', label: 'An', value: 'An', link: 'An si Facultate' },
-  { name: 'Litera', label: 'Litera', value: 'Litera', link: 'An si Facultate' },
-  { name: 'Numar', label: 'Numar', value: 'Numar', link: 'An si Facultate' },
-];
-
-const options4 = [
-  { name: 'Exemplu', label: 'Exemplu', value: 'Exemplu'},
-];
+let grupeMentorat= {};
+let user;
 
 const validationSchema: Yup.Schema<PostFormValues> = Yup.object().shape({
-  contacts: Yup.string()
-    .required('Alege contactele!'),
-  content: Yup.string()
-    .min(Postare.contentConstraint.min)
-    .max(Postare.contentConstraint.max)
-    .required('Mesajul nu poate fi gol'),
-  isAnonymous: Yup.boolean(),
+    contacts: Yup.string()
+        .required('Alege contactele!'),
+    content: Yup.string()
+        .min(Postare.contentConstraint.min)
+        .max(Postare.contentConstraint.max)
+        .required('Mesajul nu poate fi gol'),
+    isAnonymous: Yup.boolean(),
 });
 
-class PostForm extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      selectedOption: {},
-      selectedOption2: {},
-      selectedOption3: {},
-    };
-  }
+
+class UnconnectedPostForm extends React.Component<Props> {
+
+    async componentDidMount(): void {
+        const {getProfesori, setUserToken } = this.props;
+
+        const tokenLS = localStorage.getItem('userToken');
+        await  setUserToken(tokenLS);
+
+        user = localStorage.getItem('user');
+
+        if (tokenLS) {
+           await getProfesori(tokenLS.toString());
+            grupeMentorat = await Context.apiService.getGrupeMentorat(tokenLS.toString());
+            grupeMentorat = grupeMentorat.list.slice();
+        }
 
 
-  handleSubmit(values: PostFormValues) {
-    console.log(values);
-  }
+    }
 
-  handleChange1 = (event, selectedOption) => {
-    this.setState({ selectedOption })
-  };
+    mapProfesori = () => this.props.profesori ? this.props.profesori.map((profesor) => (
+        SelectOption.create({
+            name: profesor.professorId,
+            value: profesor.professorId,
+            label: profesor.firstName + ' ' + profesor.lastName,
+            parentName: 'Profesor',
+        })
+    )) : {};
 
-  handleChange2 = (event, selectedOption) => {
-    this.setState({ selectedOption2: selectedOption })
-  }
+    mapGrupeMentorat = () => grupeMentorat ? grupeMentorat.map((grup) => (
+        SelectOption.create({
+            name: grup.ownerId,
+            label: grup.title,
+            parentName: 'Grup Mentorat',
+            value: grup.ownerId,
+        })
+    )) : {};
 
-  handleChange3 = (event, selectedOption2) => {
-    this.setState({ selectedOption3: selectedOption2 })
+    handleSubmit = (values: PostFormValues)=> {
+        const{createPost} = this.props;
+        console.log(values.vizibility1);
+        const {
+            vizibility1,
+            vizibility2,
+            vizibility31,
+            vizibility32,
+            vizibility33,
+            title,
+            content,
+            isAnonymous,
+        } = values;
 
-  }
 
-  render() {
-    const filteredOptions = options2.filter((o) => o.link === this.state.selectedOption.value)
-    const filteredOptions2 = options3.filter((o) => o.link === this.state.selectedOption2.value)
+        if(vizibility1.label === 'Toti utilizatorii') {
+            const postRequest: CreatePostRequest = {
+                isAnonymous,
+                recipients: 'All',
+                title,
+                content,
+            };
 
-    return (
-      <PostFormContainer>
-        <Formik
-          initialValues={initialValues}
-          validationSchema={validationSchema}
-          onSubmit={this.handleSubmit}
-        >
-          {(formikProps: FormikProps<PostFormValues>) => {
-            const { handleSubmit } = formikProps;
+            createPost(postRequest);
+        } else {
+            if(vizibility1.label === 'Profesori') {
+                    if(vizibility2.label === 'Toti Profesorii' ) {
+                        const postRequest: CreatePostRequest = {
+                            recipients : 'Professors',
+                            professors : {
+                                recipient: 'All',
+                            },
+                            content,
+                            title,
+                            isAnonymous,
+                        };
 
-            return (
-              <FormGroup onSubmit={handleSubmit}>
-                <TitleContainer>
-                  <h2>Creare postare</h2>
-                </TitleContainer>
-                <h3>Destinatari:</h3>
-                <Autocomplete
-                  style={autoCompleteStyles}
-                  id="search-contacts"
-                  options={options}
-                  getOptionLabel={(option) => option.name}
-                  onChange={this.handleChange1}
-                  value={this.state.selectedOption.value}
-                  filterSelectedOptions
-                  disableClearable
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Optiune 1:"
-                      variant="standard"
-                      placeholder="Către..."
-                    />
-                  )}
-                />
-                <Autocomplete
-                  style={autoCompleteStyles}
-                  id="search-contacts2"
-                  options={filteredOptions}
-                  getOptionLabel={(option) => option.name}
-                  onChange={this.handleChange2}
-                  value={this.state.selectedOption2.value}
-                  filterSelectedOptions
-                  disableClearable
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Optiune 2:"
-                      variant="standard"
-                      placeholder="Către..."
-                    />
-                  )}
-                />
-                {(this.state.selectedOption2.value === 'Profesor') ||
-                (this.state.selectedOption2.value === 'Mentorat') ?
-                  <Autocomplete
-                    style={autoCompleteStyles}
-                    id="search-name"
-                    options={options4}
-                    getOptionLabel={(option) => option.name}
-                    filterSelectedOptions
-                    disableClearable
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        label="Alege:"
-                        variant="standard"
-                        placeholder="Către..."
-                      />
-                    )}
-                  /> : null}
-                <Autocomplete
-                  style={autoCompleteStyles}
-                  id="search-contacts3"
-                  options={filteredOptions2}
-                  getOptionLabel={(option) => option.name}
-                  onChange={this.handleChange3}
-                  value={this.state.selectedOption3.value}
-                  filterSelectedOptions
-                  disableClearable
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Optiune 3:"
-                      variant="standard"
-                      placeholder="Către..."
-                    />
-                  )}
-                />
-                <Field
-                  name="title"
-                  label="Titlu postare:"
-                  placeholder="Scrie..."
-                  component={TextInput}
-                />
-                <Field
-                  name="content"
-                  label="Continut postare:"
-                  placeholder="Scrie..."
-                  component={TextAreaInput}
-                />
-                <Field
-                  name="anonymous"
-                  label="Trimite drept anonim"
-                  component={Checkbox}
-                />
+                        createPost(postRequest);
+                    } else {
+                        if(vizibility2.label === 'Tutore') {
+                            const postRequest: CreatePostRequest = {
+                                recipients: 'Professors',
+                                professors: {
+                                    recipient: 'Tutor',
+                                },
+                                content,
+                                title,
+                                isAnonymous,
+                            };
 
-                <Button
-                  type="submit"
-                  style={buttonStyles}
-                  variant="contained"
+                            createPost(postRequest);
+                        } else if(vizibility2.parentName === 'Profesor') {
+                            const postRequest: CreatePostRequest = {
+                                recipients: 'Professors',
+                                professors: {
+                                    recipient: 'Professor',
+                                    professorId: vizibility2.value,
+                                },
+                                content,
+                                title,
+                                isAnonymous,
+                            };
+
+                            createPost(postRequest);
+                        }
+                    }
+            } else {
+                if(vizibility1.label === 'Grup') {
+                    if(vizibility2.label === 'Grup Facultate') {
+                        const postRequest: CreatePostRequest = {
+                            recipients: 'Groupe',
+                            groupe: {
+                                year: vizibility31.value,
+                                letter: vizibility32.value,
+                                number: vizibility33.value,
+                            },
+                            content,
+                            title,
+                            isAnonymous,
+                        };
+
+                        createPost(postRequest);
+                    } else if(vizibility2.label === 'Grup Mentorat') {
+                        const postRequest: CreatePostRequest = {
+                            recipients: 'Groupe',
+                            groupe: {
+                               groupeId: vizibility31.value,
+                            },
+                            content,
+                            title,
+                            isAnonymous,
+                        };
+
+                        createPost(postRequest);
+                    }
+                }
+            }
+        }
+    }
+
+    render() {
+        return (
+            <PostFormContainer>
+                <Formik
+                    initialValues={initialValues}
+                    validationSchema={validationSchema}
+                    onSubmit={this.handleSubmit}
                 >
-                  Postează
-                        </Button>
-              </FormGroup>
-            );
-          }}
+                    {(formikProps: FormikProps<PostFormValues>) => {
+                        const {
+                            handleSubmit,
+                            values: {vizibility1, vizibility2, vizibility31, vizibility32, vizibility33}
+                        } = formikProps;
 
-        </Formik>
-      </PostFormContainer>
-    );
-  }
+                        return (
+                            <FormGroup onSubmit={handleSubmit}>
+                                <TitleContainer>
+                                    <h2>Creare postare</h2>
+                                </TitleContainer>
+                                <FastField
+                                    label="Vizibilitate"
+                                    name="vizibility1"
+                                    options={options1}
+                                    closeMenuOnSelect
+                                    component={Select}
+                                />
+                                {vizibility1  && vizibility1.label === 'Profesori' &&
+                                (<div>
+                                    <FastField
+                                        label="Selecteaza Profesor"
+                                        name="vizibility2"
+                                        options={options21}
+                                        closeMenuOnSelect
+                                        component={Select}
+                                    />
+                                    {vizibility2 && vizibility2.label === 'Profesor' &&
+                                    (
+                                        <FastField
+                                            label="Alege Profesorii"
+                                            name="vizibility2"
+                                            options={this.mapProfesori()}
+                                            closeMenuOnSelect
+                                            component={Select}
+                                        />
+                                    )
+                                    }
+                                </div>)
+                                }
+
+
+                                {vizibility1  && vizibility1.label === 'Grup' &&
+                                (<div>
+                                        <FastField
+                                            label="Selecteaza grup"
+                                            name="vizibility2"
+                                            options={options22}
+                                            closeMenuOnSelect
+                                            component={Select}
+                                        />
+                                        {vizibility2  && vizibility2.label === 'Grup Mentorat' &&
+                                        (<FastField
+                                            label="Selecteaza grup"
+                                            name="vizibility31"
+                                            options={this.mapGrupeMentorat()}
+                                            closeMenuOnSelect
+                                            component={Select}
+                                        />)
+                                        }
+                                        {vizibility2 && vizibility2.label === 'Grup Facultate' &&
+                                        (<div>
+                                            <FastField
+                                                label="An"
+                                                name="vizibility31"
+                                                options={options321}
+                                                closeMenuOnSelect
+                                                component={Select}
+                                            />
+                                            <FastField
+                                                label="Semian"
+                                                name="vizibility32"
+                                                options={options322}
+                                                closeMenuOnSelect
+                                                component={Select}
+                                            />
+                                            <FastField
+                                                label="Grupa"
+                                                name="vizibility33"
+                                                options={options333}
+                                                closeMenuOnSelect
+                                                component={Select}
+                                            />
+                                        </div>)
+                                        }
+                                    </div>
+                                )
+                                }
+
+
+                                <Field
+                                    name="title"
+                                    label="Titlu postare:"
+                                    placeholder="Scrie..."
+                                    component={TextInput}
+                                />
+                                <Field
+                                    name="content"
+                                    label="Continut postare:"
+                                    placeholder="Scrie..."
+                                    component={TextAreaInput}
+                                />
+                                {user && user.role === 'student'
+                                &&
+                                    <Field
+                                        name="isAnonymous"
+                                        label="Trimite drept anonim"
+                                        component={Checkbox}
+                                    />
+                                }
+                                <Button
+                                    type="submit"
+                                    style={buttonStyles}
+                                    variant="contained"
+                                >
+                                    Postează
+                                </Button>
+                            </FormGroup>
+                        );
+                    }}
+
+                </Formik>
+            </PostFormContainer>
+        );
+    }
 }
 
-export default PostForm;
+const mapStateToProps = ({profesori}: AppState): StateProps => ({
+    profesori,
+});
+
+const mapDispatchToProps: DispatchProps = {
+    getProfesori: getProfesoriThunk,
+    setUserToken: setUserTokenThunk,
+    createPost: createAPostThunk,
+};
+
+export const PostForm = connect(mapStateToProps, mapDispatchToProps)(UnconnectedPostForm);
+
+

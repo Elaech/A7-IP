@@ -5,7 +5,9 @@ import { Post } from '../models/entities/Post';
 import { ProfessorRepository } from '../Repositories/ProfessorRepository';
 import { PrivateMessageRepository } from '../Repositories/PrivateMessageRepository';
 import { PrivateMessage } from '../models/entities/PrivateMessage';
-import { Groupe } from '../models/entities/Groupe';
+import { GroupeMemberRepository } from '../Repositories/GroupeMemberRepository';
+import { UserRepository } from '../Repositories/UserRepository';
+import { response } from 'express';
 
 async function createPost(req: any, res: any) {
 
@@ -135,7 +137,7 @@ async function createPost(req: any, res: any) {
 
         return res.status(HttpStatus.BAD_REQUEST).json({
             succes: false,
-            message:error
+            message: error
         })
     }
 
@@ -163,4 +165,90 @@ async function createPostAll(body: any, userId: number, groupeTitle: string) {
 
 }
 
-export { createPost }
+
+
+async function getPostByPostId(req: any, res: any) {
+    const postId: number = req.params.postId;
+    const userId: number = req.user.payload.id;
+
+    const postRepository = new PostRepository();
+    const post = await postRepository.getById(postId);
+
+    const groupeMemberRepository = new GroupeMemberRepository();
+    const groupeMember = await groupeMemberRepository.getByUserIdAndGroupeId(userId, post[0].groupeId);
+
+    if (groupeMember.length) {
+
+        const userRepository = new UserRepository();
+        const user = await userRepository.getById(userId);
+
+        const lastName: string = user[0].lastName;
+        const firstName: string = user[0].firstName;
+
+        const groupeRepository = new GroupeRepository();
+        const groupe = await groupeRepository.getById(post[0].groupeId);
+
+        const response = {
+            succes: true,
+            title: post[0].title,
+            content: post[0].content,
+            author: "",
+            timestamp: post[0].time,
+            isAnonymous: post[0].isAnonymous,
+            groupeTitle: groupe[0].title
+        }
+
+        post[0].isAnonymous ? response.author = "author" : response.author = `${lastName} ${firstName}`;
+
+        return res.status(HttpStatus.OK).json(response);
+
+    } else {
+        return res.status(HttpStatus.FORBIDDEN).json({
+            succes: false,
+            message: "You do not have the right permissions to view this post."
+        })
+    }
+
+}
+
+async function getPrivateMessageByPrivateMessageId(req: any, res: any) {
+    const pMessagetId: number = req.params.pMessageId;
+    const userId: number = req.user.payload.id;
+
+    const privateMessageRepository = new PrivateMessageRepository();
+    const pMessage = await privateMessageRepository.getById(pMessagetId);
+
+    if(pMessage[0].senderId === userId || pMessage[0].receiverId === userId){
+
+        const userRepository = new UserRepository();
+        let user = await userRepository.getById(pMessage[0].receiverId);
+
+        const index: number = pMessage[0].content.indexOf('\n');
+        const title: string= pMessage[0].content.substring(0,index);
+        const content: string = pMessage[0].content.substring(index+1);
+
+        const response = {
+            success: true,
+            title : title,
+            content: content,
+            author : "",
+            receiver: `${user[0].lastName} ${user[0].firstName}`,
+            timestamp : pMessage[0].time,
+            IsAnonymous: pMessage[0].isAnonymous
+        }
+
+        user = await userRepository.getById(pMessage[0].senderId);
+        pMessage[0].isAnonymous ? response.author = "Anonymous" : response.author = `${user[0].lastName} ${user[0].firstName}`;
+
+        return res.status(HttpStatus.OK).json(response);
+
+    } else {
+        return res.status(HttpStatus.FORBIDDEN).json({
+            succes: false,
+            message: "You do not have the right permissions to view this post."
+        })
+    }
+}
+
+
+export { createPost, getPostByPostId, getPrivateMessageByPrivateMessageId }
