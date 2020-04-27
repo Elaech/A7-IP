@@ -181,7 +181,7 @@ async function getPostByPostId(req: any, res: any) {
 
         const userRepository = new UserRepository();
         const user = await userRepository.getById(userId);
-        
+
         const lastName: string = user[0].lastName;
         const firstName: string = user[0].firstName;
 
@@ -189,7 +189,7 @@ async function getPostByPostId(req: any, res: any) {
         const groupe = await groupeRepository.getById(post[0].groupeId);
 
         const response = {
-            succes: "true",
+            succes: true,
             title: post[0].title,
             content: post[0].content,
             author: "",
@@ -204,7 +204,7 @@ async function getPostByPostId(req: any, res: any) {
 
     } else {
         return res.status(HttpStatus.FORBIDDEN).json({
-            succes: "false",
+            succes: false,
             message: "You do not have the right permissions to view this post."
         })
     }
