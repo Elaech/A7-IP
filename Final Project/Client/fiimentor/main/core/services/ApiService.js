@@ -84,5 +84,5 @@ export interface ApiService {
 
     getPosts(): Promise<Postare[]>;
 
-    getFilters(req: SearchRequest) : Promise<Filters>;
+    searchPost(req: SearchRequest) : Promise<Filters>;
 }

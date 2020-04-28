@@ -77,7 +77,7 @@ export class HttpApiService implements ApiService{
     return this.axiosService.get('/post');
   }
 
-  async getFilters(req: SearchRequest) : Promise<Filters>{
+  async searchPost(req: SearchRequest) : Promise<Filters>{
     return this.axiosService.get('api/post', req);
   }
 }
