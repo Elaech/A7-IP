@@ -12,7 +12,8 @@ export  const searchPostThunk = (searchReq)=> async(
     dispatch: Dispatch
 )=>{
     try{
-            const payload: Postare[];
+            const payload: Postare[]=await Context.ApiService.search(searchReq);
+            dispatch(createSearchSuccessAction(payload);
      }catch(e) {
         dispatch(createSearchErrorAction(e));
 
