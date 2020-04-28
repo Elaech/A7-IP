@@ -17,7 +17,7 @@ function SideBar() {
             anchor="left"
         >
           <List className="List">
-            {['ACASA','MESAJE', 'POSTSARI', 'INTALNIRI', 'PROIECTE', 'PROFESORI'].map((text) => (
+            {['ACASA', 'POSTARI', 'INTALNIRI', 'PROIECTE', 'PROFESORI'].map((text) => (
                 <div className="DrawerContent">
                     <ListItem button key={text}>
                         <ListItemIcon>{<TelegramIcon />}</ListItemIcon>
