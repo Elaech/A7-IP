@@ -52,7 +52,7 @@ export interface CreatePostRequest {
 }
 
 export interface SearchRequest {
-    query: String;
+    query: string;
     page: ' ';
     size: int;
     filters: Filters;
@@ -84,5 +84,5 @@ export interface ApiService {
 
     getPosts(): Promise<Postare[]>;
 
-    searchPost(req: SearchRequest) : Promise<Filters>;
+    searchPost(req: SearchRequest) : Promise<Postare[]>;
 }
