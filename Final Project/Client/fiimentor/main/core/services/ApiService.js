@@ -51,6 +51,18 @@ export interface CreatePostRequest {
     groupe?: GroupePost;
 }
 
+export interface SearchRequest {
+    query: string;
+    page: ' ';
+    size: int;
+    filters: Filters;
+}
+
+export interface Filters {
+    professors?: ProfessorsPost;
+    groupe?: GroupePost;
+}
+
 export interface ApiService {
     registerUser(req: RegisterUserRequest): Promise<User>;
 
@@ -68,8 +80,9 @@ export interface ApiService {
 
     getGrupeMentorat(autorizer: string): Promise<any>;
 
-
     createPost(req: CreatePostRequest): Promise<void>;
 
     getPosts(): Promise<Postare[]>;
+
+    searchPost(req: SearchRequest) : Promise<Postare[]>;
 }
