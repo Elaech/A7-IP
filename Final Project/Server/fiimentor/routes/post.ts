@@ -3,7 +3,7 @@ import {Router} from "express";
 
 
 
-import {createPost,getPostByPostId} from "../controllers"
+import {createPost,getPostByPostId,getPostList} from "../controllers"
 
 const router = Router();
 
@@ -16,6 +16,7 @@ router.get('/', (req: any, res: any) => {
 
 router.post('/', createPost);
 router.get('/:postId',getPostByPostId);
+router.post('/getPosts',getPostList);
 
 
 export = router;
