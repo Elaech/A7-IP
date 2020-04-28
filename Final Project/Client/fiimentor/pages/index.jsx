@@ -6,6 +6,7 @@ const Home = () => (
     <Head>
       <title>FIIMentor</title>
     </Head>
+    <LoginPageLayout/>
     </>
 );
 export default Home
