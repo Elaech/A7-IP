@@ -7,7 +7,8 @@ import {FormContainer, buttonStyles} from './FormAfterRegistrationStyles';
 
 import {SelectOption} from '../Generics/Select/SelectOption';
 import {Select} from '../Generics/Select/Select';
-import {options1,options11,options12,options13} from './SelectOptionsForm';
+import {options1} from './SelectOptionsForm';
+import {options321,options322, options333} from '../PostFormComponents/SelectOptions';
 
 
 
@@ -64,21 +65,21 @@ class AfterRegistrationForm extends React.Component<Props> {
                                             <FastField
                                                 label="An:"
                                                 name="role11"
-                                                options={options11}
+                                                options={options321}
                                                 closeMenuOnSelect
                                                 component={Select}
                                             />
                                             <FastField
                                                 label="Semian:"
                                                 name="role12"
-                                                options={options12}
+                                                options={options322}
                                                 closeMenuOnSelect
                                                 component={Select}
                                             />
                                             <FastField
                                                 label="Grupa:"
                                                 name="role13"
-                                                options={options13}
+                                                options={options333}
                                                 closeMenuOnSelect
                                                 component={Select}
                                             />
