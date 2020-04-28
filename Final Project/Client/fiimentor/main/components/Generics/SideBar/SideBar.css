@@ -1,0 +1,9 @@
+.DrawerContent{
+    padding-top: 20px;
+    width: 200px;
+}
+.List{
+    height: 100%;
+    background: #F3F9FB;
+    position: fixed;
+}
