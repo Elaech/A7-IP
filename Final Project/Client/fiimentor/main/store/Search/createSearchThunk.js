@@ -8,24 +8,12 @@ import {
 
 import {Context} from '../../Context';
 
-export  const createSearchThunk = (SearchContent)=> async(
+export  const searchPostThunk = (searchReq)=> async(
     dispatch: Dispatch
 )=>{
     try{
-        dispatch(createSearchAction());
-
-        const search = await Context.apiService.createPost(postContent);
-        console.log(search);
-
-        dispatch(createSearchSuccessAction());
-
-        await Swal.fire({
-            title: 'Success!',
-            text: 'Ati cautat cu succes!',
-            icon: 'success',
-            confirmButtonText: 'Ok',
-        })
-    } catch(e) {
+            const payload: Postare[];
+     }catch(e) {
         dispatch(createSearchErrorAction(e));
 
        await Swal.fire({
