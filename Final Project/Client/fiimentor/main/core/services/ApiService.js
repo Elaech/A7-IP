@@ -83,4 +83,6 @@ export interface ApiService {
     createPost(req: CreatePostRequest): Promise<void>;
 
     getPosts(): Promise<Postare[]>;
+
+    getFilters(req: SearchRequest) : Promise<Filters>;
 }
