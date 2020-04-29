@@ -76,4 +76,8 @@ export class HttpApiService implements ApiService{
   async getPosts(): Promise<Postare[]> {
     return this.axiosService.get('/post');
   }
+
+  async searchPost(req: SearchRequest) : Promise<Postare[]>{
+    return this.axiosService.get('api/post', req);
+  }
 }

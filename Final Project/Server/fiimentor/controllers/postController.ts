@@ -171,7 +171,6 @@ async function createPostAll(body: any, userId: number, groupeTitle: string) {
 
 
 async function getPostList(req:any, res: any){
-    console.log("mortii mei");
 
     interface postResult{
         title: string;
@@ -190,7 +189,6 @@ async function getPostList(req:any, res: any){
     let queryParam : string;
     if (req.body.params.queryParam) queryParam=`%${req.body.params.queryParam}%`;
     else queryParam="%";
-    console.log(queryParam);
     const isAnonymous : boolean =req.body.params.isAnonymous;
     const postedByMe : boolean =req.body.params.postedByMe;
     const post : boolean = req.body.params.post;
@@ -215,10 +213,7 @@ async function getPostList(req:any, res: any){
     }
 
     if (req.body.params.toFrom === 'Groupe') {
-        console.log("aejqwheuiqg");
         const groupeId = req.body.params.groupe.groupeId;
-        console.log(groupeId);
-        console.log(usersGroups);
         if (usersGroups.some(x => x.groupeId === groupeId)) {
             const groupeMemberRepository = new GroupeMemberRepository();
             const groupeMemberUserId =(await groupeMemberRepository.getByGroupeId(groupeId)).map(temp=>temp.userId);
@@ -344,6 +339,44 @@ async function getPostByPostId(req: any, res: any) {
 
 }
 
+async function getPrivateMessageByPrivateMessageId(req: any, res: any) {
+    const pMessagetId: number = req.params.pMessageId;
+    const userId: number = req.user.payload.id;
+
+    const privateMessageRepository = new PrivateMessageRepository();
+    const pMessage = await privateMessageRepository.getById(pMessagetId);
+
+    if(pMessage[0].senderId === userId || pMessage[0].receiverId === userId){
+
+        const userRepository = new UserRepository();
+        let user = await userRepository.getById(pMessage[0].receiverId);
+
+        const index: number = pMessage[0].content.indexOf('\n');
+        const title: string= pMessage[0].content.substring(0,index);
+        const content: string = pMessage[0].content.substring(index+1);
+
+        const response = {
+            success: true,
+            title : title,
+            content: content,
+            author : "",
+            receiver: `${user[0].lastName} ${user[0].firstName}`,
+            timestamp : pMessage[0].time,
+            IsAnonymous: pMessage[0].isAnonymous
+        }
+
+        user = await userRepository.getById(pMessage[0].senderId);
+        pMessage[0].isAnonymous ? response.author = "Anonymous" : response.author = `${user[0].lastName} ${user[0].firstName}`;
+
+        return res.status(HttpStatus.OK).json(response);
+
+    } else {
+        return res.status(HttpStatus.FORBIDDEN).json({
+            succes: false,
+            message: "You do not have the right permissions to view this post."
+        })
+    }
+}
 
 
-export { createPost, getPostByPostId ,getPostList}
+export { createPost, getPostByPostId ,getPostList, getPrivateMessageByPrivateMessageId }
