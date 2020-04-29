@@ -174,16 +174,49 @@ async function getPostList(req:any, res: any){
 
     interface postResult{
         title: string;
-        postID: number;
+        postId: number;
         author: string;
-        timestamp: Date; // sau Date
+        groupeId: number;
+        timestamp: Date;
     }
 
     interface privateMessageResult{
         title: string;
-        pmessageID: number;
+        pmessageId: number;
         author: string;
         timestamp: Date;
+    }
+
+    async function postOutput(posts: Post[]):Promise<postResult[]>{
+        let finalOutput: postResult[] = [];
+        const userRepository = new UserRepository();
+        for (let i = 0; i < posts.length; i++) {
+            const user = (await userRepository.getById(posts[i].userId))[0];
+            const author = `${user.firstName} ${user.lastName}`
+            finalOutput[i] = {
+                title: posts[i].title,
+                postId: posts[i].id,
+                author: author,
+                groupeId: posts[i].groupeId,
+                timestamp: posts[i].time!
+            }
+        }
+        return finalOutput;
+    }
+    async function pmOutput(pms: PrivateMessage[]):Promise<privateMessageResult[]>{
+        let finalOutput: privateMessageResult[] = [];
+        const userRepository = new UserRepository();
+        for (let i = 0; i < pms.length; i++) {
+            const user = (await userRepository.getById(pms[i].senderId))[0];
+            const author = `${user.firstName} ${user.lastName}`
+            finalOutput[i] = {
+                title: "",
+                pmessageId: pms[i].id,
+                author: author,
+                timestamp: pms[i].time!
+            }
+        }
+        return finalOutput;
     }
 
     let queryParam : string;
@@ -204,12 +237,16 @@ async function getPostList(req:any, res: any){
     const postRepository = new PostRepository();
     const privateMessageRepository = new PrivateMessageRepository();
     if (req.body.params.toFrom === 'All'){
-        const output= post?(postedByMe ? (await postRepository.getPostListByUserId(skip,take,queryParam,isAnonParam,userId))
-            :(await postRepository.getAllPostList(skip,take,queryParam,isAnonParam,userId,usersGroupsId)))
-            :(postedByMe ? (await privateMessageRepository.getPrivateMessageListBySenderId(skip,take,queryParam,isAnonParam,userId))
+        if (post) {
+            const output =(postedByMe ? (await postRepository.getPostListByUserId(skip, take, queryParam, isAnonParam, userId))
+                : (await postRepository.getAllPostList(skip, take, queryParam, isAnonParam, userId, usersGroupsId)));
+            return res.status(HttpStatus.OK).json(await postOutput(output));
+        }
+        else{
+            const output =(postedByMe ? (await privateMessageRepository.getPrivateMessageListBySenderId(skip,take,queryParam,isAnonParam,userId))
                 :(await privateMessageRepository.getPrivateMessageListByUserId(skip,take,queryParam,isAnonParam,userId)));
-        return res.status(HttpStatus.OK).json(output);
-
+            return res.status(HttpStatus.OK).json(await pmOutput(output));
+        }
     }
 
     if (req.body.params.toFrom === 'Groupe') {
@@ -217,11 +254,16 @@ async function getPostList(req:any, res: any){
         if (usersGroups.some(x => x.groupeId === groupeId)) {
             const groupeMemberRepository = new GroupeMemberRepository();
             const groupeMemberUserId =(await groupeMemberRepository.getByGroupeId(groupeId)).map(temp=>temp.userId);
-            const output =post ? (postedByMe ? (await postRepository.getPostListByUserIdAndGroupe(skip,take,queryParam,isAnonParam,[userId],[groupeId]))
-                :(await postRepository.getPostListByGroupe(skip,take,queryParam,isAnonParam,groupeId).catch(console.error)))
-                :(postedByMe ? (await privateMessageRepository.getPrivateMessageListBySenderIdAndUserIdArray(skip,take,queryParam,isAnonParam,userId,groupeMemberUserId))
-                    :(await privateMessageRepository.getPrivateMessageList(skip,take,queryParam,isAnonParam,[userId],groupeMemberUserId).catch(console.error)));
-            return res.status(HttpStatus.OK).json(output);
+            if (post){
+                const output =(postedByMe ? (await postRepository.getPostListByUserIdAndGroupe(skip,take,queryParam,isAnonParam,[userId],[groupeId]))
+                    :(await postRepository.getPostListByGroupe(skip,take,queryParam,isAnonParam,groupeId)))
+                return res.status(HttpStatus.OK).json(await postOutput(output));
+            }
+            else{
+                const output = (postedByMe ? (await privateMessageRepository.getPrivateMessageListBySenderIdAndUserIdArray(skip,take,queryParam,isAnonParam,userId,groupeMemberUserId))
+                    :(await privateMessageRepository.getPrivateMessageList(skip,take,queryParam,isAnonParam,[userId],groupeMemberUserId)));
+                return res.status(HttpStatus.OK).json(await pmOutput(output));
+            }
         } else {
                 return res.status(HttpStatus.UNAUTHORIZED).json({
                     success: false,
@@ -248,26 +290,42 @@ async function getPostList(req:any, res: any){
                (await postRepository.getPostListByUserIdAndGroupe(skip,take,queryParam,isAnonParam,[userId],[professorsGroupeId])):[];
            const posts=postsByProfs.concat(myPostsForProfs);
            posts.sort((a,b)=>a.time!.getTime() > b.time!.getTime() ? 1 : -1);
-           const output = post? posts : (postedByMe ? await privateMessageRepository.getPrivateMessageListBySenderIdAndUserIdArray(skip,take,queryParam,isAnonParam,userId,professorsUserId)
-               : await privateMessageRepository.getPrivateMessageList(skip,take,queryParam,isAnonParam,[userId],professorsUserId));
-           return res.status(HttpStatus.OK).json(output);
+           if (post) {
+               const output =posts;
+               return res.status(HttpStatus.OK).json(await postOutput(output));
+           }
+           else{
+               const output =(postedByMe ? await privateMessageRepository.getPrivateMessageListBySenderIdAndUserIdArray(skip,take,queryParam,isAnonParam,userId,professorsUserId)
+                   : await privateMessageRepository.getPrivateMessageList(skip,take,queryParam,isAnonParam,[userId],professorsUserId));
+               return res.status(HttpStatus.OK).json(await pmOutput(output));
+           }
        }
        if (req.body.params.professors.recipient === 'Professor'){
            const professorId=req.body.params.professors.professorId;
-           const output = post? (postedByMe ? [] : (await postRepository.getPostListByUserIdAndGroupe(skip,take,queryParam,isAnonParam,[professorId],usersGroupsId)))
-               : (postedByMe ? (await privateMessageRepository.getPrivateMessageListBySenderIdAndUserIdArray(skip,take,queryParam,isAnonParam,userId,[professorId]))
+           if (post) {
+               const output =(postedByMe ? [] : (await postRepository.getPostListByUserIdAndGroupe(skip,take,queryParam,isAnonParam,[professorId],usersGroupsId)));
+               return res.status(HttpStatus.OK).json(await postOutput(output));
+           }
+           else{
+               const output =(postedByMe ? (await privateMessageRepository.getPrivateMessageListBySenderIdAndUserIdArray(skip,take,queryParam,isAnonParam,userId,[professorId]))
                    :(await privateMessageRepository.getPrivateMessageList(skip,take,queryParam,isAnonParam,[userId],[professorId])));
-           return res.status(HttpStatus.OK).json(output);
+               return res.status(HttpStatus.OK).json(await pmOutput(output));
+           }
        }
        if (req.body.params.professors.recipient === 'Tutor'){
            if (req.user.payload.role === 'student'){
                const studentRepository = new StudentRepository();
                let tutorId=(await studentRepository.getByUserId(userId))[0].tutorId;
                if(tutorId == null) tutorId=0;
-               const output = post?(postedByMe ? [] : (await postRepository.getPostListByUserIdAndGroupe(skip,take,queryParam,isAnonParam,[tutorId],usersGroupsId)))
-                   : (postedByMe ? (await privateMessageRepository.getPrivateMessageListBySenderIdAndUserIdArray(skip,take,queryParam,isAnonParam,userId,[tutorId]))
-                       :(await privateMessageRepository.getPrivateMessageList(skip,take,queryParam,isAnonParam,[userId],[tutorId])))
-               return res.status(HttpStatus.OK).json(output);
+               if (post) {
+                   const output =(postedByMe ? [] : (await postRepository.getPostListByUserIdAndGroupe(skip,take,queryParam,isAnonParam,[tutorId],usersGroupsId)));
+                   return res.status(HttpStatus.OK).json(await postOutput(output));
+               }
+               else{
+                   const output =(postedByMe ? (await privateMessageRepository.getPrivateMessageListBySenderIdAndUserIdArray(skip,take,queryParam,isAnonParam,userId,[tutorId]))
+                       :(await privateMessageRepository.getPrivateMessageList(skip,take,queryParam,isAnonParam,[userId],[tutorId])));
+                   return res.status(HttpStatus.OK).json(await pmOutput(output));
+               }
            }
            if (req.user.payload.role === 'professor'){
                const professor = await professorRepository.getByUserId(userId);
@@ -278,11 +336,16 @@ async function getPostList(req:any, res: any){
                    if (tutorGroupeId == null) tutorGroupeId = -1;
                    const groupeMemberRepository = new GroupeMemberRepository();
                    const groupeMemberUserId =(await groupeMemberRepository.getByGroupeId(tutorGroupeId)).map(temp=>temp.userId);
-                   const output = post ? (postedByMe ? (await postRepository.getPostListByUserIdAndGroupe(skip,take,queryParam,isAnonParam,[userId],[tutorGroupeId]))
-                       : (await postRepository.getPostListByGroupe(skip,take,queryParam,isAnonParam,tutorGroupeId)))
-                       : (postedByMe ? (await privateMessageRepository.getPrivateMessageListBySenderIdAndUserIdArray(skip,take,queryParam,isAnonParam,userId,groupeMemberUserId))
+                   if (post) {
+                       const output =(postedByMe ? (await postRepository.getPostListByUserIdAndGroupe(skip,take,queryParam,isAnonParam,[userId],[tutorGroupeId]))
+                           : (await postRepository.getPostListByGroupe(skip,take,queryParam,isAnonParam,tutorGroupeId)));
+                       return res.status(HttpStatus.OK).json(await postOutput(output));
+                   }
+                   else{
+                       const output =(postedByMe ? (await privateMessageRepository.getPrivateMessageListBySenderIdAndUserIdArray(skip,take,queryParam,isAnonParam,userId,groupeMemberUserId))
                            : (await privateMessageRepository.getPrivateMessageList(skip,take,queryParam,isAnonParam,[userId],groupeMemberUserId)));
-                   return res.status(HttpStatus.OK).json(output);
+                       return res.status(HttpStatus.OK).json(await pmOutput(output));
+                   }
                }
            }
        }
