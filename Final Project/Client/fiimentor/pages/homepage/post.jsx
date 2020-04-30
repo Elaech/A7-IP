@@ -2,7 +2,7 @@ import Head from 'next/head'
 import React from 'react'
 import {FormContainer, TitleContainer} from '../../main/components/PostPageComponent/PostPageStyle';
 import {PostForm} from '../../main/components/PostFormComponents/PostForm';
-import {ViewPosts} from '../main/components/ViewPostsComponent/ViewPosts';
+import ViewPosts from '../../main/components/ViewPostsComponent/ViewPosts';
 
 const Post= () => (
 
@@ -12,7 +12,7 @@ const Post= () => (
             </TitleContainer>
             <FormContainer>
                 <PostForm/>
-                
+
                 <ViewPosts/>
             </FormContainer>
         </>

@@ -10,7 +10,7 @@ import { Profesor } from '../core/domain/Profesor';
 import { Tutore } from '../core/domain/Tutore';
 import { Postare } from '../core/domain/Postare';
 import type { UserLogged } from '../../global';
-import type {CreatePostRequest} from '../core/services/ApiService';
+import type {CreatePostRequest, SearchRequest} from '../core/services/ApiService';
 
 export class HttpApiService implements ApiService{
   axiosService: AxiosService;

@@ -53,7 +53,7 @@ export  const loginUserThunk = (userCredentials: LoginUserRequest)=> async(
 
      await Swal.fire({
        title: 'Error!',
-       text: ` ${errorResponse.status} `,
+       text: ` ${errorResponse.message} `,
        type: 'error',
        confirmButtonText: 'Ok',
        icon: 'error',

@@ -1,23 +1,24 @@
 import {Dispatch} from 'redux';
 import Swal from 'sweetalert2';
-import {
-    createSearchAction,
-    createSearchSuccessAction,
-    createSearchErrorAction,
-} from './SearcActions';
+import {createSearchAction, createSearchErrorAction, createSearchSuccessAction,} from './SearchActions';
 
 import {Context} from '../../Context';
+import {Postare} from '../../core/domain/Postare';
 
-export  const searchPostThunk = (searchReq)=> async(
+export const searchPostThunk = (searchReq) => async (
     dispatch: Dispatch
-)=>{
-    try{
-            const payload: Postare[]=await Context.ApiService.search(searchReq);
-            dispatch(createSearchSuccessAction(payload);
-     }catch(e) {
+) => {
+    try {
+
+        dispatch(createSearchAction());
+
+        const payload: Postare[] = await Context.apiService.searchPost(searchReq);
+
+        dispatch(createSearchSuccessAction(payload));
+    } catch (e) {
         dispatch(createSearchErrorAction(e));
 
-       await Swal.fire({
+        await Swal.fire({
             title: 'Error!',
             text: 'A aparut o eroare la cautare!',
             icon: 'error',

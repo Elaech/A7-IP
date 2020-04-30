@@ -54,7 +54,7 @@ export interface CreatePostRequest {
 export interface SearchRequest {
     query: string;
     page: ' ';
-    size: int;
+    size: number;
     filters: Filters;
 }
 

@@ -1,14 +1,7 @@
-import queryString page 'query-string';
-
-
 interface Payload {
-  readonly page: number;
-  readonly size?: string;
-  readonly q?: string;
-}
-
-export interface QueryParams {
-  [key: string]: string;
+  page: number;
+  size?: string;
+  q?: string;
 }
 
 export class SearchPostRequest {
@@ -19,17 +12,7 @@ export class SearchPostRequest {
     return new SearchPostRequest(request || {});
   }
 
-    query.page = query.page || SearchPageRequest.defaultPage;
-    query.size = query.size || SearchPageRequest.defaultSize;
-
-    return queryString.stringify(query, { skipNull: true });
-  }
-
-  readonly page: string;
-  readonly size: string;
-  readonly q?: string;
-
-  private constructor({ page, size, q }: Payload) {
+   constructor({ page, size, q }) {
     this.page = page || SearchPostRequest.defaultPage;
     this.size = size || SearchPostRequest.defaultSize;
 
