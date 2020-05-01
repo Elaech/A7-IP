@@ -9,11 +9,14 @@ import { userReducer } from './User/userReducer';
 import {tokenReducer} from './User/tokenReducer';
 import type {AppState} from './AppState';
 import {profesoriReducer} from './Profesor/profesorReducer';
+import {searchPostReducer} from './Post/searchPostReducer';
 
 const rootReducer = combineReducers({
-  User: userReducer,
-  Token: tokenReducer,
+  user: userReducer,
+  token: tokenReducer,
   profesori: profesoriReducer,
+  searchedPosts: searchPostReducer,
+
 });
 
 export const initializeStore = (initialState?: AppState) =>

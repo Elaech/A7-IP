@@ -220,23 +220,23 @@ async function getPostList(req:any, res: any){
     }
 
     let queryParam : string;
-    if (req.body.params.queryParam) queryParam=`%${req.body.params.queryParam}%`;
+    if (req.body.queryParam) queryParam=`%${req.body.queryParam}%`;
     else queryParam="%";
-    const isAnonymous : boolean =req.body.params.isAnonymous;
-    const postedByMe : boolean =req.body.params.postedByMe;
-    const post : boolean = req.body.params.post;
+    const isAnonymous : boolean =req.body.isAnonymous;
+    const postedByMe : boolean =req.body.postedByMe;
+    const post : boolean = req.body.post;
     const userId=req.user.payload.id;
     const groupeMemberRepository = new GroupeMemberRepository();
     const usersGroups = await groupeMemberRepository.getByUserId(userId);
-    const take = req.body.params.size;
-    const skip = (req.body.params.page-1)*take;
+    const take = req.body.size;
+    const skip = (req.body.page-1)*take;
     const usersGroupsId =  usersGroups.map(temp=>temp.groupeId);
     const isAnonParam = isAnonymous ? [1] : [0,1];
     const postedByMeParam : string = postedByMe ? '${userId}' : '%';
 
     const postRepository = new PostRepository();
     const privateMessageRepository = new PrivateMessageRepository();
-    if (req.body.params.toFrom === 'All'){
+    if (req.body.toFrom === 'All'){
         if (post) {
             const output =(postedByMe ? (await postRepository.getPostListByUserId(skip, take, queryParam, isAnonParam, userId))
                 : (await postRepository.getAllPostList(skip, take, queryParam, isAnonParam, userId, usersGroupsId)));
@@ -249,8 +249,8 @@ async function getPostList(req:any, res: any){
         }
     }
 
-    if (req.body.params.toFrom === 'Groupe') {
-        const groupeId = req.body.params.groupe.groupeId;
+    if (req.body.toFrom === 'Groupe') {
+        const groupeId = req.body.groupe.groupeId;
         if (usersGroups.some(x => x.groupeId === groupeId)) {
             const groupeMemberRepository = new GroupeMemberRepository();
             const groupeMemberUserId =(await groupeMemberRepository.getByGroupeId(groupeId)).map(temp=>temp.userId);
@@ -271,11 +271,11 @@ async function getPostList(req:any, res: any){
                 });
         }
     }
-    if (req.body.params.toFrom === 'Professors'){
+    if (req.body.toFrom === 'Professors'){
        const professorRepository = new ProfessorRepository();
 
 
-       if (req.body.params.professors.recipient === 'All'){
+       if (req.body.professors.recipient === 'All'){
            const professors = await professorRepository.getAll();
            const groupeRepository = new GroupeRepository();
            const professorsUserId = professors.map(temp=>temp.userId);
@@ -300,8 +300,8 @@ async function getPostList(req:any, res: any){
                return res.status(HttpStatus.OK).json(await pmOutput(output));
            }
        }
-       if (req.body.params.professors.recipient === 'Professor'){
-           const professorId=req.body.params.professors.professorId;
+       if (req.body.professors.recipient === 'Professor'){
+           const professorId=req.body.professors.professorId;
            if (post) {
                const output =(postedByMe ? [] : (await postRepository.getPostListByUserIdAndGroupe(skip,take,queryParam,isAnonParam,[professorId],usersGroupsId)));
                return res.status(HttpStatus.OK).json(await postOutput(output));
@@ -312,7 +312,7 @@ async function getPostList(req:any, res: any){
                return res.status(HttpStatus.OK).json(await pmOutput(output));
            }
        }
-       if (req.body.params.professors.recipient === 'Tutor'){
+       if (req.body.professors.recipient === 'Tutor'){
            if (req.user.payload.role === 'student'){
                const studentRepository = new StudentRepository();
                let tutorId=(await studentRepository.getByUserId(userId))[0].tutorId;
@@ -359,7 +359,7 @@ async function getPostList(req:any, res: any){
 
 
 async function getPostByPostId(req: any, res: any) {
-    const postId: number = req.body.params.postId;
+    const postId: number = req.body.postId;
     const userId: number = req.user.payload.id;
 
     const postRepository = new PostRepository();

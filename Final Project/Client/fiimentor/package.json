@@ -26,6 +26,7 @@
     "lodash": "^4.17.15",
     "lodash.at": "^4.6.0",
     "material-ui-superselectfield": "^1.10.0",
+    "moment": "^2.25.0",
     "next": "9.3.3",
     "next-images": "^1.4.0",
     "next-redux-wrapper": "^5.0.0",

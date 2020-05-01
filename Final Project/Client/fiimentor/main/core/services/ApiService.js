@@ -59,8 +59,10 @@ export interface SearchRequest {
 }
 
 export interface Filters {
-    professors?: ProfessorsPost;
-    groupe?: GroupePost;
+    toFrom: ProfessorsPost & GroupePost;
+    postedByMe: boolean;
+    isAnonymous: boolean;
+
 }
 
 export interface ApiService {
@@ -84,5 +86,5 @@ export interface ApiService {
 
     getPosts(): Promise<Postare[]>;
 
-    searchPost(req: SearchRequest) : Promise<Postare[]>;
+    searchPost(req: SearchRequest, authorizer: string) : Promise<Postare[]>;
 }

@@ -77,7 +77,8 @@ export class HttpApiService implements ApiService{
     return this.axiosService.get('/post');
   }
 
-  async searchPost(req: SearchRequest) : Promise<Postare[]>{
-    return this.axiosService.get('api/post', req);
+  async searchPost(req: SearchRequest, authorizer: string) : Promise<Postare[]>{
+    this.setUserAuthorizer(authorizer);
+    return this.axiosServiceToken.post('api/post/getPosts', req);
   }
 }
