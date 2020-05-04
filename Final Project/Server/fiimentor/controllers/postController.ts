@@ -342,11 +342,18 @@ async function getPostList(req: any, res: any) {
 
 
 async function getPostByPostId(req: any, res: any) {
-    const postId: number = req.body.params.postId;
+    const postId: number = req.params.postId;
     const userId: number = req.user.payload.id;
 
     const postRepository = new PostRepository();
     const post = await postRepository.getById(postId);
+
+    if(!post.length) {
+        return res.status(HttpStatus.BAD_REQUEST).json({
+            succes: false,
+            message: "The post does not exist."
+        })
+    }
 
     const groupeMemberRepository = new GroupeMemberRepository();
     const groupeMember = await groupeMemberRepository.getByUserIdAndGroupeId(userId, post[0].groupeId);
@@ -389,8 +396,16 @@ async function getPrivateMessageByPrivateMessageId(req: any, res: any) {
     const pMessagetId: number = req.params.pMessageId;
     const userId: number = req.user.payload.id;
 
+
     const privateMessageRepository = new PrivateMessageRepository();
     const pMessage = await privateMessageRepository.getById(pMessagetId);
+
+    if(!pMessage.length) {
+        return res.status(HttpStatus.BAD_REQUEST).json({
+            succes: false,
+            message: "The post does not exist."
+        })
+    }
 
     if (pMessage[0].senderId === userId || pMessage[0].receiverId === userId) {
 
