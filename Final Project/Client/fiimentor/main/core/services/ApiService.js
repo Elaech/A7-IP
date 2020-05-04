@@ -84,7 +84,9 @@ export interface ApiService {
 
     createPost(req: CreatePostRequest): Promise<void>;
 
-    getPosts(): Promise<Postare[]>;
+    getPost(postId: number, authorizer: string): Promise<Postare>;
+
+    getPrivateMessage(pmessageId: number, authorizer: string): Promise<Postare>;
 
     searchPost(req: SearchRequest, authorizer: string) : Promise<Postare[]>;
 }

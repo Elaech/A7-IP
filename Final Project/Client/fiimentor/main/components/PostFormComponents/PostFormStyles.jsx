@@ -11,6 +11,7 @@ export const PostFormContainer = styled.div`
     border-radius: 35px;
     padding: 25px 25px 25px 25px;
     box-shadow: 1px 2px 5px 2px #D4D4CE;
+  
 `;
 
 export const TitleContainer = styled.div`

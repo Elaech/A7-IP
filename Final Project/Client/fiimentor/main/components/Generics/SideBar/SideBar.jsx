@@ -8,8 +8,8 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import TelegramIcon from '@material-ui/icons/Telegram';
 
-function SideBar() {
-  
+const SideBar =()=> {
+
     return (
       <div>
         <Drawer
@@ -17,9 +17,9 @@ function SideBar() {
             anchor="left"
         >
           <List className="List">
-            {['ACASA', 'POSTARI', 'INTALNIRI', 'PROIECTE', 'PROFESORI'].map((text) => (
+            {['ACASA', 'POSTARI', 'INTALNIRI', 'PROIECTE', 'PROFESORI'].map((text, index) => (
                 <div className="DrawerContent">
-                    <ListItem button key={text}>
+                    <ListItem button key={index}>
                         <ListItemIcon>{<TelegramIcon />}</ListItemIcon>
                         <ListItemText primary={text}/>
                     </ListItem>
@@ -31,4 +31,4 @@ function SideBar() {
     );
   }
 
-  export default SideBar
+  export {SideBar};
