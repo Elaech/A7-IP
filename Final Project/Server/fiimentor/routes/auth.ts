@@ -1,7 +1,7 @@
 import HttpStatus from 'http-status-codes';
 import {Router} from "express";
 
-import {login, register, registerRole} from "../controllers";
+import {login, register, registerRole} from "../controllers/AuthController";
 
 const router = Router();
 
