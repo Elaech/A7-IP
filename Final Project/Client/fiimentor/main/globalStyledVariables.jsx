@@ -1,4 +1,5 @@
 import logo from '../static/images/final-logo.png';
+import logoPosts from '../static/images/logoPost.png';
 import React from 'react';
 import styled from 'styled-components';
 
@@ -13,7 +14,9 @@ export const font = {
   family: 'Graphik, sans-serif',
 };
 
+
 export const Logo = ()=> <img src={logo} className="logo" alt="Logo"/>;
+export const LogoPosts = ()=> <img src={logoPosts} className="logo" alt="Logo" width="90%"/>;
 
 export const SiteContainer = styled.div`
   max-width: 1440px;
