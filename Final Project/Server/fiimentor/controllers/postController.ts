@@ -204,7 +204,7 @@ async function getPostList(req: any, res: any) {
 
 
 async function getPostByPostId(req: any, res: any) {
-    const postId: number = req.postId;
+    const postId: number = req.params.postId;
     const userId: number = req.user.payload.id;
 
     const postRepository = new PostRepository();
@@ -255,7 +255,7 @@ async function getPostByPostId(req: any, res: any) {
 }
 
 async function getPrivateMessageByPrivateMessageId(req: any, res: any) {
-    const pMessagetId: number = req.pMessageId;
+    const pMessagetId: number = req.params.pMessageId;
     const userId: number = req.user.payload.id;
 
 
