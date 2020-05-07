@@ -1,7 +1,7 @@
 
 import {GroupeMember} from "../../models/entities/GroupeMember";
 
-export class getPostListOptions{
+export class GetPostListOptions{
     queryParam: string;
     isAnonymous: boolean;
     postedByMe: boolean;

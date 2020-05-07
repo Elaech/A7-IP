@@ -1,34 +1,34 @@
-import {getPostListOptions} from "./getPostListOptions";
-import {postResult} from "./postResult";
-import {privateMessageResult} from "./privateMessageResult";
+import {GetPostListOptions} from "./GetPostListOptions";
+import {PostResult} from "./PostResult";
+import {PrivateMessageResult} from "./PrivateMessageResult";
 import {StudentRepository} from "../../Repositories/StudentRepository";
 import {PostRepository} from "../../Repositories/PostRepository";
-import {postListOutput} from "./postListOutput";
+import {PostListOutput} from "./PostListOutput";
 import {PrivateMessageRepository} from "../../Repositories/PrivateMessageRepository";
-import {pmListOutput} from "./pmListOutput";
+import {PrivateMessageListOutput} from "./PrivateMessageListOutput";
 import {TutorRepository} from "../../Repositories/TutorRepository";
 import {GroupeMemberRepository} from "../../Repositories/GroupeMemberRepository";
 import {ProfessorRepository} from "../../Repositories/ProfessorRepository";
 
-export class toFromTutorProfessor{
+export class ToFromTutorProfessor{
 
-    static async tutorWhenUserIsStudent(options:getPostListOptions):Promise<(postResult|privateMessageResult)[]>{
+    static async tutorWhenUserIsStudent(options:GetPostListOptions):Promise<(PostResult|PrivateMessageResult)[]>{
         const studentRepository = new StudentRepository();
         let tutorId = (await studentRepository.getByUserId(options.userId))[0].tutorId;
         if (tutorId == null) tutorId = 0;
         if (options.post) {
             const postRepository = new PostRepository();
             const output = (options.postedByMe ? [] : (await postRepository.getPostListByUserIdAndGroupe(options.skip, options.take, options.queryParam, options.isAnonParam, [tutorId], options.usersGroupsId)));
-            return await postListOutput.postOutput(output);
+            return await PostListOutput.postOutput(output);
         } else {
             const privateMessageRepository = new PrivateMessageRepository();
             const output = (options.postedByMe ? (await privateMessageRepository.getPrivateMessageListBySenderIdAndUserIdArray(options.skip, options.take, options.queryParam, options.isAnonParam, options.userId, [tutorId]))
                 : (await privateMessageRepository.getPrivateMessageList(options.skip, options.take, options.queryParam, options.isAnonParam, [options.userId], [tutorId])));
-            return await pmListOutput.pmOutput(output);
+            return await PrivateMessageListOutput.privateMessageOutput(output);
         }
     }
 
-    static async tutorWhenUserIsProfessor(options:getPostListOptions):Promise<(postResult|privateMessageResult)[]>{
+    static async tutorWhenUserIsProfessor(options:GetPostListOptions):Promise<(PostResult|PrivateMessageResult)[]>{
         const professorRepository= new ProfessorRepository();
         const professor = await professorRepository.getByUserId(options.userId);
         const tutorRepository = new TutorRepository();
@@ -44,12 +44,12 @@ export class toFromTutorProfessor{
                 const postRepository = new PostRepository();
                 const output = (options.postedByMe ? (await postRepository.getPostListByUserIdAndGroupe(options.skip, options.take, options.queryParam, options.isAnonParam, [options.userId], [tutorGroupeId]))
                     : (await postRepository.getPostListByGroupe(options.skip, options.take, options.queryParam, options.isAnonParam, tutorGroupeId)));
-                return await postListOutput.postOutput(output);
+                return await PostListOutput.postOutput(output);
             } else {
                 const privateMessageRepository = new PrivateMessageRepository();
                 const output = (options.postedByMe ? (await privateMessageRepository.getPrivateMessageListBySenderIdAndUserIdArray(options.skip, options.take, options.queryParam, options.isAnonParam, options.userId, groupeMemberUserId))
                     : (await privateMessageRepository.getPrivateMessageList(options.skip, options.take, options.queryParam, options.isAnonParam, [options.userId], groupeMemberUserId)));
-                return await pmListOutput.pmOutput(output);
+                return await PrivateMessageListOutput.privateMessageOutput(output);
             }
         }
         return [];

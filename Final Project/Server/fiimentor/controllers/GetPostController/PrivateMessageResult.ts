@@ -1,5 +1,5 @@
 
-export class privateMessageResult {
+export class PrivateMessageResult {
     title: string;
     pmessageId: number;
     author: string;

@@ -1,15 +1,15 @@
-import {postResult} from "./postResult";
-import {privateMessageResult} from "./privateMessageResult";
-import {getPostListOptions} from "./getPostListOptions";
+import {PostResult} from "./PostResult";
+import {PrivateMessageResult} from "./PrivateMessageResult";
+import {GetPostListOptions} from "./GetPostListOptions";
 import {PostRepository} from "../../Repositories/PostRepository";
-import {postListOutput} from "./postListOutput";
+import {PostListOutput} from "./PostListOutput";
 import {PrivateMessageRepository} from "../../Repositories/PrivateMessageRepository";
-import {pmListOutput} from "./pmListOutput";
+import {PrivateMessageListOutput} from "./PrivateMessageListOutput";
 import {GroupeRepository} from "../../Repositories/GroupeRepository";
 import {ProfessorRepository} from "../../Repositories/ProfessorRepository";
 
-export class toFromAllProfessors{
-    static async allProfessors(options:getPostListOptions,userRole:string):Promise<(postResult|privateMessageResult)[]>{
+export class ToFromAllProfessors{
+    static async allProfessors(options:GetPostListOptions, userRole:string):Promise<(PostResult|PrivateMessageResult)[]>{
         const professorRepository = new ProfessorRepository();
         const professors = await professorRepository.getAll();
         const groupeRepository = new GroupeRepository();
@@ -27,12 +27,12 @@ export class toFromAllProfessors{
             const posts = postsByProfs.concat(myPostsForProfs);
             posts.sort((a, b) => a.time!.getTime() > b.time!.getTime() ? 1 : -1);
             const output = posts;
-            return await postListOutput.postOutput(output);
+            return await PostListOutput.postOutput(output);
         } else {
             const privateMessageRepository = new PrivateMessageRepository();
             const output = (options.postedByMe ? await privateMessageRepository.getPrivateMessageListBySenderIdAndUserIdArray(options.skip, options.take, options.queryParam, options.isAnonParam, options.userId, professorsUserId)
                 : await privateMessageRepository.getPrivateMessageList(options.skip, options.take, options.queryParam, options.isAnonParam, [options.userId], professorsUserId));
-            return await pmListOutput.pmOutput(output);
+            return await PrivateMessageListOutput.privateMessageOutput(output);
         }
     }
 }

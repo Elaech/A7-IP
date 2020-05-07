@@ -1,5 +1,5 @@
 
-export class postResult {
+export class PostResult {
     title: string;
     postId: number;
     author: string;

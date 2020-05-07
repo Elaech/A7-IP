@@ -14,12 +14,12 @@ import {ProfessorsPostTutor} from './ModelsPostController/ProfessorsPostTutor';
 import {GroupePostSpecific} from './ModelsPostController/GroupePostSpecific';
 import {PostGroupe} from './ModelsPostController/PostGroupe';
 import {GroupePostFaculty} from './ModelsPostController/GroupePostFaculty';
-import {getPostListOptions} from "./GetPostController/getPostListOptions";
-import {toFromAll} from "./GetPostController/toFromAll";
-import {toFromGroupe} from "./GetPostController/toFromGroupe";
-import {toFromAllProfessors} from "./GetPostController/toFromAllProfessors";
-import {toFromSpecificProfessor} from "./GetPostController/toFromSpecificProfessor";
-import {toFromTutorProfessor} from "./GetPostController/toFromTutorProfessor";
+import {GetPostListOptions} from "./GetPostController/GetPostListOptions";
+import {ToFromAll} from "./GetPostController/ToFromAll";
+import {ToFromGroupe} from "./GetPostController/ToFromGroupe";
+import {ToFromAllProfessors} from "./GetPostController/ToFromAllProfessors";
+import {ToFromSpecificProfessor} from "./GetPostController/ToFromSpecificProfessor";
+import {ToFromTutorProfessor} from "./GetPostController/ToFromTutorProfessor";
 
 
 async function createPost(req: any, res: any) {
@@ -162,36 +162,36 @@ async function getPostList(req: any, res: any) {
     const groupeMemberRepository = new GroupeMemberRepository();
     const usersGroups = await groupeMemberRepository.getByUserId(req.user.payload.id);
     const usersGroupsId = usersGroups.map(temp => temp.groupeId);
-    const getPostOptions = new getPostListOptions(queryParam, req.body.isAnonymous, req.body.postedByMe, req.body.post, req.user.payload.id,
+    const getPostOptions = new GetPostListOptions(queryParam, req.body.isAnonymous, req.body.postedByMe, req.body.post, req.user.payload.id,
         usersGroups, req.body.size, (req.body.page - 1) * req.body.size, usersGroupsId, (req.body.isAnonymous ? [1] : [0, 1]));
     const toFromOption = req.body.toFrom;
 
     switch (toFromOption) {
         case 'All':
-            return res.status(HttpStatus.OK).json(await toFromAll.postsToFromAll(getPostOptions));
+            return res.status(HttpStatus.OK).json(await ToFromAll.postsToFromAll(getPostOptions));
         case 'Groupe':
             const groupeId = req.body.groupe.groupeId;
             if (usersGroups.some(x => x.groupeId === groupeId)) {
-                return res.status(HttpStatus.OK).json(await toFromGroupe.postsToFromGroupe(getPostOptions, groupeId));
+                return res.status(HttpStatus.OK).json(await ToFromGroupe.postsToFromGroupe(getPostOptions, groupeId));
             } else {
                 return res.status(HttpStatus.UNAUTHORIZED).json({
                     success: false,
-                    status: 'Nu aveti permisiunea sa vedeti mesajele din aceasta grupa'
+                    status: 'You do not have the right permissions to view posts from this group.'
                 });
             }
         case 'Professors':
 
             switch (req.body.professors.recipient) {
                 case 'All':
-                    return res.status(HttpStatus.OK).json(await toFromAllProfessors.allProfessors(getPostOptions, req.user.payload.role));
+                    return res.status(HttpStatus.OK).json(await ToFromAllProfessors.allProfessors(getPostOptions, req.user.payload.role));
                 case 'Professor':
                     const professorId = req.body.professors.professorId;
-                    return res.status(HttpStatus.OK).json(await toFromSpecificProfessor.specificProfessor(getPostOptions, professorId));
+                    return res.status(HttpStatus.OK).json(await ToFromSpecificProfessor.specificProfessor(getPostOptions, professorId));
                 case 'Tutor':
                     if (req.user.payload.role === 'student') {
-                        return res.status(HttpStatus.OK).json(await toFromTutorProfessor.tutorWhenUserIsStudent(getPostOptions));
+                        return res.status(HttpStatus.OK).json(await ToFromTutorProfessor.tutorWhenUserIsStudent(getPostOptions));
                     } else if (req.user.payload.role === 'professor') {
-                        return res.status(HttpStatus.OK).json(await toFromTutorProfessor.tutorWhenUserIsProfessor(getPostOptions));
+                        return res.status(HttpStatus.OK).json(await ToFromTutorProfessor.tutorWhenUserIsProfessor(getPostOptions));
                     }
                     break;
             }
