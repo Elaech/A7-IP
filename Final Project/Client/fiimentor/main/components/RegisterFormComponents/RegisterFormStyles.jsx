@@ -3,13 +3,26 @@ import {CSSProperties} from 'react';
 import { font } from '../../globalStyledVariables';
 
 export const RegisterFormContainer = styled.div`
-    width: 90%;
+    width: 50%;
     font: 15px Spectral;
     background: #F3F9FB;
-    margin-left: 1rem;
+    margin-left: 20rem;
     padding: 25px 25px 25px 25px;
     font-face: ${font.face};
     font-family: ${font.family};
+    @media screen and (max-width:1100px){
+        width:50%;
+        margin-left: 14rem;
+    }
+    @media screen and (max-width:665px){
+        width:60%;
+        font-size: 13px;
+        margin-left: 7rem;
+    }
+    @media screen and (max-width:460px){
+        margin-left: 1.5rem;
+        width:70%;
+    }
 `;
 
 export const TitleContainer = styled.div`
@@ -18,6 +31,9 @@ export const TitleContainer = styled.div`
     margin-bottom: 5%;
     font-face: ${font.face};
     font-family: ${font.family};
+    @media screen and (max-width:665px){
+        font-size: 22px;
+    }
 `;
 
 export const TextStyle = styled.input`
@@ -34,6 +50,10 @@ export const TextStyle = styled.input`
     box-sizing: content-box;
     animation-name: mui-auto-fill-cancel;
     -webkit-tap-highlight-color: transparent;
+    @media screen and (max-width:500px){
+        font-size: 13px;
+        height: 0px;
+    }
 `;
 
 export const labelStyle: CSSProperties={
