@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import {CSSProperties} from 'react';
 
 export const TableContainer = styled.div`
     font: 15px Spectral;

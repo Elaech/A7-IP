@@ -3,7 +3,6 @@ import { CSSProperties} from 'react';
 import {font} from '../../globalStyledVariables';
 
 export const TitleContainer = styled.div`
-    width:100%;
     text-align:left;
     font-face: ${font.face};
     font-family: ${font.family};

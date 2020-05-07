@@ -22,6 +22,7 @@ export const searchPostThunk = (searchReq: SearchRequest, authorization: string)
             const post: Postare = {
                 id: value.pmessageId || value.postId,
                 type: value.pmessageId? 'privateMessage': 'post',
+                title: value.title,
                 timestamp: value.timestamp,
                 author: value.author,
                 content: value.content,

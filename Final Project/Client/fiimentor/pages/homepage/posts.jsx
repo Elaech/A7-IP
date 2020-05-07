@@ -1,19 +1,13 @@
-import Head from 'next/head'
 import React from 'react'
-import {FormContainer, TitleContainer} from '../../main/components/PostPageComponent/PostPageStyle';
 import {ListOfPosts} from '../../main/components/ListOfPostsComponent/ListOfPosts';
+import CustomPageHeader from '../../main/components/Generics/CustomPageHeader/CustomPageHeader';
 
-const Posts= () => (
+const Posts = () => (
 
-        <>
-            <TitleContainer>
-                <h2><b> Postari</b></h2>
-            </TitleContainer>
-            <FormContainer>
-
-                <ListOfPosts/>
-            </FormContainer>
-        </>
+    <>
+        <CustomPageHeader title="Postari"/>
+        <ListOfPosts/>
+    </>
 );
 
 export default Posts;

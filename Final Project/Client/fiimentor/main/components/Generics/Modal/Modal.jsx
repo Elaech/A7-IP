@@ -1,6 +1,5 @@
 import React, { ReactElement } from 'react';
 import { Modal, ModalBody, ModalHeader } from 'reactstrap';
-import './Modal.css';
 
 interface Props {
     toggle: () => void;

@@ -9,6 +9,11 @@ import Router from 'next/router';
 import {Store} from 'redux';
 import type {AppState} from '../main/store/AppState';
 import {TimeService} from '../main/services/TimeService';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import '../main/global.css';
+import Layout from '../main/components/Layout';
+import {setUserTokenThunk} from '../main/store/User/setUserTokenThunk';
+import {loginUserSuccessAction} from '../main/store/User/userActions';
 
 
 Context.initialize({
@@ -18,7 +23,20 @@ Context.initialize({
     routerService: Router,
 });
 
-class FiiMentorApp extends App<AppProps & { reduxStore: Store<AppState> }> {
+interface State {
+    userToken: string | null;
+}
+
+class FiiMentorApp extends App<AppProps & { reduxStore: Store<AppState> }, State> {
+
+    constructor() {
+        super();
+
+        this.state = {
+            userToken: null,
+        };
+    }
+
     static async getInitialProps({Component, ctx}: AppContext) {
         let pageProps = {};
 
@@ -33,14 +51,42 @@ class FiiMentorApp extends App<AppProps & { reduxStore: Store<AppState> }> {
         return {pageProps};
     }
 
+    componentDidMount() {
+        const userFromSessionStorage = sessionStorage.getItem('userToken');
+
+        if (!userFromSessionStorage && Context.routerService.pathname!=='/') {
+           window.location.replace('/');
+        }
+
+        this.setState({userToken: userFromSessionStorage});
+        this.props.reduxStore.dispatch(setUserTokenThunk(userFromSessionStorage));
+
+    }
+
+    componentDidUpdate() {
+        const userFromSessionStorage = sessionStorage.getItem('userToken');
+
+        if (!userFromSessionStorage && Context.routerService.pathname!=='/') {
+            window.location.replace('/');
+        }
+
+        if(this.state.userToken !== userFromSessionStorage) {
+            this.setState({userToken: userFromSessionStorage});
+            this.props.reduxStore.dispatch(setUserTokenThunk(userFromSessionStorage));
+        }
+    }
+
     render() {
         const {Component, pageProps, reduxStore} = this.props;
+        const {userToken} = this.state;
+
 
         return (
             <Provider store={reduxStore}>
-
+                {(userToken && (<Layout>
                     <Component {...pageProps} />
-
+                </Layout>))|| (<Component {...pageProps} />)
+                }
             </Provider>
         )
     }

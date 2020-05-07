@@ -10,8 +10,11 @@ export class PrivateMessageListOutput {
         const userRepository = new UserRepository();
         for (let i = 0; i < pms.length; i++) {
             const user = (await userRepository.getById(pms[i].senderId))[0];
-            const author = `${user.firstName} ${user.lastName}`
-            finalOutput[i] = new PrivateMessageResult("",pms[i].id,author,pms[i].time!);
+            const author = `${user.firstName} ${user.lastName}`;
+            const index = pms[i].content.indexOf('\n');
+            const title = pms[i].content.substring(0, index);
+
+            finalOutput[i] = new PrivateMessageResult(title,pms[i].id,author,pms[i].time!);
         }
         return finalOutput;
     }

@@ -13,6 +13,7 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
+        "audit": "0.0.6",
         "body-parser": "latest",
         "check-updates": "0.0.1",
         "cors": "^2.8.5",

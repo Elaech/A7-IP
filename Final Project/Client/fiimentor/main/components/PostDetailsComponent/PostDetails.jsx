@@ -19,47 +19,48 @@ interface DispatchProps {
 interface OwnProps {
     postId: number;
     postType: string;
-};
+}
 
 type Props = StateProps & DispatchProps & OwnProps;
 
 class UnconnectedPostDetails extends React.Component<Props> {
-    /*componentDidMount() {
-        const authorizer = localStorage.getItem('userToken');
+    componentDidMount() {
+        const authorizer = sessionStorage.getItem('userToken');
         const {postId, postType} = this.props;
 
 
-            this.props.getPost(postId, postType, authorizer);
+        this.props.getPost(postId, postType, authorizer);
 
-    }*/
+    }
 
-    render(){
-        /*const {post} = this.props;
+    render() {
+        const {post} = this.props;
 
-        if(!post) {
+        if (!post) {
             return <div>Loading...</div>
-        }*/
 
-        return(
+        }
+        return (
             <PostContainer>
                 <PostTitle>
-                    {'Aceasta postare nu are titlul'}
+                    {post.title || 'Aceasta postare nu are titlu'}
                 </PostTitle>
                 <AuthorContainer>
-                   Postat de autor pe data de data
+                    Postat de {post.author} pe data de {Context.dateService.formatTime(post.timestamp)}
                 </AuthorContainer>
                 <LogoContainer>
-                 <LogoPosts/>
+                    <LogoPosts/>
                 </LogoContainer>
                 <ContentContainer>
-                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing 
+                    {post.content}
                 </ContentContainer>
             </PostContainer>
         );
     }
 }
 
-/*const mapStateToProps = ({post}: AppState): StateProps => ({
+
+const mapStateToProps = ({post}: AppState): StateProps => ({
     post,
 });
 
@@ -68,5 +69,4 @@ const mapDispatchToProps: DispatchProps = {
 };
 
 export const PostDetails = connect(mapStateToProps, mapDispatchToProps)(UnconnectedPostDetails);
-*/
-export {UnconnectedPostDetails};
+

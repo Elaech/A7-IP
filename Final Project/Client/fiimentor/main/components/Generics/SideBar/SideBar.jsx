@@ -1,34 +1,90 @@
 import React from 'react';
+import { NavItem, NavLink } from 'reactstrap';
+import styled from 'styled-components';
 
-import './SideBar.css';
-import Drawer from '@material-ui/core/Drawer';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import TelegramIcon from '@material-ui/icons/Telegram';
 
-const SideBar =()=> {
+export interface MenuItem {
+    title: string;
+    slug?: string;
+    path?: string;
+    menuList: MenuItem[];
+}
 
-    return (
-      <div>
-        <Drawer
-            variant="permanent"
-            anchor="left"
-        >
-          <List className="List">
-            {['ACASA', 'POSTARI', 'INTALNIRI', 'PROIECTE', 'PROFESORI'].map((text, index) => (
-                <div className="DrawerContent">
-                    <ListItem button key={index}>
-                        <ListItemIcon>{<TelegramIcon />}</ListItemIcon>
-                        <ListItemText primary={text}/>
-                    </ListItem>
-                </div>
-            ))}
-          </List>
-        </Drawer>
-      </div>
-    );
+const StyledSidebar = styled.div`
+  grid-area: sidebar;
+  box-shadow: 0 4px 0 4px #EFF8FA;
+  
+
+  .sticky {
+    position: relative;
+    top: 56px;
+    height: calc(100vh - 121px - 1rem);
+    padding-top: 0.5rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    @supports ((position: -webkit-sticky) or (position: sticky)) {
+      position: -webkit-sticky;
+      position: sticky;
+    }
+  }
+  .nav-container {
+    padding: 0;
+    padding-top: 8px;
+    list-style: none;
+    background-color: #fff;
   }
 
-  export {SideBar};
+  .nav-item {
+    padding: 0;
+    margini: 0;
+
+    a {
+      color: #000;
+      font-weight: 600;
+    }
+
+    a.active {
+      background-color: #f2f2f2;
+    }
+  }
+`;
+
+export const Sidebar: React.FC = () => {
+    const menu: MenuItem[] = [
+
+                {
+                    path: '/',
+                    title: 'Dashboard',
+                    slug: 'dashboard',
+                    menuList: [],
+                },
+                {
+                    path: '/post/create',
+                    title: 'Creeaza o postare',
+                    slug: 'create',
+                    menuList: [],
+                },
+                {
+                    path: '/homepage/posts',
+                    title: 'Postari',
+                    slug: 'postari',
+                    menuList: [],
+                },
+
+    ];
+
+    return (
+        <StyledSidebar>
+            <ul className="nav-container sticky">
+                {menu.map((item: MenuItem, index: number) => {
+                    return (
+                        <NavItem key={`${item}${index}`}>
+                            <NavLink href={item.path}>{item.title}</NavLink>
+                        </NavItem>
+                    );
+                })}
+            </ul>
+        </StyledSidebar>
+    );
+};

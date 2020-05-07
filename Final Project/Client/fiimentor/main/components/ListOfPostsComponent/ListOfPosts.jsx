@@ -39,7 +39,7 @@ class UnconnectedViewPosts extends React.Component<Props> {
 
         const {searchPosts} = this.props;
 
-        const authorization = localStorage.getItem('userToken');
+        const authorization = sessionStorage.getItem('userToken');
 
         searchPosts(request, authorization);
 
@@ -49,7 +49,7 @@ class UnconnectedViewPosts extends React.Component<Props> {
 
         const request = SearchPostRequest.create({queryParam: values.query});
         const {searchPosts} = this.props;
-        const authorization = localStorage.getItem('userToken');
+        const authorization = sessionStorage.getItem('userToken');
 
         searchPosts(request, authorization);
 
