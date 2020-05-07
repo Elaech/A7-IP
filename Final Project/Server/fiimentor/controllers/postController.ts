@@ -1,23 +1,23 @@
 import HttpStatus from 'http-status-codes'
-import { GroupeRepository } from '../Repositories/GroupeRepository';
-import { PostRepository } from '../Repositories/PostRepository';
-import { Post } from '../models/entities/Post';
-import { ProfessorRepository } from '../Repositories/ProfessorRepository';
-import { PrivateMessageRepository } from '../Repositories/PrivateMessageRepository';
-import { PrivateMessage } from '../models/entities/PrivateMessage';
-import { GroupeMemberRepository } from '../Repositories/GroupeMemberRepository';
-import { UserRepository } from '../Repositories/UserRepository';
-import { TutorRepository } from "../Repositories/TutorRepository";
-import { StudentRepository } from "../Repositories/StudentRepository";
-import { PostAll } from './ModelsPostController/PostAll';
-import { PostCreator } from './ModelsPostController/PostCreator';
-import { ProfessorsPostAll } from './ModelsPostController/ProfessorsPostAll';
-import { PostProfessors } from './ModelsPostController/PostProfessors';
-import { ProfessorsPostProfessor } from './ModelsPostController/ProfessorsPostProfessor';
-import { ProfessorsPostTutor } from './ModelsPostController/ProfessorsPostTutor';
-import { GroupePostSpecific } from './ModelsPostController/GroupePostSpecific';
-import { PostGroupe } from './ModelsPostController/PostGroupe';
-import { GroupePostFaculty } from './ModelsPostController/GroupePostFaculty';
+import {GroupeRepository} from '../Repositories/GroupeRepository';
+import {PostRepository} from '../Repositories/PostRepository';
+import {Post} from '../models/entities/Post';
+import {ProfessorRepository} from '../Repositories/ProfessorRepository';
+import {PrivateMessageRepository} from '../Repositories/PrivateMessageRepository';
+import {PrivateMessage} from '../models/entities/PrivateMessage';
+import {GroupeMemberRepository} from '../Repositories/GroupeMemberRepository';
+import {UserRepository} from '../Repositories/UserRepository';
+import {TutorRepository} from "../Repositories/TutorRepository";
+import {StudentRepository} from "../Repositories/StudentRepository";
+import {PostAll} from './ModelsPostController/PostAll';
+import {PostCreator} from './ModelsPostController/PostCreator';
+import {ProfessorsPostAll} from './ModelsPostController/ProfessorsPostAll';
+import {PostProfessors} from './ModelsPostController/PostProfessors';
+import {ProfessorsPostProfessor} from './ModelsPostController/ProfessorsPostProfessor';
+import {ProfessorsPostTutor} from './ModelsPostController/ProfessorsPostTutor';
+import {GroupePostSpecific} from './ModelsPostController/GroupePostSpecific';
+import {PostGroupe} from './ModelsPostController/PostGroupe';
+import {GroupePostFaculty} from './ModelsPostController/GroupePostFaculty';
 
 
 async function createPost(req: any, res: any) {
@@ -34,8 +34,8 @@ async function createPost(req: any, res: any) {
 
     const option = (body.recipients === 'All') ?
         'All' : (body.recipients === 'Professors') ?
-            'Professors' : 'Groupe';
-
+            'Professors' : (body.recipients === 'Groupe') ?
+                'Groupe' : 'BadRequest';
 
     try {
 
@@ -54,7 +54,8 @@ async function createPost(req: any, res: any) {
 
                 const professorOption = (body.professors.recipient === 'All')
                     ? 'All' : (body.professors.recipient === 'Professor')
-                        ? 'Professor' : 'Tutor';
+                        ? 'Professor' : (body.professors.recipient === 'Tutor')
+                            ? 'Tutor' : 'BadRequest';
 
                 switch (professorOption) {
                     case 'All': {
@@ -89,6 +90,13 @@ async function createPost(req: any, res: any) {
                         })
 
                     }
+
+                    default: {
+                        return res.status(HttpStatus.BAD_REQUEST).json({
+                            succes: false,
+                            message: 'Professor recipient is wrong.'
+                        })
+                    }
                 }
             }
             case 'Groupe': {
@@ -116,6 +124,12 @@ async function createPost(req: any, res: any) {
                     })
 
                 }
+            }
+            default : {
+                return res.status(HttpStatus.BAD_REQUEST).json({
+                    succes: false,
+                    message: 'Recipient is wrong.'
+                })
             }
         }
     } catch (error) {
@@ -152,7 +166,6 @@ async function createPostAll(body: any, userId: number, groupeTitle: string) {
 }
 
 
-
 async function getPostList(req: any, res: any) {
 
     interface postResult {
@@ -186,6 +199,7 @@ async function getPostList(req: any, res: any) {
         }
         return finalOutput;
     }
+
     async function pmOutput(pms: PrivateMessage[]): Promise<privateMessageResult[]> {
         let finalOutput: privateMessageResult[] = [];
         const userRepository = new UserRepository();
@@ -224,8 +238,7 @@ async function getPostList(req: any, res: any) {
             const output = (postedByMe ? (await postRepository.getPostListByUserId(skip, take, queryParam, isAnonParam, userId))
                 : (await postRepository.getAllPostList(skip, take, queryParam, isAnonParam, userId, usersGroupsId)));
             return res.status(HttpStatus.OK).json(await postOutput(output));
-        }
-        else {
+        } else {
             const output = (postedByMe ? (await privateMessageRepository.getPrivateMessageListBySenderId(skip, take, queryParam, isAnonParam, userId))
                 : (await privateMessageRepository.getPrivateMessageListByUserId(skip, take, queryParam, isAnonParam, userId)));
             return res.status(HttpStatus.OK).json(await pmOutput(output));
@@ -241,8 +254,7 @@ async function getPostList(req: any, res: any) {
                 const output = (postedByMe ? (await postRepository.getPostListByUserIdAndGroupe(skip, take, queryParam, isAnonParam, [userId], [groupeId]))
                     : (await postRepository.getPostListByGroupe(skip, take, queryParam, isAnonParam, groupeId)))
                 return res.status(HttpStatus.OK).json(await postOutput(output));
-            }
-            else {
+            } else {
                 const output = (postedByMe ? (await privateMessageRepository.getPrivateMessageListBySenderIdAndUserIdArray(skip, take, queryParam, isAnonParam, userId, groupeMemberUserId))
                     : (await privateMessageRepository.getPrivateMessageList(skip, take, queryParam, isAnonParam, [userId], groupeMemberUserId)));
                 return res.status(HttpStatus.OK).json(await pmOutput(output));
@@ -250,7 +262,7 @@ async function getPostList(req: any, res: any) {
         } else {
             return res.status(HttpStatus.UNAUTHORIZED).json({
                 success: false,
-                status: 'Nu aveti permisiunea sa vedeti mesajele din aceasta grupa'
+                status: 'You do not have the right permissions to view this post.'
             });
         }
     }
@@ -276,8 +288,7 @@ async function getPostList(req: any, res: any) {
             if (post) {
                 const output = posts;
                 return res.status(HttpStatus.OK).json(await postOutput(output));
-            }
-            else {
+            } else {
                 const output = (postedByMe ? await privateMessageRepository.getPrivateMessageListBySenderIdAndUserIdArray(skip, take, queryParam, isAnonParam, userId, professorsUserId)
                     : await privateMessageRepository.getPrivateMessageList(skip, take, queryParam, isAnonParam, [userId], professorsUserId));
                 return res.status(HttpStatus.OK).json(await pmOutput(output));
@@ -288,8 +299,7 @@ async function getPostList(req: any, res: any) {
             if (post) {
                 const output = (postedByMe ? [] : (await postRepository.getPostListByUserIdAndGroupe(skip, take, queryParam, isAnonParam, [professorId], usersGroupsId)));
                 return res.status(HttpStatus.OK).json(await postOutput(output));
-            }
-            else {
+            } else {
                 const output = (postedByMe ? (await privateMessageRepository.getPrivateMessageListBySenderIdAndUserIdArray(skip, take, queryParam, isAnonParam, userId, [professorId]))
                     : (await privateMessageRepository.getPrivateMessageList(skip, take, queryParam, isAnonParam, [userId], [professorId])));
                 return res.status(HttpStatus.OK).json(await pmOutput(output));
@@ -303,8 +313,7 @@ async function getPostList(req: any, res: any) {
                 if (post) {
                     const output = (postedByMe ? [] : (await postRepository.getPostListByUserIdAndGroupe(skip, take, queryParam, isAnonParam, [tutorId], usersGroupsId)));
                     return res.status(HttpStatus.OK).json(await postOutput(output));
-                }
-                else {
+                } else {
                     const output = (postedByMe ? (await privateMessageRepository.getPrivateMessageListBySenderIdAndUserIdArray(skip, take, queryParam, isAnonParam, userId, [tutorId]))
                         : (await privateMessageRepository.getPrivateMessageList(skip, take, queryParam, isAnonParam, [userId], [tutorId])));
                     return res.status(HttpStatus.OK).json(await pmOutput(output));
@@ -323,8 +332,7 @@ async function getPostList(req: any, res: any) {
                         const output = (postedByMe ? (await postRepository.getPostListByUserIdAndGroupe(skip, take, queryParam, isAnonParam, [userId], [tutorGroupeId]))
                             : (await postRepository.getPostListByGroupe(skip, take, queryParam, isAnonParam, tutorGroupeId)));
                         return res.status(HttpStatus.OK).json(await postOutput(output));
-                    }
-                    else {
+                    } else {
                         const output = (postedByMe ? (await privateMessageRepository.getPrivateMessageListBySenderIdAndUserIdArray(skip, take, queryParam, isAnonParam, userId, groupeMemberUserId))
                             : (await privateMessageRepository.getPrivateMessageList(skip, take, queryParam, isAnonParam, [userId], groupeMemberUserId)));
                         return res.status(HttpStatus.OK).json(await pmOutput(output));
@@ -339,8 +347,6 @@ async function getPostList(req: any, res: any) {
 }
 
 
-
-
 async function getPostByPostId(req: any, res: any) {
     const postId: number = req.params.postId;
     const userId: number = req.user.payload.id;
@@ -348,7 +354,7 @@ async function getPostByPostId(req: any, res: any) {
     const postRepository = new PostRepository();
     const post = await postRepository.getById(postId);
 
-    if(!post.length) {
+    if (!post.length) {
         return res.status(HttpStatus.BAD_REQUEST).json({
             succes: false,
             message: "The post does not exist."
@@ -400,7 +406,7 @@ async function getPrivateMessageByPrivateMessageId(req: any, res: any) {
     const privateMessageRepository = new PrivateMessageRepository();
     const pMessage = await privateMessageRepository.getById(pMessagetId);
 
-    if(!pMessage.length) {
+    if (!pMessage.length) {
         return res.status(HttpStatus.BAD_REQUEST).json({
             succes: false,
             message: "The post does not exist."
@@ -440,4 +446,4 @@ async function getPrivateMessageByPrivateMessageId(req: any, res: any) {
 }
 
 
-export { createPost, getPostByPostId, getPostList, getPrivateMessageByPrivateMessageId, createPostAll }
+export {createPost, getPostByPostId, getPostList, getPrivateMessageByPrivateMessageId, createPostAll}
