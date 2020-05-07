@@ -46,7 +46,7 @@ export  const loginUserThunk = (userCredentials: LoginUserRequest)=> async(
        }
      }
 
-     await Context.routerService.push('/homepage/post');
+     await Context.routerService.push('/homepage/posts');
 
    } catch(e) {
      dispatch(loginUserErrorAction(e));
