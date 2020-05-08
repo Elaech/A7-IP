@@ -45,7 +45,7 @@ export const PaginationBar: React.FC<Props> = (props: Props) => {
                                     {p === pages[pages.length - 1] && totalNumberOfPages - p > 1 && (
                                         <>
                                             <PaginationEllipsis>...</PaginationEllipsis>
-                                            <PaginationItem>
+                                            <PaginationItem key={index}>
                                                 <PaginationNumber
                                                     onClick={onPaginationLinkClick(totalNumberOfPages)}
                                                 >
@@ -58,7 +58,7 @@ export const PaginationBar: React.FC<Props> = (props: Props) => {
                             );
                         })}
                         {!Paginator.isLast(options) && (
-                            <PaginationItem>
+                            <PaginationItem key="final">
                                 <PaginationNext onClick={onNextLinkClick}>Next</PaginationNext>
                             </PaginationItem>
                         )}

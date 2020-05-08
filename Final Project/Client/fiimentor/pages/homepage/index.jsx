@@ -1,12 +1,11 @@
-import Head from 'next/head'
 import React from 'react';
-import AfterRegistrationForm from '../../main/components/FormAfterRegistration/FormAfterRegistration';
+import Dashboard from '../../main/components/DashboardComponent/Dashboard';
+import CustomPageHeader from '../../main/components/Generics/CustomPageHeader/CustomPageHeader';
+
 const HomePage = () => (
     <>
-        <Head>
-            <title>FIIMentor</title>
-        </Head>
-        <AfterRegistrationForm/>
+     <CustomPageHeader title="Dashboard"/>
+        <Dashboard/>
     </>
 );
 export default HomePage

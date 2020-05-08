@@ -54,7 +54,7 @@ export const Sidebar: React.FC = () => {
     const menu: MenuItem[] = [
 
                 {
-                    path: '/',
+                    path: '/homepage',
                     title: 'Dashboard',
                     slug: 'dashboard',
                     menuList: [],
@@ -66,7 +66,7 @@ export const Sidebar: React.FC = () => {
                     menuList: [],
                 },
                 {
-                    path: '/homepage/posts',
+                    path: '/post/posts',
                     title: 'Postari',
                     slug: 'postari',
                     menuList: [],

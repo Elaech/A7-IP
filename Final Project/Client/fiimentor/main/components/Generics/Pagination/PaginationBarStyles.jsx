@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const PaginationNumber = styled.div`
-  font-family: GraphikCond-Medium;
+  font-family: Spectral;
   font-size: 1rem;
   font-weight: 400;
   letter-spacing: 1px;
@@ -11,7 +11,7 @@ export const PaginationNumber = styled.div`
 `;
 
 export const PaginationEllipsis = styled.div`
-  font-family: GraphikCond-Medium;
+  font-family: Spectral;
   font-size: 1rem;
   font-weight: 400;
   letter-spacing: 1px;
@@ -20,7 +20,7 @@ export const PaginationEllipsis = styled.div`
 `;
 
 export const PaginationNext = styled.div`
-  font-family: GraphikCond-Medium;
+  font-family: Spectral;
   font-size: 1rem;
   font-weight: 400;
   letter-spacing: 1px;

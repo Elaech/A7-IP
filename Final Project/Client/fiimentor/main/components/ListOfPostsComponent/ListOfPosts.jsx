@@ -12,6 +12,8 @@ import {FastField, Formik, FormikProps} from 'formik';
 import {TextInput} from '../Generics/TextInput';
 import {Context} from '../../Context';
 import Link from 'next/link';
+import {PaginationBar} from '../Generics/Pagination/PaginationBar';
+import type {PaginatorOptions} from '../Generics/Pagination/Paginator';
 
 interface StateProps {
     searchedPosts: SearchedPostsState;
@@ -25,6 +27,9 @@ interface SearchProps {
     query: string;
 }
 
+interface State {
+    from: number;
+}
 
 type Props = StateProps & DispatchProps;
 
@@ -32,10 +37,21 @@ const initialValues: SearchProps = {
     query: '',
 };
 
-class UnconnectedViewPosts extends React.Component<Props> {
+const size = 20;
+
+class UnconnectedViewPosts extends React.Component<Props, State> {
+    constructor() {
+        super();
+        this.state = {
+            from: size,
+        };
+    }
 
     componentDidMount() {
-        const request = SearchPostRequest.create();
+
+        const page = Math.round(this.state.from/size);
+
+        const request = SearchPostRequest.create({page});
 
         const {searchPosts} = this.props;
 
@@ -43,6 +59,19 @@ class UnconnectedViewPosts extends React.Component<Props> {
 
         searchPosts(request, authorization);
 
+    }
+    componentDidUpdate(prevProps, prevState: State) {
+        if (prevState.from !== this.state.from && prevProps) {
+            const page = Math.round(this.state.from/size);
+
+            const request = SearchPostRequest.create({page});
+
+            const {searchPosts} = this.props;
+
+            const authorization = sessionStorage.getItem('userToken');
+
+            searchPosts(request, authorization);
+        }
     }
 
     handleSubmit = (values: SearchProps) => {
@@ -55,8 +84,18 @@ class UnconnectedViewPosts extends React.Component<Props> {
 
     };
 
+    newSearchRequest = (options: PaginatorOptions) => {
+        const from = options.from + size;
+        this.setState({from});
+    };
+
     render() {
         const {searchedPosts} = this.props;
+        const options: PaginatorOptions = {
+            from: this.state.from,
+            total: 120,
+            size,
+        };
 
         if (!searchedPosts) {
             return <div>Loading...</div>
@@ -104,6 +143,7 @@ class UnconnectedViewPosts extends React.Component<Props> {
                         ))}
                     </TableBody>
                 </Table>
+                <PaginationBar options={options} onChange={this.newSearchRequest}/>
             </div>
         );
     }
