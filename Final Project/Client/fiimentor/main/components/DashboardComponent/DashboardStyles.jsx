@@ -20,7 +20,6 @@ export const DashboardContainer = styled.div`
     width: 59%;
     height: 570px;
     background:#F3F9FB;
-    border:#D4D4CE 1px solid;
     padding: 20px 20px 20px 20px;
     @media screen and (max-width : 1050px) {
         width:40%;

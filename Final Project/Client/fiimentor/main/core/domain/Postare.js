@@ -11,22 +11,22 @@ static titleConstraint = {
 };
 
   id: number;
-  senderId: number;
-  receiverId: number[];
+  type: string;
   title: string;
+  author: string;
   content: string;
-  time: number;
+  timestamp: number;
   isAnonymous: boolean;
 
   constructor(postare: Postare) {
-    const {id, senderId, receiverId, title, content, time, isAnonymous} = postare;
+    const {id, type, title, content, timestamp, author, isAnonymous} = postare;
 
     this.id = id;
-    this.senderId = senderId;
-    this.receiverId = receiverId;
+    this.type = type;
     this.title = title;
     this.content = content;
-    this.time = time;
+    this.timestamp = timestamp;
+    this.author = author;
     this.isAnonymous = isAnonymous;
   }
 

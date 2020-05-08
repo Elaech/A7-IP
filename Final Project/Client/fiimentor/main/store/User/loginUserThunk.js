@@ -33,27 +33,27 @@ export  const loginUserThunk = (userCredentials: LoginUserRequest)=> async(
      if(payload.payload.role === 'student') {
        const user=Student.createStudent(payload.payload);
        dispatch(loginUserSuccessAction(user));
-       localStorage.setItem('user', user)
+       sessionStorage.setItem('user', user)
      } else {
        if(payload.payload.groupId) {
          const user = Tutore.createTutore(payload.payload);
          dispatch(loginUserSuccessAction(user));
-         localStorage.setItem('user', user);
+         sessionStorage.setItem('user', user);
        } else {
          const user = Profesor.createProfesor(payload.payload);
          dispatch(loginUserSuccessAction(user));
-         localStorage.setItem('user', user);
+         sessionStorage.setItem('user', user);
        }
      }
 
-     await Context.routerService.push('/homepage/post');
+     await Context.routerService.replace('/homepage');
 
    } catch(e) {
      dispatch(loginUserErrorAction(e));
 
      await Swal.fire({
        title: 'Error!',
-       text: ` ${errorResponse.status} `,
+       text: ` ${errorResponse.message} `,
        type: 'error',
        confirmButtonText: 'Ok',
        icon: 'error',

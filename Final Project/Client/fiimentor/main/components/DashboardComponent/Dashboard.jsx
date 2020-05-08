@@ -3,11 +3,11 @@ import { makeStyles } from '@material-ui/core/styles';
 import { TitleContainer, DashboardContainer, CardsContainer } from './DashboardStyles';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
-import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import Link from 'next/link';
+
 
 const useStyles = makeStyles({
   root: {
@@ -26,11 +26,9 @@ export default function Dashboard() {
   const classes = useStyles();
   return (
     <DashboardContainer>
-      <TitleContainer>
-        Tablou de lucru
-      </TitleContainer>
       <CardsContainer>
         <Card className={classes.root}>
+          <Link href="/post/create">
           <CardActionArea>
 
             <CardContent>
@@ -50,10 +48,11 @@ export default function Dashboard() {
                 Creează o postare
               </Typography>
             </CardContent>
-
           </CardActionArea>
+          </Link>
         </Card>
         <Card className={classes.root}>
+          <Link href="/post/posts">
           <CardActionArea>
 
             <CardContent>
@@ -75,6 +74,7 @@ export default function Dashboard() {
             </CardContent>
 
           </CardActionArea>
+          </Link>
         </Card>
       </CardsContainer>
     </DashboardContainer>

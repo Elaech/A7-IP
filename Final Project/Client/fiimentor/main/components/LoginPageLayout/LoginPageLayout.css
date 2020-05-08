@@ -4,16 +4,14 @@
     position: relative;
     left: 30%;
     top: 2rem;
-    margin-bottom: 1rem;
 }
 
 .LoginFormContainer{
 
     position: fixed;
-    left: 34%;
     width:100%;
 }
 
 .registerButton {
-    margin-left: 1rem!important;
+    margin-left: 3rem!important;
 }

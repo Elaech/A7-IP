@@ -15,7 +15,7 @@ export const LoginFormContainer = styled.div`
     width: 28%;
     background:#F3F9FB;
     margin-left: 30rem;
-    margin-top: 10%;
+    margin-top: 2rem;
     border:#D4D4CE 2px solid;
     padding: 10px 15px 20px 19px;
     box-shadow: 1px 2px 5px 2px #D4D4CE;
