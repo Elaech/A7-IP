@@ -14,14 +14,33 @@ export const LoginFormContainer = styled.div`
     font: 15px Spectral;
     width: 28%;
     background:#F3F9FB;
-    margin-left: 1rem;
+    margin-left: 30rem;
+    margin-top: 2rem;
     border:#D4D4CE 2px solid;
     padding: 10px 15px 20px 19px;
     box-shadow: 1px 2px 5px 2px #D4D4CE;
     font-face: ${font.face};
     font-family: ${font.family};
     color: black;
-
+    @media screen and (max-width:1255px){
+        margin-left:25rem;
+        width:35%;
+    }
+    @media screen and (max-width:965px){
+        margin-left:12rem;
+        width:48%;
+        margin-top:18%;
+    }
+    @media screen and (max-width:690px){
+        margin-left: 5rem;
+        width:64%;
+        margin-top:25%;
+    }
+    @media screen and (max-width:465px){
+        margin-left: 1rem;
+        width:80%;
+        margin-top:30%;
+    }
 `;
 
 export const FormGroupContainer = styled.div`

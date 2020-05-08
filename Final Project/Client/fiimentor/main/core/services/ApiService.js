@@ -51,6 +51,20 @@ export interface CreatePostRequest {
     groupe?: GroupePost;
 }
 
+export interface SearchRequest {
+    query: string;
+    page: ' ';
+    size: number;
+    filters: Filters;
+}
+
+export interface Filters {
+    toFrom: ProfessorsPost & GroupePost;
+    postedByMe: boolean;
+    isAnonymous: boolean;
+
+}
+
 export interface ApiService {
     registerUser(req: RegisterUserRequest): Promise<User>;
 
@@ -68,8 +82,11 @@ export interface ApiService {
 
     getGrupeMentorat(autorizer: string): Promise<any>;
 
-
     createPost(req: CreatePostRequest): Promise<void>;
 
-    getPosts(): Promise<Postare[]>;
+    getPost(postId: number, authorizer: string): Promise<Postare>;
+
+    getPrivateMessage(pmessageId: number, authorizer: string): Promise<Postare>;
+
+    searchPost(req: SearchRequest, authorizer: string) : Promise<Postare[]>;
 }

@@ -3,10 +3,9 @@ import {CSSProperties} from 'react';
 import { font } from '../../globalStyledVariables';
 
 export const RegisterFormContainer = styled.div`
-    width: 90%;
+    width: 100%;
     font: 15px Spectral;
     background: #F3F9FB;
-    margin-left: 1rem;
     padding: 25px 25px 25px 25px;
     font-face: ${font.face};
     font-family: ${font.family};
@@ -18,6 +17,9 @@ export const TitleContainer = styled.div`
     margin-bottom: 5%;
     font-face: ${font.face};
     font-family: ${font.family};
+    @media screen and (max-width:665px){
+        font-size: 22px;
+    }
 `;
 
 export const TextStyle = styled.input`
@@ -34,6 +36,10 @@ export const TextStyle = styled.input`
     box-sizing: content-box;
     animation-name: mui-auto-fill-cancel;
     -webkit-tap-highlight-color: transparent;
+    @media screen and (max-width:500px){
+        font-size: 13px;
+        height: 0px;
+    }
 `;
 
 export const labelStyle: CSSProperties={
