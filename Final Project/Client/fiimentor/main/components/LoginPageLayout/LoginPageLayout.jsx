@@ -6,6 +6,8 @@ import './LoginPageLayout.css';
 import ModalComponent from '../Generics/Modal/Modal';
 import {RegisterForm} from '../RegisterFormComponents/RegisterForm';
 import styled from 'styled-components';
+import {font} from '../../globalStyledVariables';
+
 
 
 interface State {
@@ -18,6 +20,8 @@ border: 0;
 position: fixed;
 left: 33%;
 margin-top:1rem;
+font-face: ${font.face};
+font-family: ${font.family};
 `;
 
 class LoginPageLayout extends Component<{}, State> {

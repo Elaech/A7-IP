@@ -11,7 +11,9 @@ export const TitleContainer = styled.div`
 `;
 
 export const LoginFormContainer = styled.div`
-    font: 15px Spectral;
+    font: 15px;
+     font-face: ${font.face};
+    font-family: ${font.family};
     width: 28%;
     background:#F3F9FB;
     margin-left: 30rem;
@@ -19,8 +21,6 @@ export const LoginFormContainer = styled.div`
     border:#D4D4CE 2px solid;
     padding: 10px 15px 20px 19px;
     box-shadow: 1px 2px 5px 2px #D4D4CE;
-    font-face: ${font.face};
-    font-family: ${font.family};
     color: black;
     @media screen and (max-width:1255px){
         margin-left:25rem;
@@ -64,10 +64,13 @@ export const buttonStyles: CSSProperties = {
     left: '30%',
     marginBottom: '1rem',
     boxShadow: '5px 1px 5px 2px #D4D4CE',
+    font:'15px Spectral sans-serif',
 };
 
 export const TextInput = styled.input `
-    font: inherit;
+    font-size:15px;
+     font-face: ${font.face};
+    font-family: ${font.family};
     color: currentColor;
     width: 90%;
     border: 1px solid grey;
@@ -84,4 +87,5 @@ export const TextInput = styled.input `
 
 export const labelStyle: CSSProperties = {
     color: 'black',
+    font:"Spectral sans-serif",
 };

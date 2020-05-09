@@ -11,11 +11,15 @@ margin-left:5px;
 export const PostTitle = styled.div`
 font-weight: bold;
 font-size:35px;
+font-face: ${font.face};
+font-family: ${font.family};
 padding:5px 5px 15px 5px;
 `;
 
 export const AuthorContainer = styled.div`
 font-size:15px;
+font-face: ${font.face};
+font-family: ${font.family};
 padding:12px 5px 12px 5px;
 color:grey;
 border-top: #ebebe0 1px solid;

@@ -1,8 +1,13 @@
 import styled from 'styled-components';
 import { FormatAlignCenter } from '@material-ui/icons';
+import { font } from '../../globalStyledVariables';
+
+
 
 export const ForgotPasswordFormContainer = styled.div`
-    font: 15px Spectral;
+    font-size: 15px;
+    font-face: ${font.face};
+    font-family: ${font.family};
     width:  35%;
     background:#F3F9FB;
     margin-left: 28%;
@@ -35,6 +40,7 @@ export const buttonStyles: CSSProperties = {
     //marginTop: '0%',
     marginLeft: '35%',
     boxShadow: '1px 2px 5px 2px #D4D4CE',
+    font:'15px Spectral sans-serif',
 };
 
 

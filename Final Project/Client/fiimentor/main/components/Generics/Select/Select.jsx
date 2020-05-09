@@ -168,7 +168,7 @@ export const Select: FC<Props> = (props: Props) => {
                 id={name}
                 name={name}
                 styles={customStyles}
-                placeholder={placeholder || 'Please select'}
+                placeholder={placeholder || 'Selectati'}
                 options={makeOptions()}
                 onChange={handleChange}
                 onBlur={onBlur}

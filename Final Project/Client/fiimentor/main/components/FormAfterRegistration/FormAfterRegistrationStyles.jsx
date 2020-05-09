@@ -1,9 +1,12 @@
 import styled from 'styled-components';
 import {CSSProperties} from 'react';
+import {font} from '../../globalStyledVariables';
 
 
 export const FormContainer = styled.div`
-    font: 15px Spectral;
+    font: 15px;
+    font-face: ${font.face};
+    font-family: ${font.family};
     width: 25%;
     background:#F3F9FB;
     margin-left: 1rem;

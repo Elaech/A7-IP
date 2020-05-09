@@ -1,6 +1,9 @@
 import React from 'react';
 import { NavItem, NavLink } from 'reactstrap';
 import styled from 'styled-components';
+import { font } from '../../../globalStyledVariables';
+
+
 
 
 export interface MenuItem {
@@ -42,6 +45,8 @@ const StyledSidebar = styled.div`
     a {
       color: #000;
       font-weight: 600;
+      font-face: ${font.face};
+      font-family: ${font.family};
     }
 
     a.active {
