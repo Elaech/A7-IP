@@ -2,7 +2,6 @@ import { UserRepository } from "../../Repositories/UserRepository";
 import { Student } from "../../models/entities/Student";
 import { ReadWriteRepository } from "../../Repositories/ReadWriteRepository";
 import { Professor } from "../../models/entities/Professor";
-import { error } from "util";
 import HttpStatus from "http-status-codes";
 
 async function registerRole(req: any, res: any) {
@@ -24,8 +23,7 @@ async function registerRole(req: any, res: any) {
             professor.userId = id;
             const repository = new ReadWriteRepository(Professor);
             await repository.create(professor);
-        } else
-            throw (error);
+        } 
 
         return res.status(HttpStatus.OK).json({
             success: true,
