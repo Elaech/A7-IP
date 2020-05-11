@@ -174,13 +174,22 @@ async function getPostList(req: any, res: any) {
         usersGroups, req.body.size, (req.body.page - 1) * req.body.size, usersGroupsId, (req.body.isAnonymous ? [1] : [0, 1]));
     const toFromOption = req.body.toFrom;
 
+    let postsList;
     switch (toFromOption) {
         case 'All':
-            return res.status(HttpStatus.OK).json(await ToFromAll.postsToFromAll(getPostOptions));
+            postsList = await ToFromAll.postsToFromAll(getPostOptions);
+            return res.status(HttpStatus.OK).json({
+                totalPosts:postsList.length,
+                posts: postsList
+            });
         case 'Groupe':
             const groupeId = req.body.groupe.groupeId;
             if (usersGroups.some(x => x.groupeId === groupeId)) {
-                return res.status(HttpStatus.OK).json(await ToFromGroupe.postsToFromGroupe(getPostOptions, groupeId));
+                const postsList = await ToFromGroupe.postsToFromGroupe(getPostOptions, groupeId);
+                return res.status(HttpStatus.OK).json({
+                    totalPosts:postsList.length,
+                    posts: postsList
+                });
             } else {
                 return res.status(HttpStatus.UNAUTHORIZED).json({
                     success: false,
@@ -191,15 +200,31 @@ async function getPostList(req: any, res: any) {
 
             switch (req.body.professors.recipient) {
                 case 'All':
-                    return res.status(HttpStatus.OK).json(await ToFromAllProfessors.allProfessors(getPostOptions, req.user.payload.role));
+                    postsList = await ToFromAllProfessors.allProfessors(getPostOptions, req.user.payload.role);
+                    return res.status(HttpStatus.OK).json({
+                        totalPosts:postsList.length,
+                        posts: postsList
+                    });
                 case 'Professor':
                     const professorId = req.body.professors.professorId;
-                    return res.status(HttpStatus.OK).json(await ToFromSpecificProfessor.specificProfessor(getPostOptions, professorId));
+                    postsList = await ToFromSpecificProfessor.specificProfessor(getPostOptions, professorId);
+                    return res.status(HttpStatus.OK).json({
+                        totalPosts:postsList.length,
+                        posts: postsList
+                    });
                 case 'Tutor':
                     if (req.user.payload.role === 'student') {
-                        return res.status(HttpStatus.OK).json(await ToFromTutorProfessor.tutorWhenUserIsStudent(getPostOptions));
+                        postsList = await ToFromTutorProfessor.tutorWhenUserIsStudent(getPostOptions);
+                        return res.status(HttpStatus.OK).json({
+                            totalPosts:postsList.length,
+                            posts: postsList
+                        });
                     } else if (req.user.payload.role === 'professor') {
-                        return res.status(HttpStatus.OK).json(await ToFromTutorProfessor.tutorWhenUserIsProfessor(getPostOptions));
+                        postsList = await ToFromTutorProfessor.tutorWhenUserIsProfessor(getPostOptions);
+                        return res.status(HttpStatus.OK).json({
+                            totalPosts:postsList.length,
+                            posts: postsList
+                        });
                     }
                     break;
             }
