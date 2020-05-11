@@ -65,6 +65,15 @@ export interface Filters {
 
 }
 
+export interface UpdateUserRequest{
+    role: string;
+    year?: number;
+    number?: number;
+    letter?: string;
+    academicRank?: string;
+    groupeTitle?: string;
+}
+
 export interface ApiService {
     registerUser(req: RegisterUserRequest): Promise<User>;
 
@@ -89,4 +98,6 @@ export interface ApiService {
     getPrivateMessage(pmessageId: number, authorizer: string): Promise<Postare>;
 
     searchPost(req: SearchRequest, authorizer: string) : Promise<Postare[]>;
+
+    updateUser(req: UpdateUserRequest): Promise<User>;
 }
