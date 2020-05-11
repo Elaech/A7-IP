@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import {CSSProperties} from 'react';
-import {font} from '../../globalStyledVariables';
+import { font } from '../../globalStyledVariables';
 
 export const TitleContainer = styled.div`
     width: 100%;
