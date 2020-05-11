@@ -64,10 +64,11 @@ border: 2px solid;
 border-radius: 10px;
 `;
 export const DashboardContainer = styled.div`
-    font: 15px Spectral;
-    width: 100%;
-    height: 100%;
-    background:#F3F9FB;
+    font-size:15px ;
+    font-face:${font.face};
+    font-family:${font.family};
+    width: 59%;
+    height: 570px;
     padding: 20px 20px 20px 20px;
     @media screen and (max-width : 1050px) {
         width:40%;
