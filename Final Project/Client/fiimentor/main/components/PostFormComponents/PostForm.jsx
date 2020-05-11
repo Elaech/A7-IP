@@ -61,8 +61,8 @@ const validationSchema: Yup.Schema<PostFormValues> = Yup.object().shape({
     contacts: Yup.string()
         .required('Alege contactele!'),
     content: Yup.string()
-        .min(Postare.contentConstraint.min)
-        .max(Postare.contentConstraint.max)
+        .min(Postare.contentConstraint.min,`Postarea trebuie sa aiba cel putin ${Postare.contentConstraint.min} caractere`)
+        .max(Postare.contentConstraint.max,`Postarea trebuie sa aiba cel mult ${Postare.contentConstraint.max} caractere`)
         .required('Continutul postarii nu poate fi gol'),
     isAnonymous: Yup.boolean(),
 });
@@ -304,12 +304,14 @@ class UnconnectedPostForm extends React.Component<Props> {
                                     name="title"
                                     label="Titlu postare:"
                                     placeholder="Scrie..."
+                                    helperText="Titlul trebuie sa aiba maxim 250 de caractere!"
                                     component={TextInput}
                                 />
                                 <Field
                                     name="content"
                                     label="Continut postare:"
                                     placeholder="Scrie..."
+                                    helperText="Continutul postarii trebuie sa aiba maxim 5000 de caractere!"
                                     component={TextAreaInput}
                                 />
                                 {user && user.role === 'student'
@@ -325,7 +327,7 @@ class UnconnectedPostForm extends React.Component<Props> {
                                     style={buttonStyles}
                                     variant="contained"
                                 >
-                                    Postează
+                                    Posteaza
                                 </Button>
                             </FormGroup>
                         );

@@ -33,7 +33,7 @@ export default function Dashboard() {
 
             <CardContent>
               <TitleContainer>
-                Postări
+                Postari
               </TitleContainer>
             </CardContent>
 
@@ -45,7 +45,7 @@ export default function Dashboard() {
 
             <CardContent>
               <Typography gutterBottom variant="h6">
-                Creează o postare
+                Creeaza o postare
               </Typography>
             </CardContent>
           </CardActionArea>
@@ -57,7 +57,7 @@ export default function Dashboard() {
 
             <CardContent>
               <TitleContainer>
-                Postări
+                Postari
               </TitleContainer>
             </CardContent>
 
@@ -69,7 +69,7 @@ export default function Dashboard() {
 
             <CardContent>
               <Typography gutterBottom variant="h6">
-                Vezi postările
+                Vezi postarile
             </Typography>
             </CardContent>
 

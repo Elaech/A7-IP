@@ -48,27 +48,28 @@ const initialValues: RegisterFormValues = {
 };
 
 export const nameSchema: Yup.Schema<string> = Yup.string()
-    .min(User.nameConstraint.min, 'Numele este prea scurt!')
-    .max(User.nameConstraint.max, 'Numele este prea lung!')
-    .required('Campul nu poate fi gol!');
+    .min(User.nameConstraint.min, `Numele trebuie sa aiba cel putin ${User.usernameConstraint.min} caractere`)
+    .max(User.nameConstraint.max, `Numele trebuie sa aiba cel mult ${User.usernameConstraint.max} caractere`)
+    .required('Acest camp nu poate fi gol!');
 
 const validationSchema: Yup.Schema<RegisterFormValues> = Yup.object().shape({
     email: Yup.string()
         .email('Email-ul trebuie sa fie unul valid!')
-        .matches(User.emailPattern, 'Email-ul nu corespunde domeniului')
-        .required('Campul nu poate fi gol'),
+        .matches(User.emailPattern, 'Email-ul nu corespunde domeniului!')
+        .required('Acest camp nu poate fi gol!'),
     password: Yup.string()
         .min(User.passwordConstraint.min, `Parola trebuie sa aiba minim ${User.passwordConstraint.min}  caractere!`)
         .max(User.passwordConstraint.max, `Parola trebuie sa aiba maxim ${User.passwordConstraint.max}  caractere!`)
-        .required('Campul nu poate fi gol!'),
+        .required('Acest camp nu poate fi gol!'),
     confPassword: Yup.string()
-        .oneOf([Yup.ref('password'), null], 'Parolele trebuie sa corespunda!'),
+        .oneOf([Yup.ref('password'), null], 'Parolele trebuie sa corespunda!')
+        .required('Acest camp nu poate fi gol!'),
     username: Yup.string()
-        .min(User.usernameConstraint.min, 'Username-ul este prea scurt!')
-        .max(User.usernameConstraint.max, 'Username-ul este prea lung!')
-        .required('Campul nu poate fi gol!'),
+        .min(User.usernameConstraint.min, `Numele trebuie sa aiba cel putin ${User.usernameConstraint.min} caractere`)
+        .max(User.usernameConstraint.max, `Numele trebuie sa aiba cel putin ${User.usernameConstraint.max} caractere`)
+        .required('Acest camp nu poate fi gol!'),
     serialNumber: Yup.string()
-        .required('Campul nu poate fi gol!'),
+        .required('Acest camp nu poate fi gol!'),
     firstName: nameSchema,
     lastName: nameSchema,
 });
@@ -116,6 +117,7 @@ class UnconnectedRegisterForm extends React.Component<Props> {
                                     name="lastName"
                                     label="Nume*"
                                     placeholder="Nume"
+                                    helperText="Acest camp trebuie sa aiba cel putin 3 si cel mult 50 de caractere!"
                                     component={TextInput}
                                 />
 
@@ -123,6 +125,7 @@ class UnconnectedRegisterForm extends React.Component<Props> {
                                     name="firstName"
                                     label="Prenume*"
                                     placeholder="Prenume"
+                                    helperText="Acest camp trebuie sa aiba cel putin 3 si cel mult 50 de caractere!"
                                     component={TextInput}
                                 />
 
@@ -137,6 +140,7 @@ class UnconnectedRegisterForm extends React.Component<Props> {
                                     name="username"
                                     label="Nume utilizator*"
                                     placeholder="Nume utilizator"
+                                    helperText="Acest camp trebuie sa aiba cel putin 5 si cel mult 50 de caractere!"
                                     component={TextInput}
                                 />
 
@@ -144,6 +148,7 @@ class UnconnectedRegisterForm extends React.Component<Props> {
                                     name="password"
                                     label="Parola*"
                                     placeholder="Parola"
+                                    helperText="Acest camp trebuie sa aiba cel putin 8 si cel mult 50 de caractere!"
                                     component={PasswordInput}
                                 />
 
@@ -166,7 +171,7 @@ class UnconnectedRegisterForm extends React.Component<Props> {
                                     style={registerButton}
                                     variant="contained"
                                 >
-                                   Register
+                                   Inregistrare
                                 </Button>
 
                             </FormGroup>
