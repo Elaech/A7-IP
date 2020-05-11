@@ -3,6 +3,7 @@ import {
   ApiService,
   LoginUserRequest,
   RegisterUserRequest,
+  UpdateUserRequest,
 } from '../core/services/ApiService';
 import {User} from '../core/domain/User';
 import { Student } from '../core/domain/Student';
@@ -86,5 +87,9 @@ export class HttpApiService implements ApiService{
   async searchPost(req: SearchRequest, authorizer: string) : Promise<Postare[]>{
     this.setUserAuthorizer(authorizer);
     return this.axiosServiceToken.post('api/post/getPosts', req);
+  }
+
+  async updateUser(req:UpdateUserRequest): Promise<User>{
+    return this.axiosService.post('api/user',req);
   }
 }
