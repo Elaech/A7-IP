@@ -3,26 +3,12 @@ import {CSSProperties} from 'react';
 import { font } from '../../globalStyledVariables';
 
 export const RegisterFormContainer = styled.div`
-    width: 50%;
+    width: 100%;
     font: 15px Spectral;
     background: #F3F9FB;
-    margin-left: 20rem;
     padding: 25px 25px 25px 25px;
     font-face: ${font.face};
     font-family: ${font.family};
-    @media screen and (max-width:1100px){
-        width:50%;
-        margin-left: 14rem;
-    }
-    @media screen and (max-width:665px){
-        width:60%;
-        font-size: 13px;
-        margin-left: 7rem;
-    }
-    @media screen and (max-width:460px){
-        margin-left: 1.5rem;
-        width:70%;
-    }
 `;
 
 export const TitleContainer = styled.div`

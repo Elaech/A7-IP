@@ -63,7 +63,7 @@ const validationSchema: Yup.Schema<PostFormValues> = Yup.object().shape({
     content: Yup.string()
         .min(Postare.contentConstraint.min)
         .max(Postare.contentConstraint.max)
-        .required('Mesajul nu poate fi gol'),
+        .required('Continutul postarii nu poate fi gol'),
     isAnonymous: Yup.boolean(),
 });
 
@@ -73,10 +73,10 @@ class UnconnectedPostForm extends React.Component<Props> {
     async componentDidMount(): void {
         const {getProfesori, setUserToken } = this.props;
 
-        const tokenLS = localStorage.getItem('userToken');
+        const tokenLS = sessionStorage.getItem('userToken');
         await  setUserToken(tokenLS);
 
-        user = localStorage.getItem('user');
+        user = sessionStorage.getItem('user');
 
         if (tokenLS) {
            await getProfesori(tokenLS.toString());
@@ -221,9 +221,6 @@ class UnconnectedPostForm extends React.Component<Props> {
 
                         return (
                             <FormGroup onSubmit={handleSubmit}>
-                                <TitleContainer>
-                                    <h2>Creare postare</h2>
-                                </TitleContainer>
                                 <FastField
                                     label="Vizibilitate"
                                     name="vizibility1"

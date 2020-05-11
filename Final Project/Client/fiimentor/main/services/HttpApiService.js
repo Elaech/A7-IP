@@ -11,7 +11,7 @@ import { Tutore } from '../core/domain/Tutore';
 import { Postare } from '../core/domain/Postare';
 import { Comment } from '../core/domain/Comment';
 import type { UserLogged } from '../../global';
-import type {CreatePostRequest} from '../core/services/ApiService';
+import type {CreatePostRequest, SearchRequest} from '../core/services/ApiService';
 
 export class HttpApiService implements ApiService{
   axiosService: AxiosService;
@@ -74,12 +74,19 @@ export class HttpApiService implements ApiService{
     return this.axiosServiceToken.post('api/post',req);
   }
 
-  async getPosts(): Promise<Postare[]> {
-    return this.axiosService.get('/post');
+  async getPost(postId: number, authorizer: string): Promise<Postare[]> {
+    this.setUserAuthorizer(authorizer);
+    return this.axiosServiceToken.get(`api/post/${postId}`);
   }
 
-  async searchPost(req: SearchRequest) : Promise<Postare[]>{
-    return this.axiosService.get('api/post', req);
+  async getPrivateMessage(pmessageId: number, authorizer: string) {
+  this.setUserAuthorizer(authorizer);
+  return this.axiosServiceToken.get(`api/pmessage/${pmessageId}`);
+  }
+
+  async searchPost(req: SearchRequest, authorizer: string) : Promise<Postare[]>{
+    this.setUserAuthorizer(authorizer);
+    return this.axiosServiceToken.post('api/post/getPosts', req);
   }
 
   async createComment(req: CreateCommentRequest): Promise<void> {

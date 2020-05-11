@@ -62,13 +62,15 @@ export interface CreateCommentRequest {
 export interface SearchRequest {
     query: string;
     page: ' ';
-    size: int;
+    size: number;
     filters: Filters;
 }
 
 export interface Filters {
-    professors?: ProfessorsPost;
-    groupe?: GroupePost;
+    toFrom: ProfessorsPost & GroupePost;
+    postedByMe: boolean;
+    isAnonymous: boolean;
+
 }
 
 export interface ApiService {
@@ -90,11 +92,14 @@ export interface ApiService {
 
     createPost(req: CreatePostRequest): Promise<void>;
 
-    getPosts(): Promise<Postare[]>;
+    getPost(postId: number, authorizer: string): Promise<Postare>;
 
-    searchPost(req: SearchRequest) : Promise<Postare[]>;
+    getPrivateMessage(pmessageId: number, authorizer: string): Promise<Postare>;
 
     createComment(req: CreateCommentRequest): Promise<void>;
 
     getComments(): Promise<Comment[]>;
+    
+    searchPost(req: SearchRequest, authorizer: string) : Promise<Postare[]>;
+
 }
