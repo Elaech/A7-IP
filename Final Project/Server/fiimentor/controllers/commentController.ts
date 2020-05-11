@@ -2,6 +2,8 @@ import HttpStatus from "http-status-codes";
 import { PostIDComment } from "./ModelsCommentController/PostIdComment";
 import { CommentCreator } from "./ModelsPostController/CommentCreator";
 import { PrivateMessageIDComment } from "./ModelsCommentController/PrivateMessageIdComment";
+import {PostCommentRepository} from "../Repositories/PostCommentRepository";
+import {CreateCommentNotification} from "./NotificationController/CreateCommentNotification";
 
 async function createComment(req: any, res: any) {
     const body = req.body;
@@ -16,7 +18,10 @@ async function createComment(req: any, res: any) {
 
             const postIdComment: PostIDComment = new PostIDComment(userId, postID, content, isAnonymous);
             const commentCreator: CommentCreator = new CommentCreator(postIdComment);
-            commentCreator.createComment();
+            await commentCreator.createComment();
+
+            const createdComment =(await (new PostCommentRepository()).getLatestCommentByUserId(userId))[0];
+            CreateCommentNotification.createNotification(createdComment,userId);
 
             return res.status(HttpStatus.OK).json({
                 succes: true
@@ -25,7 +30,10 @@ async function createComment(req: any, res: any) {
         } else if (postID === null) {
             const privateMessageIdComment: PrivateMessageIDComment = new PrivateMessageIDComment(userId, pmessageID, content, isAnonymous);
             const commentCreator: CommentCreator = new CommentCreator(privateMessageIdComment);
-            commentCreator.createComment();
+            await commentCreator.createComment();
+
+            const createdComment =(await (new PostCommentRepository()).getLatestCommentByUserId(userId))[0];
+            CreateCommentNotification.createNotification(createdComment,userId);
 
             return res.status(HttpStatus.OK).json({
                 succes: true

@@ -43,4 +43,13 @@ export class PostRepository extends ReadWriteRepository<Post> {
                 skip:skip,
                 take:take});
     }
+
+    async getLatestPostByUserId(userId:number):Promise<Post[]>{
+        return await this.connection.manager
+            .find(Post, {
+                where:{userId:userId},
+                order:{time:"DESC"},
+                take:1
+            });
+    }
 }
