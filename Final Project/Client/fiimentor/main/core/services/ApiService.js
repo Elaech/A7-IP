@@ -1,3 +1,4 @@
+import {Comment} from '../domain/Comment';
 import {Postare} from '../domain/Postare';
 import {Tutore} from '../domain/Tutore';
 import {Profesor} from '../domain/Profesor';
@@ -51,6 +52,13 @@ export interface CreatePostRequest {
     groupe?: GroupePost;
 }
 
+export interface CreateCommentRequest {
+    postId: number;
+    pmessageId: number;
+    content: string;
+    isAnonymous: false;
+}
+
 export interface SearchRequest {
     query: string;
     page: ' ';
@@ -85,4 +93,8 @@ export interface ApiService {
     getPosts(): Promise<Postare[]>;
 
     searchPost(req: SearchRequest) : Promise<Postare[]>;
+
+    createComment(req: CreateCommentRequest): Promise<void>;
+
+    getComments(): Promise<Comment[]>;
 }

@@ -9,6 +9,7 @@ import { Student } from '../core/domain/Student';
 import { Profesor } from '../core/domain/Profesor';
 import { Tutore } from '../core/domain/Tutore';
 import { Postare } from '../core/domain/Postare';
+import { Comment } from '../core/domain/Comment';
 import type { UserLogged } from '../../global';
 import type {CreatePostRequest} from '../core/services/ApiService';
 
@@ -79,5 +80,13 @@ export class HttpApiService implements ApiService{
 
   async searchPost(req: SearchRequest) : Promise<Postare[]>{
     return this.axiosService.get('api/post', req);
+  }
+
+  async createComment(req: CreateCommentRequest): Promise<void> {
+    return this.axiosServiceToken.post('api/comment', req);
+  }
+
+  async getComments(): Promise<Comment[]> {
+    return this.axiosService.get('/comment');
   }
 }
