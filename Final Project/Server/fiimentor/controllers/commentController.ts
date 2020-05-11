@@ -19,7 +19,7 @@ async function createComment(req: any, res: any) {
             commentCreator.createComment();
 
             return res.status(HttpStatus.OK).json({
-                "succes": true
+                succes: true
             });
 
         } else if (postID === null) {
@@ -28,7 +28,7 @@ async function createComment(req: any, res: any) {
             commentCreator.createComment();
 
             return res.status(HttpStatus.OK).json({
-                "succes": true
+                succes: true
             });
         }
     } catch (error) {
@@ -36,8 +36,8 @@ async function createComment(req: any, res: any) {
     }
 
     return res.status(HttpStatus.BAD_REQUEST).json({
-        "succes": false,
-        "status": "The comment could not be created."
+        succes: false,
+        status: "The comment could not be created."
     });
 
 }

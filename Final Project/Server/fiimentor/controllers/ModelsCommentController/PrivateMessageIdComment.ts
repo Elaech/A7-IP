@@ -21,10 +21,10 @@ export class PrivateMessageIDComment implements IComment {
     }
     async createComment(): Promise<void> {
         const privateMessageRepository = new PrivateMessageRepository();
-        const senderIdFromPrivateMessageId: number = (await privateMessageRepository.getById(this.pmessageID))[0].senderId;
+        const receiverIdFromPrivateMessageId: number = (await privateMessageRepository.getById(this.pmessageID))[0].receiverId;
         const newPrivateMessage: PrivateMessage = new PrivateMessage();
         newPrivateMessage.senderId = this.userId;
-        newPrivateMessage.receiverId = senderIdFromPrivateMessageId;
+        newPrivateMessage.receiverId = receiverIdFromPrivateMessageId;
         newPrivateMessage.content = this.content;
         newPrivateMessage.isAnonymous = this.isAnonymous;
 
