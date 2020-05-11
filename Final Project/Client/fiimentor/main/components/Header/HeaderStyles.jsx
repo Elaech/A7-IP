@@ -9,7 +9,6 @@ export const HeaderStyles = styled.header`
   font-weight: bold;
 
   span {
-    margin-right: 16px;
     text-transform: capitalize;
   }
 
