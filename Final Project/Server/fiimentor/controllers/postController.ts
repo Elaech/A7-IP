@@ -221,7 +221,7 @@ async function getPostByPostId(req: any, res: any) {
     if (!post.length) {
         return res.status(HttpStatus.BAD_REQUEST).json({
             succes: false,
-            message: "The post does not exist."
+            status: "The post does not exist."
         })
     }
 
@@ -293,7 +293,7 @@ async function getPostByPostId(req: any, res: any) {
     } else {
         return res.status(HttpStatus.FORBIDDEN).json({
             succes: false,
-            message: "You do not have the right permissions to view this post."
+            status: "You do not have the right permissions to view this post."
         })
     }
 
@@ -310,7 +310,7 @@ async function getPrivateMessageByPrivateMessageId(req: any, res: any) {
     if (!pMessage.length) {
         return res.status(HttpStatus.BAD_REQUEST).json({
             succes: false,
-            message: "The post does not exist."
+            status: "The post does not exist."
         })
     }
 
@@ -371,7 +371,7 @@ async function getPrivateMessageByPrivateMessageId(req: any, res: any) {
     } else {
         return res.status(HttpStatus.FORBIDDEN).json({
             succes: false,
-            message: "You do not have the right permissions to view this post."
+            status: "You do not have the right permissions to view this post."
         })
     }
 }
