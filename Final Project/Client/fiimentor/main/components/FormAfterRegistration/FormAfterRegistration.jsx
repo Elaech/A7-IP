@@ -9,6 +9,7 @@ import {SelectOption} from '../Generics/Select/SelectOption';
 import {Select} from '../Generics/Select/Select';
 import {options1} from './SelectOptionsForm';
 import {options321,options322, options333} from '../PostFormComponents/SelectOptions';
+import {TextInput} from '../Generics/TextInput';
 
 
 
@@ -83,6 +84,31 @@ class AfterRegistrationForm extends React.Component<> {
                                                 closeMenuOnSelect
                                                 component={Select}
                                             />
+                                        </div>)
+                                }
+
+                                {role1  && (role1.label === 'Profesor' || role1.label === 'Tutore') &&
+                                (<div>
+                                            <Field
+                                                 name="functie"
+                                                 label="Functie:"
+                                                 placeholder="Functie"
+                                                 helperText="Acest camp trebuie sa aiba maxim 50 de caractere!"
+                                                 component={TextInput}
+                                            />
+                                           
+                                        </div>)
+                                }
+                                {role1  && ( role1.label === 'Tutore') &&
+                                (<div>
+                                            <Field
+                                                 name="titlu"
+                                                 label="Titlu grupa:"
+                                                 placeholder="Titlu grupa"
+                                                 helperText="Acest camp trebuie sa aiba maxim 50 de caractere!"
+                                                 component={TextInput}
+                                            />
+                                           
                                         </div>)
                                 }
 

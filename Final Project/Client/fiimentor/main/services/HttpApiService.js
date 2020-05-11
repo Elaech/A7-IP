@@ -3,6 +3,7 @@ import {
   ApiService,
   LoginUserRequest,
   RegisterUserRequest,
+  UpdateUserRequest,
 } from '../core/services/ApiService';
 import {User} from '../core/domain/User';
 import { Student } from '../core/domain/Student';
@@ -89,11 +90,16 @@ export class HttpApiService implements ApiService{
     return this.axiosServiceToken.post('api/post/getPosts', req);
   }
 
+
   async createComment(req: CreateCommentRequest): Promise<void> {
     return this.axiosServiceToken.post('api/comment', req);
   }
 
   async getComments(): Promise<Comment[]> {
     return this.axiosService.get('/comment');
+
+  async updateUser(req:UpdateUserRequest): Promise<User>{
+    return this.axiosService.post('api/user',req);
+
   }
 }

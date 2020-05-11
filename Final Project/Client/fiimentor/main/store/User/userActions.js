@@ -12,6 +12,9 @@ export const UserActions = {
   SET_USER_TOKEN: 'SET_USER_TOKEN',
   SET_USER_TOKEN_SUCCESS: 'SET_USER_TOKEN_SUCCESS',
   SET_USER_TOKEN_ERROR: 'SET_USER_TOKEN_ERROR',
+  UPDATE_USER : 'UPDATE_USER',
+  UPDATE_USER_SUCCESS : 'UPDATE_USER_SUCCESS',
+  UPDATE_USER_ERROR : 'UPDATE_USER_ERROR',
 
 };
 
@@ -57,6 +60,20 @@ export interface SetUserTokenErrorAction extends Action {
   payload: Error;
 }
 
+export interface UpdateUserAction extends Action{
+  type: UserActions.UPDATE_USER;
+};
+
+export interface UpdateUserSuccessAction extends Action{
+  type: UserActions.UPDATE_USER_SUCCESS;
+  payload: User;
+};
+
+export interface UpdateUserErrorAction extends Action {
+  type: UserActions.UPDATE_USER_ERROR;
+  payload: Error;
+}
+
 export const loginUserAction = (): LoginUserAction => ({
   type: UserActions.LOGIN_USER,
 });
@@ -96,5 +113,19 @@ export const setUserTokenSuccessAction = (payload: string):SetUserTokenSuccessAc
 
 export const setUserTokenErrorAction = (payload?: Error): SetUserTokenErrorAction => ({
   type: UserActions.SET_USER_TOKEN_ERROR,
+  payload,
+});
+
+export const updateUserAction = (): UpdateUserAction => ({
+  type: UserActions.UPDATE_USER,
+});
+
+export const updateUserSuccessAction = (payload: User): UpdateUserSuccessAction => ({
+  type: UserActions.UPDATE_USER_SUCCESS,
+  payload,
+});
+
+export const updateUserErrorAction = (payload?: Error): UpdateUserErrorAction => ({
+  type: UserActions.UPDATE_USER_ERROR,
   payload,
 });

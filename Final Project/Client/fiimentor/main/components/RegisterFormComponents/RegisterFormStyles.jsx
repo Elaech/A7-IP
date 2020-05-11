@@ -4,7 +4,7 @@ import { font } from '../../globalStyledVariables';
 
 export const RegisterFormContainer = styled.div`
     width: 100%;
-    font: 15px Spectral;
+    font-size: 15px;
     background: #F3F9FB;
     padding: 25px 25px 25px 25px;
     font-face: ${font.face};
@@ -23,7 +23,9 @@ export const TitleContainer = styled.div`
 `;
 
 export const TextStyle = styled.input`
-    font: inherit;
+    font-size:15px;
+     font-face: ${font.face};
+    font-family: ${font.family};
     color: currentColor;
     width: 90%;
     border: 1px solid grey;
@@ -44,6 +46,8 @@ export const TextStyle = styled.input`
 
 export const labelStyle: CSSProperties={
     color:'black',
+    font:"Spectral, sans-serif",
+
 }
 
 export const registerButton: CSSProperties = {
@@ -53,5 +57,6 @@ export const registerButton: CSSProperties = {
     marginLeft:'6rem',
     marginBottom: '1rem',
     boxShadow: '5px 1px 5px 2px #D4D4CE',
+    font:'Spectral, sans-serif',
 }
 

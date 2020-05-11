@@ -42,10 +42,10 @@ const validationSchema: Yup.Schema<LoginFormValues> = Yup.object()
     .shape({
         username: Yup.string()
             .min(User.usernameConstraint.min,
-                `Usernameul trebuie sa aiba cel putin ${User.usernameConstraint.min} caractere`
+                `Numele utilizatorului trebuie sa aiba cel putin ${User.usernameConstraint.min} caractere`
             )
             .max(User.usernameConstraint.max,
-                `Usernameul trebuie sa aiba cel putin ${User.usernameConstraint.max} caractere`
+                `Numele utilizatorului trebuie sa aiba cel mult ${User.usernameConstraint.max} caractere`
             )
             .required('Acest camp nu poate fi gol'),
 
@@ -79,20 +79,22 @@ class UnconnectedLoginForm extends React.Component<Props, State> {
                             <FormGroup onSubmit={handleSubmit}>
 
                                 <TitleContainer>
-                                    <h1> Login </h1>
+                                    <h1> Autentificare </h1>
                                 </TitleContainer>
 
                                 <Field
                                     name="username"
-                                    label="Username*"
-                                    placeholder="Username"
+                                    label="Nume utilizator*"
+                                    placeholder="Nume utilizator"
+                                    helperText="Acest camp trebuie sa aiba cel putin 5 si cel mult 50 de caractere!"
                                     component={TextInput}
                                 />
 
                                 <Field
                                     name="password"
-                                    label="Password*"
-                                    placeholder="Password"
+                                    label="Parola*"
+                                    placeholder="Parola"
+                                    helperText="Acest camp trebuie sa aiba cel putin 8 si cel mult 50 de caractere!"
                                     component={PasswordInput}
                                 />
 
@@ -101,7 +103,7 @@ class UnconnectedLoginForm extends React.Component<Props, State> {
                                     style={buttonStyles}
                                     variant="contained"
                                 >
-                                    Login
+                                    Autentificare
                                 </Button>
                             </FormGroup>
                         );

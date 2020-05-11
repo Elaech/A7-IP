@@ -1,12 +1,15 @@
 import styled from 'styled-components';
 import {CSSProperties} from 'react';
+import { font } from '../../globalStyledVariables';
 
 
 export const TitleContainer = styled.div`
     width: 100%;
     text-align:center;
     padding: 8px 0px 8px 0px;
-    font:26px Spectral;
+    font-size:26px;
+    font-face: ${font.face};
+    font-family: ${font.family};
     background:#87C0CD;
     border-radius: 25px;
     @media screen and (max-width:800px){
@@ -16,7 +19,9 @@ export const TitleContainer = styled.div`
 
 
 export const DashboardContainer = styled.div`
-    font: 15px Spectral;
+    font-size:15px ;
+    font-face:${font.face};
+    font-family:${font.family};
     width: 59%;
     height: 570px;
     background:#F3F9FB;

@@ -1,7 +1,11 @@
 import styled from 'styled-components';
+import { font } from '../../globalStyledVariables';
+
 
 export const TableContainer = styled.div`
-    font: 15px Spectral;
+    font-size: 15px;
+    font-face: ${font.face};
+    font-family: ${font.family};
     width: 50%;
     background:#F3F9FB;
     margin-left: 1rem;
@@ -14,7 +18,8 @@ export const TableContainer = styled.div`
 
 export const ThStyled = styled.th`
   color: #8e8e93;
-  font-family: Graphik;
+  font-face: ${font.face};
+  font-family: ${font.family};
   font-size: 16px;
   font-weight: 400;
   letter-spacing: 1px;
@@ -28,7 +33,8 @@ export const TheadStyled = styled.thead`
   width: 1002px;
   height: 32px;
   color: #8e8e93;
-  font-family: Graphik;
+  font-face: ${font.face};
+  font-family: ${font.family};
   font-size: 16px;
   font-weight: 400;
   letter-spacing: 1px;
@@ -42,7 +48,8 @@ export const TrowStyled = styled.tr`
   width: 1002px;
   height: 52px;
   color: #000000;
-  font-family: Graphik;
+  font-face: ${font.face};
+  font-family: ${font.family};
   font-size: 20px;
   font-weight: 400;
   letter-spacing: 1px;

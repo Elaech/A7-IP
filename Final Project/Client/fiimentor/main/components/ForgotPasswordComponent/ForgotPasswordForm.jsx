@@ -20,8 +20,8 @@ const initialValues: ForgotPasswordFormValues = {
 const validationSchema = Yup.object().shape({
   email: Yup.string()
     .label('Email')
-    .email('Enter a valid email')
-    .required('Please enter a registered email')
+    .email('Email-ul trebuie sa fie unul valid!')
+    .required('Acest camp nu poate fi gol!')
 })
 class ForgotPasswordForm extends React.Component {
 
@@ -42,17 +42,17 @@ class ForgotPasswordForm extends React.Component {
                         <Field
                         name='email'
                         component={EmailInput}
-                        placeholder='Enter email'
+                        placeholder='Email'
                         autoCapitalize='none'
                         />
                         <Button
                           buttonType='outline'
-                          title='Send Email'
+                          title='Trimite Email'
                           buttonColor='#039BE5'
                           style={buttonStyles}
                           variant="contained"
                         >
-                          Send Email
+                          Trimite 
                         </Button>
                       </FormGroup>
                     );
