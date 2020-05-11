@@ -1,12 +1,12 @@
 import Head from 'next/head'
 import React from 'react';
-import Dashboard from '../main/components/DashboardComponent/Dashboard';
+import LoginPageLayout from '../main/components/LoginPageLayout/LoginPageLayout';
 const Home = () => (
   <>
     <Head>
       <title>FIIMentor</title>
     </Head>
-    <Dashboard/>
+    <LoginPageLayout/>
   </>
 );
 export default Home

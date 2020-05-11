@@ -1,6 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { TitleContainer, DashboardContainer, CardsContainer, PostContainer, AuthorContainer, PostTitle, LogoContainer, ContentContainer, PostNr2, PostNr1, ButtonStyles } from './DashboardStyles';
+import { TitleContainer, DashboardContainer, CardsContainer, PostContainer, AuthorContainer, PostTitle, LogoContainer, ContentContainer, PostNr2, PostNr1 } from './DashboardStyles';
 import {Button} from '@material-ui/core';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
@@ -9,7 +9,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import Link from 'next/link';
 import {LogoPosts} from '../../globalStyledVariables';
-
+import {buttonStyles} from '../LoginFormComponents/LoginFormStyles';
 
 const useStyles = makeStyles({
   root: {
@@ -109,11 +109,9 @@ export default function Dashboard() {
 
     </ContentContainer>
     </PostNr2>
-    <ButtonStyles>
-    <Button>
+    <Button style={buttonStyles}>
         Vezi mai multe posturi
     </Button>
-    </ButtonStyles>
   </PostContainer>
     
     </DashboardContainer>

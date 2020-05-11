@@ -12,12 +12,7 @@ export const TitleContainer = styled.div`
     @media screen and (max-width:800px){
         font-size:13px;
     }
-`;
-export const ButtonStyles = styled.div `
-border: 1px solid;
-border-radius: 30px;
-width:fit-content;
-`;
+    `
 export const LogoPosts = styled.div``; 
 
 export const Button = styled.div``;
