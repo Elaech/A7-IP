@@ -112,7 +112,6 @@ class UnconnectedRegisterForm extends React.Component<Props> {
 
                         return (
                             <FormGroup onSubmit={handleSubmit}>
-                                <TitleContainer>Creare cont</TitleContainer>
                                 <Field
                                     name="lastName"
                                     label="Nume*"

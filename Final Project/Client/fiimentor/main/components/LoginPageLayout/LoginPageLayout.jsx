@@ -1,15 +1,24 @@
 import React, {Component} from 'react'
 import {LoginForm} from '../LoginFormComponents/LoginForm';
-import {Logo} from '../../globalStyledVariables';
+import {LogoLogin} from '../../globalStyledVariables';
 
 import './LoginPageLayout.css';
 import ModalComponent from '../Generics/Modal/Modal';
 import {RegisterForm} from '../RegisterFormComponents/RegisterForm';
-import Button from '@material-ui/core/Button';
+import styled from 'styled-components';
+
 
 interface State {
-    isRegisterModalOpen:boolean;
+    isRegisterModalOpen: boolean;
 }
+
+const StyledButton = styled.button`
+color: inherit;
+border: 0;
+position: fixed;
+left: 33%;
+margin-top:1rem;
+`;
 
 class LoginPageLayout extends Component<{}, State> {
     constructor() {
@@ -20,11 +29,11 @@ class LoginPageLayout extends Component<{}, State> {
         };
     }
 
-    closeRegisterModal = ()=> {
+    closeRegisterModal = () => {
         this.setState({isRegisterModalOpen: false});
     };
 
-    openRegisterModal = ()=> {
+    openRegisterModal = () => {
         this.setState({isRegisterModalOpen: true});
     };
 
@@ -32,24 +41,23 @@ class LoginPageLayout extends Component<{}, State> {
         return (
             <div>
                 <div className="LogoContainer">
-                    <Logo/>
+                    <LogoLogin/>
                 </div>
                 <div className="LoginFormContainer">
                     <ModalComponent
                         toggle={this.closeRegisterModal}
                         isOpen={this.state.isRegisterModalOpen}
-                        title="Inregistrare">
+                        title="Creare cont">
                         <RegisterForm/>
                     </ModalComponent>
                     <LoginForm/>
-                    <Button
+                    <StyledButton
+                        className={''}
                         onClick={this.openRegisterModal}
                         type="button"
-                        color="inherit"
-                        className="registerButton"
                     >
                         Nu ai cont? Inregistreaza-te
-                    </Button>
+                    </StyledButton>
                 </div>
             </div>
         )

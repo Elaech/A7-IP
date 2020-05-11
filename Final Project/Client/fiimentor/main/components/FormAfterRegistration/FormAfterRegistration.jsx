@@ -25,11 +25,11 @@ const initialValues: AfterRegistrationFormValues = {
 const validationSchema: Yup.Schema<AfterRegistrationFormValues> = Yup.object().shape({
     role1: Yup.string()
         .required('Alege rolul!'),
-    
+
 });
 
 
-class AfterRegistrationForm extends React.Component<Props> {
+class AfterRegistrationForm extends React.Component<> {
     handleSubmit = (values: AfterRegistrationFormValues)=> {
         console.log(values);
 
@@ -91,10 +91,10 @@ class AfterRegistrationForm extends React.Component<Props> {
                                     style={buttonStyles}
                                     variant="contained"
                                 >
-                                    Submit
+                                    Salveaza
                                 </Button>
-                                
-                                
+
+
                             </FormGroup>
                         );
                     }}
@@ -104,7 +104,7 @@ class AfterRegistrationForm extends React.Component<Props> {
         );
     }
 
-    
+
 }
 
 export default AfterRegistrationForm;
