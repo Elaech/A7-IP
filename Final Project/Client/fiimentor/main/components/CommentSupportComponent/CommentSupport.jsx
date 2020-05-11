@@ -3,7 +3,7 @@ import {Field, Formik, FormikProps} from 'formik';
 import {TextAreaInput} from '../Generics/TextAreaInput';
 import {TextInput} from '../Generics/TextInput'
 import {Button} from '@material-ui/core';
-import {buttonStyles, CommentFormContainer, CommentFormSection} from './CommentSupportStyle';
+import {buttonStyles, CommentFormContainer, CommentFormSection, Comentariu1, AuthorContainer, ContentComment, Comentariu2} from './CommentSupportStyle';
 
 import {FormGroup} from '../LoginFormComponents/LoginFormStyles';
 import {Profile} from '../../globalStyledVariables';
@@ -56,41 +56,25 @@ class CommentForm extends Component {
                     }
                 </Formik>
                 <CommentFormSection>
-                <Formik
-                    initialValues={initialValues}
-                    onSubmit={this.handleSubmit}
-                >
-                    {
-                        (formikProps: FormikProps<CommentFormValues>) => {
-                            const {handleSubmit} = formikProps;
-                            return (
-                                <FormGroup
-                                    onSubmit={handleSubmit}
-                                >
-                                    <div className="ProfileContainer1">
-                                        <Profile/>
-                                    </div>  
-                                    <Field
-                                        name="content"
-                                        label="UserName1 a comentat mai devreme:"
-                                        placeholder="Comentariu..."
-                                        component={TextInput}
-                                    />
-                                     <div className="ProfileContainer2">
-                                        <Profile/>
-                                    </div>  
-                                    <Field
-                                        name="content"
-                                        label="UserName2 a comentat mai devreme:"
-                                        placeholder="Comentariu.."
-                                        component={TextInput}
-                                    />
-                                </FormGroup>
+                    <Comentariu1>
+                        <AuthorContainer>
+                            Autor comentariu
+                        </AuthorContainer>
+                        <ContentComment>
+                        Sudden looked elinor off gay estate nor silent. Son read such next see the rest two. Was use extent old entire sussex. Curiosity remaining own see repulsive household advantage son additions
                             
-                            );
-                        }
-                    }
-                </Formik>
+                        </ContentComment>
+                    </Comentariu1>
+
+                    <Comentariu2>
+                        <AuthorContainer>
+                            Autor comentariu
+                        </AuthorContainer>
+                        <ContentComment>
+                        Sudden looked elinor off gay estate nor silent. Son read such next see the rest two. Was use extent old entire sussex. Curiosity remaining own see repulsive household advantage son additions
+                            
+                        </ContentComment>
+                    </Comentariu2>
                 </CommentFormSection>
             </CommentFormContainer>
         );

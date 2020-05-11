@@ -40,3 +40,8 @@ export const buttonStyles: CSSProperties = {
     marginLeft: '35%',
     boxShadow: '1px 2px 5px 2px #D4D4CE',
 };
+
+export const Comentariu1 = styled.div``;
+export const AuthorContainer = styled.div``; 
+export const ContentComment = styled.div``; 
+export const Comentariu2 = styled.div``;
