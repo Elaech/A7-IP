@@ -41,7 +41,31 @@ export const buttonStyles: CSSProperties = {
     boxShadow: '1px 2px 5px 2px #D4D4CE',
 };
 
-export const Comentariu1 = styled.div``;
-export const AuthorContainer = styled.div``; 
-export const ContentComment = styled.div``; 
-export const Comentariu2 = styled.div``;
+export const Comentariu1 = styled.div`
+width:70%;
+background:#FFFFFF;
+border: 2px solid;
+border-radius: 10px;
+width:85%;
+`;
+export const AuthorContainer = styled.div`
+font-size:15px;
+padding:12px 5px 12px 5px;
+color:grey;
+border-top: #black 3px solid;
+border-bottom: #black 3px solid;
+border-style: double;
+`; 
+export const ContentComment = styled.div`
+font-size:20px;
+padding:5px 5px 15px 5px;
+
+`; 
+export const Comentariu2 = styled.div`
+margin-top:1%;
+width:70%;
+background:#FFFFFF;
+border: 2px solid;
+border-radius: 10px;
+width:85%;
+`;

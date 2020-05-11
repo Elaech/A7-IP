@@ -58,21 +58,24 @@ class CommentForm extends Component {
                 <CommentFormSection>
                     <Comentariu1>
                         <AuthorContainer>
+                            <Profile/>
                             Autor comentariu
                         </AuthorContainer>
                         <ContentComment>
-                        Sudden looked elinor off gay estate nor silent. Son read such next see the rest two. Was use extent old entire sussex. Curiosity remaining own see repulsive household advantage son additions
+                      *Comentariu*
+                      Curiosity remaining own see repulsive household advantage son additions
                             
                         </ContentComment>
                     </Comentariu1>
 
                     <Comentariu2>
                         <AuthorContainer>
+                        <Profile/>
                             Autor comentariu
                         </AuthorContainer>
                         <ContentComment>
-                        Sudden looked elinor off gay estate nor silent. Son read such next see the rest two. Was use extent old entire sussex. Curiosity remaining own see repulsive household advantage son additions
-                            
+                        *Comentariu*
+                      Curiosity remaining own see repulsive household advantage son additions   
                         </ContentComment>
                     </Comentariu2>
                 </CommentFormSection>
