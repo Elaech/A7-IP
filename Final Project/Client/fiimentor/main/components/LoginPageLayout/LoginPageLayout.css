@@ -1,0 +1,17 @@
+.LogoContainer {
+
+    width: 35%;
+    position: relative;
+    left: 30%;
+    top: 2rem;
+}
+
+.LoginFormContainer{
+
+    position: fixed;
+    width:100%;
+}
+
+.registerButton {
+    margin-left: 3rem!important;
+}
