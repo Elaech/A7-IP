@@ -36,7 +36,7 @@ async function getNotification(req: any, res: any) {
     const pmNotification: PrivateMessageNotification[] = await privateMessageNotificationRepository.getUnseenPrivateMessageNotification(userId);
     const commentNotification: CommentNotification[] = await commentNotificationRepository.getUnseenCommentNotification(userId);
     const postNotification: PostNotification[] = await postNotificationRepository.getUnseenPostNotification(userId);
-
+try {
     for (let i = 0; i < pmNotification.length; i++) {
         user = await userRepository.getById(pmNotification[i].userId);
         pmEntity = await privateMessageRepository.getById(pmNotification[i].privateMessageID);
@@ -75,7 +75,10 @@ async function getNotification(req: any, res: any) {
         totalPosts: length,
         posts: output
     });
-
+}
+catch (error) {
+    req.log.error(`Unable to get notification list -> ${req.url} -> ${error}`);
+}
 }
 
 const utils = {getNotification};

@@ -19,7 +19,7 @@ export class PostNotificationRepository extends ReadWriteRepository<PostNotifica
 
     async getUnseenPostNotification(userId: number): Promise<PostNotification[]> {
         return await this.connection.manager
-            .find(PostNotification, {where: {userId: userId, Seen: 0}})
+            .find(PostNotification, {where: {userId: userId, seen: 0}})
     }
 
 

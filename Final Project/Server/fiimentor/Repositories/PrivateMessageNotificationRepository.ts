@@ -20,6 +20,6 @@ export class PrivateMessageNotificationRepository extends ReadWriteRepository<Pr
 
     async getUnseenPrivateMessageNotification(userId: number): Promise<PrivateMessageNotification[]> {
         return await this.connection.manager
-            .find(PrivateMessageNotification, {where: {userId: userId, Seen: 0}})
+            .find(PrivateMessageNotification, {where: {userId: userId, seen: 0}})
     }
 }

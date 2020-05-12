@@ -19,6 +19,6 @@ export class CommentNotificationRepository extends ReadWriteRepository<CommentNo
 
     async getUnseenCommentNotification(userId: number): Promise<CommentNotification[]> {
         return await this.connection.manager
-            .find(CommentNotification, {where: {userId: userId, Seen: 0}})
+            .find(CommentNotification, {where: {userId: userId, seen: 0}})
     }
 }
