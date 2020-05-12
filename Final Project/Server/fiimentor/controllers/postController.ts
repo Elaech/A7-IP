@@ -179,16 +179,16 @@ async function getPostList(req: any, res: any) {
         case 'All':
             postsList = await ToFromAll.postsToFromAll(getPostOptions);
             return res.status(HttpStatus.OK).json({
-                totalPosts:postsList.length,
-                posts: postsList
+                totalPosts:postsList.totalPosts,
+                posts: postsList.posts
             });
         case 'Groupe':
             const groupeId = req.body.groupe.groupeId;
             if (usersGroups.some(x => x.groupeId === groupeId)) {
                 const postsList = await ToFromGroupe.postsToFromGroupe(getPostOptions, groupeId);
                 return res.status(HttpStatus.OK).json({
-                    totalPosts:postsList.length,
-                    posts: postsList
+                    totalPosts:postsList.totalPosts,
+                    posts: postsList.posts
                 });
             } else {
                 return res.status(HttpStatus.UNAUTHORIZED).json({
@@ -202,28 +202,28 @@ async function getPostList(req: any, res: any) {
                 case 'All':
                     postsList = await ToFromAllProfessors.allProfessors(getPostOptions, req.user.payload.role);
                     return res.status(HttpStatus.OK).json({
-                        totalPosts:postsList.length,
-                        posts: postsList
+                        totalPosts:postsList.totalPosts,
+                        posts: postsList.posts
                     });
                 case 'Professor':
                     const professorId = req.body.professors.professorId;
                     postsList = await ToFromSpecificProfessor.specificProfessor(getPostOptions, professorId);
                     return res.status(HttpStatus.OK).json({
-                        totalPosts:postsList.length,
-                        posts: postsList
+                        totalPosts:postsList.totalPosts,
+                        posts: postsList.posts
                     });
                 case 'Tutor':
                     if (req.user.payload.role === 'student') {
                         postsList = await ToFromTutorProfessor.tutorWhenUserIsStudent(getPostOptions);
                         return res.status(HttpStatus.OK).json({
-                            totalPosts:postsList.length,
-                            posts: postsList
+                            totalPosts:postsList.totalPosts,
+                            posts: postsList.posts
                         });
                     } else if (req.user.payload.role === 'professor') {
                         postsList = await ToFromTutorProfessor.tutorWhenUserIsProfessor(getPostOptions);
                         return res.status(HttpStatus.OK).json({
-                            totalPosts:postsList.length,
-                            posts: postsList
+                            totalPosts:postsList.totalPosts,
+                            posts: postsList.posts
                         });
                     }
                     break;

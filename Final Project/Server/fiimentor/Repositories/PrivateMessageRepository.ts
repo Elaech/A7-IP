@@ -20,6 +20,16 @@ export class PrivateMessageRepository extends ReadWriteRepository<PrivateMessage
             });
     }
 
+    async countPrivateMessageList(queryParam: string, anonParam: number[],
+                                firstRecipientId: number[], secondRecipientId: number[]): Promise<[PrivateMessage[], number]> {
+        return await this.connection.manager
+            .findAndCount(PrivateMessage, {
+                where: [{ senderId: In(firstRecipientId), receiverId: In(secondRecipientId), isAnonymous: In(anonParam), content: Like(queryParam) }
+                    , { senderId: In(secondRecipientId), receiverId: In(firstRecipientId), isAnonymous: In(anonParam), content: Like(queryParam) }],
+                order: { time: "DESC" },
+            });
+    }
+
     async getPrivateMessageListBySenderId(skip: number, take: number, queryParam: string, anonParam: number[], firstRecipientId: number): Promise<PrivateMessage[]> {
         return await this.connection.manager
             .find(PrivateMessage, {
@@ -27,6 +37,14 @@ export class PrivateMessageRepository extends ReadWriteRepository<PrivateMessage
                 order: { time: "DESC" },
                 skip: skip,
                 take: take
+            });
+    }
+
+    async countPrivateMessageListBySenderId(queryParam: string, anonParam: number[], firstRecipientId: number): Promise<[PrivateMessage[], number]> {
+        return await this.connection.manager
+            .findAndCount(PrivateMessage, {
+                where: { senderId: firstRecipientId, isAnonymous: In(anonParam), content: Like(queryParam) },
+                order: { time: "DESC" },
             });
     }
 
@@ -41,6 +59,15 @@ export class PrivateMessageRepository extends ReadWriteRepository<PrivateMessage
             });
     }
 
+    async countPrivateMessageListByUserId(queryParam: string, anonParam: number[], firstRecipientId: number): Promise<[PrivateMessage[], number]> {
+            return await this.connection.manager
+            .findAndCount(PrivateMessage, {
+                where: [{ senderId: firstRecipientId, isAnonymous: In(anonParam), content: Like(queryParam) },
+                    { receiverId: firstRecipientId, isAnonymous: In(anonParam), content: Like(queryParam) }],
+                order: { time: "DESC" },
+            });
+    }
+
     async getPrivateMessageListBySenderIdAndUserIdArray(skip: number, take: number, queryParam: string, anonParam: number[],
         firstRecipientId: number, secondRecipientId: number[]): Promise<PrivateMessage[]> {
         return await this.connection.manager
@@ -49,6 +76,15 @@ export class PrivateMessageRepository extends ReadWriteRepository<PrivateMessage
                 order: { time: "DESC" },
                 skip: skip,
                 take: take
+            });
+    }
+
+    async countPrivateMessageListBySenderIdAndUserIdArray(queryParam: string, anonParam: number[],
+                                                        firstRecipientId: number, secondRecipientId: number[]): Promise<[PrivateMessage[], number]> {
+        return await this.connection.manager
+            .findAndCount(PrivateMessage, {
+                where: { senderId: firstRecipientId, receiverId: In(secondRecipientId), isAnonymous: In(anonParam), content: Like(queryParam) },
+                order: { time: "DESC" },
             });
     }
 
