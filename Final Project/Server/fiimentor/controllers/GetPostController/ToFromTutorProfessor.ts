@@ -12,23 +12,32 @@ import {ProfessorRepository} from "../../Repositories/ProfessorRepository";
 
 export class ToFromTutorProfessor{
 
-    static async tutorWhenUserIsStudent(options:GetPostListOptions):Promise<(PostResult|PrivateMessageResult)[]>{
+    static async tutorWhenUserIsStudent(options:GetPostListOptions):Promise<{ totalPosts: number; posts: (PostResult | PrivateMessageResult)[] }>{
         const studentRepository = new StudentRepository();
         let tutorId = (await studentRepository.getByUserId(options.userId))[0].tutorId;
         if (tutorId == null) tutorId = 0;
         if (options.post) {
             const postRepository = new PostRepository();
             const output = (options.postedByMe ? [] : (await postRepository.getPostListByUserIdAndGroupe(options.skip, options.take, options.queryParam, options.isAnonParam, [tutorId], options.usersGroupsId)));
-            return await PostListOutput.postOutput(output);
+            const counter : number = (options.postedByMe ? 0 : (await postRepository.countPostListByUserIdAndGroupe(options.queryParam, options.isAnonParam, [tutorId], options.usersGroupsId))[1]);
+            return {
+                totalPosts:counter,
+                posts: await PostListOutput.postOutput(output)
+            };
         } else {
             const privateMessageRepository = new PrivateMessageRepository();
             const output = (options.postedByMe ? (await privateMessageRepository.getPrivateMessageListBySenderIdAndUserIdArray(options.skip, options.take, options.queryParam, options.isAnonParam, options.userId, [tutorId]))
                 : (await privateMessageRepository.getPrivateMessageList(options.skip, options.take, options.queryParam, options.isAnonParam, [options.userId], [tutorId])));
-            return await PrivateMessageListOutput.privateMessageOutput(output);
+            const counter : number = (options.postedByMe ? (await privateMessageRepository.countPrivateMessageListBySenderIdAndUserIdArray(options.queryParam, options.isAnonParam, options.userId, [tutorId]))[1]
+                : (await privateMessageRepository.countPrivateMessageList(options.queryParam, options.isAnonParam, [options.userId], [tutorId]))[1]);
+            return {
+                totalPosts:counter,
+                posts: await PrivateMessageListOutput.privateMessageOutput(output)
+            };
         }
     }
 
-    static async tutorWhenUserIsProfessor(options:GetPostListOptions):Promise<(PostResult|PrivateMessageResult)[]>{
+    static async tutorWhenUserIsProfessor(options:GetPostListOptions):Promise<{ totalPosts: number; posts: (PostResult | PrivateMessageResult)[] }>{
         const professorRepository= new ProfessorRepository();
         const professor = await professorRepository.getByUserId(options.userId);
         const tutorRepository = new TutorRepository();
@@ -44,14 +53,27 @@ export class ToFromTutorProfessor{
                 const postRepository = new PostRepository();
                 const output = (options.postedByMe ? (await postRepository.getPostListByUserIdAndGroupe(options.skip, options.take, options.queryParam, options.isAnonParam, [options.userId], [tutorGroupeId]))
                     : (await postRepository.getPostListByGroupe(options.skip, options.take, options.queryParam, options.isAnonParam, tutorGroupeId)));
-                return await PostListOutput.postOutput(output);
+                const counter : number = (options.postedByMe ? (await postRepository.countPostListByUserIdAndGroupe(options.queryParam, options.isAnonParam, [options.userId], [tutorGroupeId]))[1]
+                    : (await postRepository.countPostListByGroupe(options.queryParam, options.isAnonParam, tutorGroupeId))[1]);
+                return {
+                    totalPosts:counter,
+                    posts: await PostListOutput.postOutput(output)
+                };
             } else {
                 const privateMessageRepository = new PrivateMessageRepository();
                 const output = (options.postedByMe ? (await privateMessageRepository.getPrivateMessageListBySenderIdAndUserIdArray(options.skip, options.take, options.queryParam, options.isAnonParam, options.userId, groupeMemberUserId))
                     : (await privateMessageRepository.getPrivateMessageList(options.skip, options.take, options.queryParam, options.isAnonParam, [options.userId], groupeMemberUserId)));
-                return await PrivateMessageListOutput.privateMessageOutput(output);
+                const counter : number = (options.postedByMe ? (await privateMessageRepository.countPrivateMessageListBySenderIdAndUserIdArray(options.queryParam, options.isAnonParam, options.userId, groupeMemberUserId))[1]
+                    : (await privateMessageRepository.countPrivateMessageList( options.queryParam, options.isAnonParam, [options.userId], groupeMemberUserId))[1]);
+                return {
+                    totalPosts:counter,
+                    posts: await PrivateMessageListOutput.privateMessageOutput(output)
+                };
             }
         }
-        return [];
+        return {
+            totalPosts: 0,
+            posts: []
+        };
     }
 }
