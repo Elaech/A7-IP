@@ -27,6 +27,14 @@ export const searchPostThunk = (searchReq: SearchRequest, authorization: string)
                 author: value.author,
                 content: value.content,
                 isAnonymous: value.isAnonymous,
+                comments: value.comments.map(value)=> {
+                    const comments: Comment = {
+                        author: value.author,
+                        content: value.content,
+                        isAnonymous: value.isAnonymous,
+                        timestamp: value.timestamp,
+                    }
+                },
             };
             return new Postare(post);
         });

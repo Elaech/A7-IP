@@ -38,7 +38,7 @@ export  const registerUserThunk = (userCredentials: RegisterUserRequest)=> async
 
         Swal.fire({
             title: 'Error!',
-            text: ` ${errorResponse.error} `,
+            text: ` ${errorResponse.message} `,
             icon: 'error',
             confirmButtonText: 'Ok',
         })
