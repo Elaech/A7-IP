@@ -28,6 +28,8 @@ import { PrivateMessage } from '../models/entities/PrivateMessage';
 import { User } from '../models/entities/User';
 import { PrivateMessageNotificationRepository } from '../Repositories/PrivateMessageNotificationRepository';
 import { CommentNotificationRepository } from '../Repositories/CommentNotificationRepository';
+import {CreatePrivateMessageNotification} from "./NotificationController/CreatePrivateMessageNotification";
+import {CreatePostNotification} from "./NotificationController/CreatePostNotification";
 
 
 async function createPost(req: any, res: any) {
@@ -54,7 +56,10 @@ async function createPost(req: any, res: any) {
 
                 const postAllOption: PostAll = new PostAll(body, userId);
                 const postCreator: PostCreator = new PostCreator(postAllOption);
-                postCreator.createPost();
+                await postCreator.createPost();
+
+                const createdPost =(await (new PostRepository).getLatestPostByUserId(userId))[0];
+                CreatePostNotification.createNotification(createdPost,userId);
 
                 return res.status(HttpStatus.CREATED).json({
                     succes: true
@@ -71,8 +76,10 @@ async function createPost(req: any, res: any) {
                         const professorsPostAll: ProfessorsPostAll = new ProfessorsPostAll(body, userId);
                         const postProfessorsOption: PostProfessors = new PostProfessors(professorsPostAll);
                         const postCreator: PostCreator = new PostCreator(postProfessorsOption);
-                        postCreator.createPost();
+                        await postCreator.createPost();
 
+                        const createdPost =(await (new PostRepository).getLatestPostByUserId(userId))[0];
+                        CreatePostNotification.createNotification(createdPost,userId);
                         return res.status(HttpStatus.CREATED).json({
                             succes: true
                         })
@@ -81,7 +88,8 @@ async function createPost(req: any, res: any) {
                         const professorsPostProfessor: ProfessorsPostProfessor = new ProfessorsPostProfessor(body, userId, title, content, isAnonymous);
                         const postProfessorsOption: PostProfessors = new PostProfessors(professorsPostProfessor);
                         const postCreator: PostCreator = new PostCreator(postProfessorsOption);
-                        postCreator.createPost();
+                        await postCreator.createPost();
+                        CreatePrivateMessageNotification.createNotification(body.professors.professorId, userId);
 
                         return res.status(HttpStatus.CREATED).json({
                             succes: true
@@ -92,7 +100,8 @@ async function createPost(req: any, res: any) {
                         const professorsPostTutor: ProfessorsPostTutor = new ProfessorsPostTutor(req, userId, title, content, isAnonymous);
                         const postProfessorsOption: PostProfessors = new PostProfessors(professorsPostTutor);
                         const postCreator: PostCreator = new PostCreator(postProfessorsOption);
-                        postCreator.createPost();
+                        await postCreator.createPost();
+                        CreatePrivateMessageNotification.createNotification(req.user.payload.tutorId, userId);
 
                         return res.status(HttpStatus.CREATED).json({
                             succes: true
@@ -108,7 +117,10 @@ async function createPost(req: any, res: any) {
                     const groupePostSpecific: GroupePostSpecific = new GroupePostSpecific(groupeId, userId, title, content, isAnonymous);
                     const postGroupeOption: PostGroupe = new PostGroupe(groupePostSpecific);
                     const postCreator: PostCreator = new PostCreator(postGroupeOption);
-                    postCreator.createPost();
+                    await postCreator.createPost();
+
+                    const createdPost =(await (new PostRepository).getLatestPostByUserId(userId))[0];
+                    CreatePostNotification.createNotification(createdPost,userId);
 
                     return res.status(HttpStatus.CREATED).json({
                         succes: true
@@ -119,7 +131,10 @@ async function createPost(req: any, res: any) {
                     const groupePostFaculty: GroupePostFaculty = new GroupePostFaculty(body, userId, title, content, isAnonymous);
                     const postGroupeOption: PostGroupe = new PostGroupe(groupePostFaculty);
                     const postCreator: PostCreator = new PostCreator(postGroupeOption);
-                    postCreator.createPost();
+                    await postCreator.createPost();
+
+                    const createdPost =(await (new PostRepository).getLatestPostByUserId(userId))[0];
+                    CreatePostNotification.createNotification(createdPost,userId);
 
                     return res.status(HttpStatus.CREATED).json({
                         succes: true
