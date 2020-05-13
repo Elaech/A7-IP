@@ -32,6 +32,7 @@ import {CreatePrivateMessageNotification} from "./NotificationController/CreateP
 import {CreatePostNotification} from "./NotificationController/CreatePostNotification";
 
 
+
 async function createPost(req: any, res: any) {
 
     if (req.user.payload.role === 'professor') {
@@ -46,8 +47,8 @@ async function createPost(req: any, res: any) {
 
     const option = (body.recipients === 'All') ?
         'All' : (body.recipients === 'Professors') ?
-            'Professors' : 'Groupe';
-
+            'Professors' : (body.recipients === 'Groupe') ?
+                'Groupe' : 'BadRequest';
 
     try {
 
@@ -69,7 +70,8 @@ async function createPost(req: any, res: any) {
 
                 const professorOption = (body.professors.recipient === 'All')
                     ? 'All' : (body.professors.recipient === 'Professor')
-                        ? 'Professor' : 'Tutor';
+                        ? 'Professor' : (body.professors.recipient === 'Tutor')
+                            ? 'Tutor' : 'BadRequest';
 
                 switch (professorOption) {
                     case 'All': {
@@ -108,6 +110,13 @@ async function createPost(req: any, res: any) {
                         })
 
                     }
+
+                    default: {
+                        return res.status(HttpStatus.BAD_REQUEST).json({
+                            succes: false,
+                            message: 'Professor recipient is wrong.'
+                        })
+                    }
                 }
             }
             case 'Groupe': {
@@ -141,6 +150,12 @@ async function createPost(req: any, res: any) {
                     })
 
                 }
+            }
+            default : {
+                return res.status(HttpStatus.BAD_REQUEST).json({
+                    succes: false,
+                    message: 'Recipient is wrong.'
+                })
             }
         }
     } catch (error) {
@@ -179,12 +194,15 @@ async function createPostAll(body: any, userId: number, groupeTitle: string) {
 
 async function getPostList(req: any, res: any) {
 
+
+
     let queryParam: string;
     if (req.body.queryParam) queryParam = `%${req.body.queryParam}%`;
     else queryParam = "%";
     const groupeMemberRepository = new GroupeMemberRepository();
     const usersGroups = await groupeMemberRepository.getByUserId(req.user.payload.id);
     const usersGroupsId = usersGroups.map(temp => temp.groupeId);
+
     const getPostOptions = new GetPostListOptions(queryParam, req.body.isAnonymous, req.body.postedByMe, req.body.post, req.user.payload.id,
         usersGroups, req.body.size, (req.body.page - 1) * req.body.size, usersGroupsId, (req.body.isAnonymous ? [1] : [0, 1]));
     const toFromOption = req.body.toFrom;
@@ -215,6 +233,7 @@ async function getPostList(req: any, res: any) {
                         return res.status(HttpStatus.OK).json(await ToFromTutorProfessor.tutorWhenUserIsStudent(getPostOptions));
                     } else if (req.user.payload.role === 'professor') {
                         return res.status(HttpStatus.OK).json(await ToFromTutorProfessor.tutorWhenUserIsProfessor(getPostOptions));
+
                     }
                     break;
             }
