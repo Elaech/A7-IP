@@ -1,5 +1,6 @@
 import { ReadWriteRepository } from "./ReadWriteRepository";
 import { CommentNotification } from "../models/entities/CommentNotification";
+import {PostNotification} from "../models/entities/PostNotification";
 
 export class CommentNotificationRepository extends ReadWriteRepository<CommentNotification> {
     constructor() {
@@ -14,5 +15,10 @@ export class CommentNotificationRepository extends ReadWriteRepository<CommentNo
         .where("userId =:userid", { userid: userId })
         .andWhere("postcommentId=:postcommentid", {postcommentid: postCommentId})
         .execute();
+    }
+
+    async getUnseenCommentNotification(userId: number): Promise<CommentNotification[]> {
+        return await this.connection.manager
+            .find(CommentNotification, {where: {userId: userId, seen: 0}})
     }
 }

@@ -76,5 +76,13 @@ export class PostRepository extends ReadWriteRepository<Post> {
                     {groupeId: In(groupeId),isAnonymous: In(anonParam),content: Like(queryParam)}],
                 order:{time:"DESC"},
                 });
+            }
+    async getLatestPostByUserId(userId:number):Promise<Post[]>{
+        return await this.connection.manager
+            .find(Post, {
+                where:{userId:userId},
+                order:{time:"DESC"},
+                take:1
+            });
     }
 }
