@@ -41,3 +41,7 @@ export const LogoContainer = styled.div`
     text-decoration: none;
   }
 `;
+export const UserName = styled.div`
+    position: relative;
+    left: 33%;
+`;

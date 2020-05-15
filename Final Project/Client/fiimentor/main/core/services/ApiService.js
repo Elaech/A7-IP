@@ -53,8 +53,8 @@ export interface CreatePostRequest {
 }
 
 export interface CreateCommentRequest {
-    postId: number;
-    pmessageId: number;
+    postId?: number;
+    pmessageId?: number;
     content: string;
     isAnonymous: false;
 }
@@ -105,12 +105,14 @@ export interface ApiService {
 
     getPrivateMessage(pmessageId: number, authorizer: string): Promise<Postare>;
 
-    createComment(req: CreateCommentRequest): Promise<void>;
+    createComment(req: CreateCommentRequest, authorizer: string): Promise<void>;
 
     getComments(): Promise<Comment[]>;
-    
+
     searchPost(req: SearchRequest, authorizer: string) : Promise<Postare[]>;
 
-    updateUser(req: UpdateUserRequest): Promise<User>;
+    updateUser(req: UpdateUserRequest, authorizer: string): Promise<User>;
+
+    getNotifications(authorizer: string): Promise<Postare[]>;
 
 }

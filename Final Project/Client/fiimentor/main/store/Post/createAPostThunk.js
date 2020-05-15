@@ -22,7 +22,7 @@ export  const createAPostThunk = (postContent: CreatePostRequest)=> async(
         dispatch(createPostSuccessAction());
 
         await Swal.fire({
-            title: 'Success!',
+            title: 'Succes!',
             text: 'Postare creata cu succes!',
             icon: 'success',
             confirmButtonText: 'Ok',
@@ -31,7 +31,7 @@ export  const createAPostThunk = (postContent: CreatePostRequest)=> async(
         dispatch(createPostErrorAction(e));
 
        await Swal.fire({
-            title: 'Error!',
+            title: 'Eroare!',
             text: 'A aparut o eroare la crearea unei postari!',
             icon: 'error',
             confirmButtonText: 'Ok',

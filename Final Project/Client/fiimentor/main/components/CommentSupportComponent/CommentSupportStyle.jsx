@@ -1,71 +1,67 @@
 import styled from 'styled-components';
-import {CSSProperties} from 'react';
+import {font} from '../../globalStyledVariables';
 
-export const CommentFormContainer = styled.div`
+export const CommentsContainer = styled.div`
 font: 15px Spectral;
-width:  35%;
-background:#F3F9FB;
-margin-left: 28%;
-margin-top: 0%;
-border:#D4D4CE 1px solid;
 border-radius: 20px;
-padding: 35px 35px 35px 35px;
-box-shadow: 1px 2px 5px 2px #D4D4CE;
+padding: 0.5rem;
 backgroundColor: #113F67;
-@media screen and (max-width:1180px){
-    width:50%;
-    margin-left: 21%;
-    margin-top: 18%;
-}
-@media screen and (max-width:715px){
-    width:82%;
-    margin-left:3%;
-    margin-top:33%;
-}
-@media screen and (max-width:448px){
-    margin-top:80%;
-    margin-left:0rem;
-    width:115%;
-}
+
 `;
 
-export const CommentFormSection = styled.div`
-    margin-top:10%;
+export const CommentButton = styled.button`
+background: #87C0CD;
+box-shadow: 1px 2px 5px 2px #D4D4CE;
+width: 20ch;
+border-radius: 1rem;
+margin-top: 1rem;
 `;
 
-export const buttonStyles: CSSProperties = {
-    backgroundColor: '#87C0CD',
-    width: '30%',
-    marginTop: '15%',
-    marginLeft: '35%',
-    boxShadow: '1px 2px 5px 2px #D4D4CE',
-};
-
-export const Comentariu1 = styled.div`
-width:70%;
+export const CommentStyles = styled.div`
 background:#FFFFFF;
-border: 2px solid;
+border: 1px solid;
 border-radius: 10px;
-width:85%;
+margin-top: 1rem;
 `;
-export const AuthorContainer = styled.div`
+
+export const HeaderContainer = styled.div`
 font-size:15px;
 padding:12px 5px 12px 5px;
 color:grey;
 border-top: #black 3px solid;
 border-bottom: #black 3px solid;
-border-style: double;
-`; 
+`;
+
 export const ContentComment = styled.div`
-font-size:20px;
+font-size:15px;
 padding:5px 5px 15px 5px;
 
-`; 
-export const Comentariu2 = styled.div`
-margin-top:1%;
-width:70%;
-background:#FFFFFF;
-border: 2px solid;
-border-radius: 10px;
-width:85%;
+`;
+
+export const AuthorName = styled.div`
+display:inline-flex;
+color: black;
+margin: 4px;
+`;
+
+export const CommentDate = styled.div`
+`;
+
+export const NumberOfComments = styled.div`
+font-size: 20px;
+padding: 0.5rem;
+text-align: left;
+font-face: ${font.face};
+font-family: ${font.family};
+`;
+
+export const ViewMoreLabel = styled.label`
+padding: 0.1rem 0.5rem;
+color: grey;
+`;
+
+export const CreateCommentContainer = styled.div`
+padding: 0.5rem;
+margin-top: 2rem;
+margin-bottom: 2rem;
 `;

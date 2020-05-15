@@ -18,7 +18,7 @@ export const searchPostThunk = (searchReq: SearchRequest, authorization: string)
         dispatch(searchPostAction());
 
         const payload = await Context.apiService.searchPost(searchReq, authorization);
-        const posts = payload.map((value)=>{
+        const posts = payload.posts.map((value)=>{
             const post: Postare = {
                 id: value.pmessageId || value.postId,
                 type: value.pmessageId? 'privateMessage': 'post',
@@ -27,24 +27,22 @@ export const searchPostThunk = (searchReq: SearchRequest, authorization: string)
                 author: value.author,
                 content: value.content,
                 isAnonymous: value.isAnonymous,
-                comments: value.comments.map(value)=> {
-                    const comments: Comment = {
-                        author: value.author,
-                        content: value.content,
-                        isAnonymous: value.isAnonymous,
-                        timestamp: value.timestamp,
-                    }
-                },
             };
             return new Postare(post);
         });
+        const total = payload.totalPosts;
 
-        dispatch(searchPostSuccessAction(posts));
+        const searchedPosts = {
+            posts,
+            total
+        };
+
+        dispatch(searchPostSuccessAction(searchedPosts));
     } catch (e) {
         dispatch(searchPostErrorAction(e));
 
         await Swal.fire({
-            title: 'Error!',
+            title: 'Eroare!',
             text: 'A aparut o eroare la primirea postarilor!',
             icon: 'error',
             confirmButtonText: 'Ok',

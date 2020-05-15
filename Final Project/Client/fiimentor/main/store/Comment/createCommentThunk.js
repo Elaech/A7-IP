@@ -1,34 +1,31 @@
 import {Dispatch} from 'redux';
 import Swal from 'sweetalert2';
-import {
-    createCommentAction,
-    createCommentSuccessAction,
-    createCommentErrorAction,
-} from './commentActions';
+import {createCommentAction, createCommentErrorAction, createCommentSuccessAction,} from './commentActions';
 
 import {Context} from '../../Context';
 import type {CreateCommentRequest} from '../../core/services/ApiService';
 
 
-export  const createCommentThunk = (commentContent: CreateCommentRequest)=> async(
+export const createCommentThunk = (commentContent: CreateCommentRequest, authorizer: string) => async (
     dispatch: Dispatch
-)=>{
-    try{
+) => {
+    try {
         dispatch(createCommentAction());
 
-        const comment = await Context.apiService.createComment(commentContent);
-        console.log(comment);
+        await Context.apiService.createComment(commentContent, authorizer);
 
         dispatch(createCommentSuccessAction());
 
         await Swal.fire({
+            icon: 'success',
             text: 'Comentariul a fost adaugat cu succes!',
             confirmButtonText: 'Ok',
         })
-    } catch(e) {
+    } catch (e) {
         dispatch(createCommentErrorAction(e));
 
-       await Swal.fire({
+        await Swal.fire({
+            icon: 'error',
             text: 'A aparut o eroare la adaugarea comentariului.',
             confirmButtonText: 'Ok',
         })

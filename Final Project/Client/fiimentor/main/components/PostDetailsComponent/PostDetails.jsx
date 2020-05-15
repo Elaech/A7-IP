@@ -6,6 +6,7 @@ import {connect} from 'react-redux';
 import {getPostThunk} from '../../store/Post/getPostThunk';
 import {Context} from '../../Context';
 import {LogoPosts} from '../../globalStyledVariables';
+import {CommentForm} from '../CommentSupportComponent/CommentSupport';
 
 interface StateProps {
     post: PostState;
@@ -54,6 +55,7 @@ class UnconnectedPostDetails extends React.Component<Props> {
                 <ContentContainer>
                     {post.content}
                 </ContentContainer>
+                <CommentForm/>
             </PostContainer>
         );
     }

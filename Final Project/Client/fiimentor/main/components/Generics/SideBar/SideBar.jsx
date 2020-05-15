@@ -1,9 +1,7 @@
 import React from 'react';
-import { NavItem, NavLink } from 'reactstrap';
+import {NavItem, NavLink} from 'reactstrap';
 import styled from 'styled-components';
-import { font } from '../../../globalStyledVariables';
-
-
+import {font} from '../../../globalStyledVariables';
 
 
 export interface MenuItem {
@@ -58,24 +56,30 @@ const StyledSidebar = styled.div`
 export const Sidebar: React.FC = () => {
     const menu: MenuItem[] = [
 
-                {
-                    path: '/homepage',
-                    title: 'Dashboard',
-                    slug: 'dashboard',
-                    menuList: [],
-                },
-                {
-                    path: '/post/create',
-                    title: 'Creeaza o postare',
-                    slug: 'create',
-                    menuList: [],
-                },
-                {
-                    path: '/post/posts',
-                    title: 'Postari',
-                    slug: 'postari',
-                    menuList: [],
-                },
+        {
+            path: '/homepage',
+            title: 'Dashboard',
+            slug: 'dashboard',
+            menuList: [],
+        },
+        {
+            path: '/post/create',
+            title: 'Creeaza o postare',
+            slug: 'create',
+            menuList: [],
+        },
+        {
+            path: '/post/posts',
+            title: 'Postari',
+            slug: 'postari',
+            menuList: [],
+        },
+        {
+            path: '/post/myPosts',
+            title: 'Postarile mele',
+            slug: 'postarile-mele',
+            menuList: [],
+        },
 
     ];
 

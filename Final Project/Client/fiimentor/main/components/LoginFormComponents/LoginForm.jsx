@@ -79,7 +79,7 @@ class UnconnectedLoginForm extends React.Component<Props, State> {
                             <FormGroup onSubmit={handleSubmit}>
 
                                 <TitleContainer>
-                                    <h1> Autentificare </h1>
+                                    <h2> Autentificare </h2>
                                 </TitleContainer>
 
                                 <Field

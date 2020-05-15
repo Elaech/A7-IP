@@ -23,7 +23,6 @@ import type {UserToken} from '../../store/User/tokenReducer';
 import {setUserTokenThunk} from '../../store/User/setUserTokenThunk';
 
 
-
 interface PostFormValues {
     vizibility1: SelectOption;
     vizibility2: SelectOption;
@@ -40,7 +39,9 @@ interface StateProps {
 
 interface DispatchProps {
     getProfesori(token: string): void;
+
     setUserToken(token: string): void;
+
     createPost(post: CreatePostRequest): void;
 }
 
@@ -54,15 +55,15 @@ const initialValues: PostFormValues = {
     isAnonymous: false,
 };
 
-let grupeMentorat= {};
+let grupeMentorat = {};
 let user;
 
 const validationSchema: Yup.Schema<PostFormValues> = Yup.object().shape({
     contacts: Yup.string()
         .required('Alege contactele!'),
     content: Yup.string()
-        .min(Postare.contentConstraint.min,`Postarea trebuie sa aiba cel putin ${Postare.contentConstraint.min} caractere`)
-        .max(Postare.contentConstraint.max,`Postarea trebuie sa aiba cel mult ${Postare.contentConstraint.max} caractere`)
+        .min(Postare.contentConstraint.min, `Postarea trebuie sa aiba cel putin ${Postare.contentConstraint.min} caractere`)
+        .max(Postare.contentConstraint.max, `Postarea trebuie sa aiba cel mult ${Postare.contentConstraint.max} caractere`)
         .required('Continutul postarii nu poate fi gol'),
     isAnonymous: Yup.boolean(),
 });
@@ -71,15 +72,15 @@ const validationSchema: Yup.Schema<PostFormValues> = Yup.object().shape({
 class UnconnectedPostForm extends React.Component<Props> {
 
     async componentDidMount(): void {
-        const {getProfesori, setUserToken } = this.props;
+        const {getProfesori, setUserToken} = this.props;
 
         const tokenLS = sessionStorage.getItem('userToken');
-        await  setUserToken(tokenLS);
+        await setUserToken(tokenLS);
 
         user = sessionStorage.getItem('user');
 
         if (tokenLS) {
-           await getProfesori(tokenLS.toString());
+            await getProfesori(tokenLS.toString());
             grupeMentorat = await Context.apiService.getGrupeMentorat(tokenLS.toString());
             grupeMentorat = grupeMentorat.list.slice();
         }
@@ -105,8 +106,8 @@ class UnconnectedPostForm extends React.Component<Props> {
         })
     )) : {};
 
-    handleSubmit = (values: PostFormValues)=> {
-        const{createPost} = this.props;
+    handleSubmit = (values: PostFormValues) => {
+        const {createPost} = this.props;
         console.log(values.vizibility1);
         const {
             vizibility1,
@@ -120,7 +121,7 @@ class UnconnectedPostForm extends React.Component<Props> {
         } = values;
 
 
-        if(vizibility1.label === 'Toti utilizatorii') {
+        if (vizibility1.label === 'Toti utilizatorii') {
             const postRequest: CreatePostRequest = {
                 isAnonymous,
                 recipients: 'All',
@@ -130,12 +131,25 @@ class UnconnectedPostForm extends React.Component<Props> {
 
             createPost(postRequest);
         } else {
-            if(vizibility1.label === 'Profesori') {
-                    if(vizibility2.label === 'Toti Profesorii' ) {
+            if (vizibility1.label === 'Profesori') {
+                if (vizibility2.label === 'Toti Profesorii') {
+                    const postRequest: CreatePostRequest = {
+                        recipients: 'Professors',
+                        professors: {
+                            recipient: 'All',
+                        },
+                        content,
+                        title,
+                        isAnonymous,
+                    };
+
+                    createPost(postRequest);
+                } else {
+                    if (vizibility2.label === 'Tutore') {
                         const postRequest: CreatePostRequest = {
-                            recipients : 'Professors',
-                            professors : {
-                                recipient: 'All',
+                            recipients: 'Professors',
+                            professors: {
+                                recipient: 'Tutor',
                             },
                             content,
                             title,
@@ -143,37 +157,24 @@ class UnconnectedPostForm extends React.Component<Props> {
                         };
 
                         createPost(postRequest);
-                    } else {
-                        if(vizibility2.label === 'Tutore') {
-                            const postRequest: CreatePostRequest = {
-                                recipients: 'Professors',
-                                professors: {
-                                    recipient: 'Tutor',
-                                },
-                                content,
-                                title,
-                                isAnonymous,
-                            };
+                    } else if (vizibility2.parentName === 'Profesor') {
+                        const postRequest: CreatePostRequest = {
+                            recipients: 'Professors',
+                            professors: {
+                                recipient: 'Professor',
+                                professorId: vizibility2.value,
+                            },
+                            content,
+                            title,
+                            isAnonymous,
+                        };
 
-                            createPost(postRequest);
-                        } else if(vizibility2.parentName === 'Profesor') {
-                            const postRequest: CreatePostRequest = {
-                                recipients: 'Professors',
-                                professors: {
-                                    recipient: 'Professor',
-                                    professorId: vizibility2.value,
-                                },
-                                content,
-                                title,
-                                isAnonymous,
-                            };
-
-                            createPost(postRequest);
-                        }
+                        createPost(postRequest);
                     }
+                }
             } else {
-                if(vizibility1.label === 'Grup') {
-                    if(vizibility2.label === 'Grup Facultate') {
+                if (vizibility1.label === 'Grup') {
+                    if (vizibility2.label === 'Grup Facultate') {
                         const postRequest: CreatePostRequest = {
                             recipients: 'Groupe',
                             groupe: {
@@ -187,11 +188,11 @@ class UnconnectedPostForm extends React.Component<Props> {
                         };
 
                         createPost(postRequest);
-                    } else if(vizibility2.label === 'Grup Mentorat') {
+                    } else if (vizibility2.label === 'Grup Mentorat') {
                         const postRequest: CreatePostRequest = {
                             recipients: 'Groupe',
                             groupe: {
-                               groupeId: vizibility31.value,
+                                groupeId: vizibility31.value,
                             },
                             content,
                             title,
@@ -228,7 +229,7 @@ class UnconnectedPostForm extends React.Component<Props> {
                                     closeMenuOnSelect
                                     component={Select}
                                 />
-                                {vizibility1  && vizibility1.label === 'Profesori' &&
+                                {vizibility1 && vizibility1.label === 'Profesori' &&
                                 (<div>
                                     <FastField
                                         label="Selecteaza Profesor"
@@ -252,7 +253,7 @@ class UnconnectedPostForm extends React.Component<Props> {
                                 }
 
 
-                                {vizibility1  && vizibility1.label === 'Grup' &&
+                                {vizibility1 && vizibility1.label === 'Grup' &&
                                 (<div>
                                         <FastField
                                             label="Selecteaza grup"
@@ -261,7 +262,7 @@ class UnconnectedPostForm extends React.Component<Props> {
                                             closeMenuOnSelect
                                             component={Select}
                                         />
-                                        {vizibility2  && vizibility2.label === 'Grup Mentorat' &&
+                                        {vizibility2 && vizibility2.label === 'Grup Mentorat' &&
                                         (<FastField
                                             label="Selecteaza grup"
                                             name="vizibility31"
@@ -314,14 +315,13 @@ class UnconnectedPostForm extends React.Component<Props> {
                                     helperText="Continutul postarii trebuie sa aiba maxim 5000 de caractere!"
                                     component={TextAreaInput}
                                 />
-                                {user && user.role === 'student'
-                                &&
-                                    <Field
-                                        name="isAnonymous"
-                                        label="Trimite drept anonim"
-                                        component={Checkbox}
-                                    />
-                                }
+
+                                <Field
+                                    name="isAnonymous"
+                                    label="Trimite drept anonim"
+                                    component={Checkbox}
+                                />
+
                                 <Button
                                     type="submit"
                                     style={buttonStyles}

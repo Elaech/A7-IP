@@ -5,14 +5,14 @@ export class Comment {
         max: 500,
       };
 
-    postId: number;
-    pmessageId: number;
+    postId: ?number;
+    pmessageId: ?number;
     content: string;
     isAnonymous: false;
 
     constructor(comment: Comment) {
         const {postId, pmessageId, content, isAnonymous} = comment;
-    
+
         this.postId = postId || '';
         this.pmessageId = pmessageId || '';
         this.content = content;
