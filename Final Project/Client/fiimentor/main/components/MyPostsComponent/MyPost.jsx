@@ -1,6 +1,6 @@
 import React from 'react';
 import {Table, TableBody} from '@material-ui/core';
-import {TheadStyled, ThStyled, TrowStyled} from './ListOfPostsStyles';
+import {TheadStyled, ThStyled, TrowStyled} from '../ListOfPostsComponent/ListOfPostsStyles';
 import type {SearchedPosts} from '../../store/Post/searchPostReducer';
 import type {SearchRequest} from '../../core/services/ApiService';
 import type {AppState} from '../../store/AppState';
@@ -39,7 +39,7 @@ const initialValues: SearchProps = {
 
 const size = 20;
 
-class UnconnectedViewPosts extends React.Component<Props, State> {
+class UnconnectedMyPosts extends React.Component<Props, State> {
     constructor() {
         super();
         this.state = {
@@ -47,11 +47,11 @@ class UnconnectedViewPosts extends React.Component<Props, State> {
         };
     }
 
-     componentDidMount() {
+    componentDidMount() {
 
         const page = Math.floor(this.state.from /size);
 
-        const request = SearchPostRequest.create({page});
+        const request = SearchPostRequest.create({page, postedByMe:true});
 
         const {searchPosts} = this.props;
 
@@ -64,7 +64,7 @@ class UnconnectedViewPosts extends React.Component<Props, State> {
         if (prevState.from !== this.state.from && prevProps) {
             const page = Math.floor(this.state.from /size);
 
-            const request = SearchPostRequest.create({page});
+            const request = SearchPostRequest.create({page, postedByMe:true});
 
             const {searchPosts} = this.props;
 
@@ -76,7 +76,7 @@ class UnconnectedViewPosts extends React.Component<Props, State> {
 
     handleSubmit = (values: SearchProps) => {
 
-        const request = SearchPostRequest.create({queryParam: values.query});
+        const request = SearchPostRequest.create({queryParam: values.query, postedByMe:true});
         const {searchPosts} = this.props;
         const authorization = sessionStorage.getItem('userToken');
 
@@ -157,4 +157,4 @@ const mapDispatchToProps: DispatchProps = {
     searchPosts: searchPostThunk,
 };
 
-export const ListOfPosts = connect(mapStateToProps, mapDispatchToProps)(UnconnectedViewPosts);
+export const MyPosts = connect(mapStateToProps, mapDispatchToProps)(UnconnectedMyPosts);

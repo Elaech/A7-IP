@@ -17,8 +17,8 @@ export const font = {
 
 export const LogoHome = ()=> <img src={logo} className="logo" alt="Logo"/>;
 export const LogoLogin = ()=> <img src={logo} className="logoLogin" alt="Logo"/>
-export const LogoPosts = ()=> <img src={logoPosts} className="logoPosts" alt="Logo" width="90%"/>;
-export const Profile = () => <img src={profile} className="Profile" alt="Profile" width="13%"/>;
+export const LogoPosts = ()=> <img src={logoPosts} className="logoPosts" alt="Logo"/>;
+export const Profile = () => <img src={profile} className="Profile" alt="Profile"/>;
 
 export const SiteContainer = styled.div`
   max-width: 1440px;

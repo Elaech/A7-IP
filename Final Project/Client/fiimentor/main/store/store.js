@@ -11,6 +11,7 @@ import type {AppState} from './AppState';
 import {profesoriReducer} from './Profesor/profesorReducer';
 import {searchPostReducer} from './Post/searchPostReducer';
 import {postReducer} from './Post/postReducer';
+import {notificationsReducer} from './Notifications/notificationsReducer';
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -18,6 +19,7 @@ const rootReducer = combineReducers({
   profesori: profesoriReducer,
   searchedPosts: searchPostReducer,
   post: postReducer,
+  notifications: notificationsReducer,
 
 });
 

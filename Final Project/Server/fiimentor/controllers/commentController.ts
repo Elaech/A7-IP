@@ -7,11 +7,12 @@ import {CreateCommentNotification} from "./NotificationController/CreateCommentN
 
 async function createComment(req: any, res: any) {
     const body = req.body;
-    const postID: number = body.postID;
-    const pmessageID: number = body.pmessageID;
+    const postID: number = body.postId;
+    const pmessageID: number = body.pmessageId;
     const content: string = body.content;
     const isAnonymous: number = body.isAnonymous;
     const userId: number = req.user.payload.id;
+
 
     try {
         if (pmessageID === null) {
@@ -21,7 +22,8 @@ async function createComment(req: any, res: any) {
             await commentCreator.createComment();
 
             const createdComment =(await (new PostCommentRepository()).getLatestCommentByUserId(userId))[0];
-            CreateCommentNotification.createNotification(createdComment,userId);
+
+            CreateCommentNotification.createNotification(createdComment, userId);
 
             return res.status(HttpStatus.OK).json({
                 succes: true
@@ -33,7 +35,8 @@ async function createComment(req: any, res: any) {
             await commentCreator.createComment();
 
             const createdComment =(await (new PostCommentRepository()).getLatestCommentByUserId(userId))[0];
-            CreateCommentNotification.createNotification(createdComment,userId);
+
+              CreateCommentNotification.createNotification(createdComment, userId);
 
             return res.status(HttpStatus.OK).json({
                 succes: true

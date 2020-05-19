@@ -6,6 +6,7 @@ import {
     getPostSuccessAction,
 } from './postActions';
 import {Context} from '../../Context';
+import {Postare} from '../../core/domain/Postare';
 
 export const getPostThunk = (postId: number, postType: string, authorization:string)=> async (
     dispatch: Dispatch
@@ -13,11 +14,21 @@ export const getPostThunk = (postId: number, postType: string, authorization:str
     try {
         dispatch(getPostAction());
 
-        const post = postType ==='privateMessage' ?
+        const payload = postType ==='privateMessage' ?
             await Context.apiService.getPrivateMessage(postId, authorization)
             :
             await Context.apiService.getPost(postId,authorization);
-       console.log(post);
+
+        const postToCreate = {
+            title: payload.title,
+            content: payload.content,
+            author: payload.author,
+            timestamp: payload.timestamp,
+            isAnonymous: payload.isAnonymous !== 0,
+            comments: payload.comments
+        };
+
+        const post: Postare = Postare.create(postToCreate);
 
         dispatch(getPostSuccessAction(post));
     } catch(e) {
@@ -25,7 +36,7 @@ export const getPostThunk = (postId: number, postType: string, authorization:str
 
 
         await Swal.fire({
-            title: 'Error!',
+            title: 'Eroare!',
             text: 'A aparut o eroare la accesarea postarii!',
             icon: 'error',
             confirmButtonText: 'Ok',

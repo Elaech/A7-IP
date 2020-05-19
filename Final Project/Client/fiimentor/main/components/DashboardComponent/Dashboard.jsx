@@ -1,119 +1,159 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import { TitleContainer, DashboardContainer, CardsContainer, PostContainer, AuthorContainer, PostTitle, LogoContainer, ContentContainer, PostNr2, PostNr1 } from './DashboardStyles';
-import {Button} from '@material-ui/core';
+import React, {FC, useEffect, useState} from 'react';
+import {makeStyles} from '@material-ui/core/styles';
+import {
+    CardsContainer,
+    DashboardContainer,
+    Notification,
+    NotificationsContainer,
+    TitleContainer,
+} from './DashboardStyles';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import Link from 'next/link';
-import {LogoPosts} from '../../globalStyledVariables';
-import {buttonStyles} from '../LoginFormComponents/LoginFormStyles';
+import type {SearchedPosts} from '../../store/Post/searchPostReducer';
+import {getNotificationsThunk} from '../../store/Notifications/getNotificationsThunk';
+import {connect} from 'react-redux';
+import type {AppState} from '../../store/AppState';
+import type {UserToken} from '../../store/User/tokenReducer';
+import {AuthorContainer, PostTitle} from '../PostDetailsComponent/PostDetailsStyles';
+import {Context} from '../../Context';
+import {Label, Badge, Button} from 'reactstrap';
+
+interface Store {
+    notifications: SearchedPosts;
+    token: UserToken;
+}
+
+interface Dispatch {
+    getNotifications(authorizer: string): void;
+}
+
+type Props = Store & Dispatch;
 
 const useStyles = makeStyles({
-  root: {
-    width: 200,
-    marginBottom: 25,
-    marginTop: 35,
-    marginRight: 25,
-  },
-  media: {
-    height: 70,
-  },
+    root: {
+        width: 200,
+        marginBottom: 25,
+        marginTop: 35,
+        marginRight: 25,
+    },
+    media: {
+        height: 70,
+    },
 });
 
-export default function Dashboard() {
+const UnconnectedDashboard: FC<Props> = ({notifications, token, ...props}) => {
 
-  const classes = useStyles();
-  return (
-    <DashboardContainer>
-      <CardsContainer>
-        <Card className={classes.root}>
-          <Link href="/post/create">
-          <CardActionArea>
+    const [notificationsVisibility, setVisibility] = useState(false);
 
-            <CardContent>
-              <TitleContainer>
-                Postari
-              </TitleContainer>
-            </CardContent>
+    useEffect(() => {
+        props.getNotifications(token);
+    }, []);
 
-            <CardMedia
-              className={classes.media}
-              image="/static/images/logoPost.png"
-              title="logo"
-            />
+    const setVisibile = () => {
+        setVisibility(!notificationsVisibility);
+    };
 
-            <CardContent>
-              <Typography gutterBottom variant="h6">
-                Creeaza o postare
-              </Typography>
-            </CardContent>
-          </CardActionArea>
-          </Link>
-        </Card>
-        <Card className={classes.root}>
-          <Link href="/post/posts">
-          <CardActionArea>
+    const classes = useStyles();
 
-            <CardContent>
-              <TitleContainer>
-                Postari
-              </TitleContainer>
-            </CardContent>
+    return (
+        <DashboardContainer>
+            <CardsContainer>
+                <Card className={classes.root}>
+                    <Link href="/post/create">
+                        <CardActionArea>
 
-            <CardMedia
-              className={classes.media}
-              image="/static/images/logoPost.png"
-              title="logo"
-            />
+                            <CardContent>
+                                <TitleContainer>
+                                    Postari
+                                </TitleContainer>
+                            </CardContent>
 
-            <CardContent>
-              <Typography gutterBottom variant="h6">
-                Vezi postarile
-            </Typography>
-            </CardContent>
+                            <CardMedia
+                                className={classes.media}
+                                image="/static/images/logoPost.png"
+                                title="logo"
+                            />
 
-          </CardActionArea>
-          </Link>
-        </Card>
-      </CardsContainer>
+                            <CardContent>
+                                <Typography gutterBottom variant="h6">
+                                    Creeaza o postare
+                                </Typography>
+                            </CardContent>
+                        </CardActionArea>
+                    </Link>
+                </Card>
+                <Card className={classes.root}>
+                    <Link href="/post/posts">
+                        <CardActionArea>
 
- <PostContainer>
- <LogoContainer>
-        <LogoPosts/>
-    </LogoContainer>
-    <PostNr1>
-    <PostTitle>
-        {'Aceasta postare nu are titlu'}
-    </PostTitle>
-    <AuthorContainer>
-        Postat de "autor" pe data de "data"
-    </AuthorContainer>
-    <ContentContainer>
-    Sudden looked elinor off gay estate nor silent. Son read such next see the rest two. Was use extent old entire sussex. Curiosity remaining own see repulsive household advantage son additions
-    
-    </ContentContainer>
-    </PostNr1>
+                            <CardContent>
+                                <TitleContainer>
+                                    Postari
+                                </TitleContainer>
+                            </CardContent>
 
-    <PostNr2>
-    <PostTitle>
-        {'Aceasta postare nu are titlu'}
-    </PostTitle>
-    <AuthorContainer>
-        Postat de "autor" pe data de "data"
-    </AuthorContainer>
-    <ContentContainer>
-    Sudden looked elinor off gay estate nor silent. Son read such next see the rest two. Was use extent old entire sussex. Curiosity remaining own see repulsive household advantage son additions
+                            <CardMedia
+                                className={classes.media}
+                                image="/static/images/logoPost.png"
+                                title="logo"
+                            />
 
-    </ContentContainer>
-    </PostNr2>
-    <Button style={buttonStyles}>
-        Vezi mai multe posturi
-    </Button>
-  </PostContainer>
-    
-    </DashboardContainer>
-  );
-}
+                            <CardContent>
+                                <Typography gutterBottom variant="h6">
+                                    Vezi postarile
+                                </Typography>
+                            </CardContent>
+
+                        </CardActionArea>
+                    </Link>
+                </Card>
+            </CardsContainer>
+
+            <NotificationsContainer>
+                <div>
+                    <Button color="info"  size="lg" outline onClick={setVisibile}>
+                        Notificari <Badge color="info">{notifications.total || 0}</Badge>
+                    </Button>
+                </div>
+                {
+                    notifications
+                    && notifications.posts
+                    && notificationsVisibility
+                    && notifications.posts.map((post, index) => {
+
+                    const id = post.pmessageID ? post.pmessageID : post.postID;
+                    const type = post.pmessageID ? 'privateMessage' : 'post';
+
+                    return (
+                        <Link href="/post/[id]" as={`/post/${id}&${type}`} key={index}>
+
+                            <Notification>
+                                <PostTitle>
+                                    {post.title || 'Aceasta postare nu are titlu'}
+                                </PostTitle>
+                                <AuthorContainer>
+                                    Postat de {post.author} pe data de {Context.dateService.formatTime(post.timestamp)}
+                                </AuthorContainer>
+                            </Notification>
+                        </Link>
+                    )
+                })}
+            </NotificationsContainer>
+        </DashboardContainer>
+    );
+};
+
+const mapStateToProps = ({notifications, token}: AppState): Store => ({
+    notifications,
+    token,
+});
+
+const mapDispatchToProps: Dispatch = {
+    getNotifications: getNotificationsThunk,
+};
+
+export const Dashboard = connect(mapStateToProps, mapDispatchToProps)(UnconnectedDashboard);

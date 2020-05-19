@@ -10,23 +10,24 @@ import { Context } from '../../Context';
 import { User } from '../../core/domain/User';
 import { setUserTokenThunk } from './setUserTokenThunk';
 import { errorResponse } from '../../services/AxiosService';
+import type {UpdateUserRequest} from '../../core/services/ApiService';
 
 interface Payload {
     token: string;
     User: User;
 }
 
-export const updateUserThunk = (userUpdate: UpdateUserRequest) => async (
+export const updateUserThunk = (userUpdate: UpdateUserRequest, authorizer:string) => async (
     dispatch: Dispatch
 ) => {
     try {
         dispatch(updateUserAction());
 
-        const payload: Payload = await Context.apiService.updateUser(userUpdate);
+        const payload: Payload = await Context.apiService.updateUser(userUpdate, authorizer);
 
         await setUserTokenThunk(payload.token)(dispatch);
 
-        const user = User.create(payload.User)
+        const user = User.create(payload.User);
         dispatch(updateUserSuccessAction(user));
         sessionStorage.setItem('user', user);
 

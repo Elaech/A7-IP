@@ -12,7 +12,7 @@ import { Tutore } from '../core/domain/Tutore';
 import { Postare } from '../core/domain/Postare';
 import { Comment } from '../core/domain/Comment';
 import type { UserLogged } from '../../global';
-import type {CreatePostRequest, SearchRequest} from '../core/services/ApiService';
+import type {CreateCommentRequest, CreatePostRequest, SearchRequest} from '../core/services/ApiService';
 
 export class HttpApiService implements ApiService{
   axiosService: AxiosService;
@@ -91,15 +91,22 @@ export class HttpApiService implements ApiService{
   }
 
 
-  async createComment(req: CreateCommentRequest): Promise<void> {
+  async createComment(req: CreateCommentRequest, authorizer: string): Promise<void> {
+    this.setUserAuthorizer(authorizer);
     return this.axiosServiceToken.post('api/comment', req);
   }
 
   async getComments(): Promise<Comment[]> {
     return this.axiosService.get('/comment');
+  }
 
-  async updateUser(req:UpdateUserRequest): Promise<User>{
-    return this.axiosService.post('api/user',req);
+  async updateUser(req:UpdateUserRequest, authorizer: string): Promise<User>{
+    this.setUserAuthorizer(authorizer);
+    return this.axiosServiceToken.post('/api/register/role',req);
+  }
 
+  async getNotifications(authorizer: string): Promise<Postare[]> {
+    this.setUserAuthorizer(authorizer);
+    return this.axiosServiceToken.get('/api/notification');
   }
 }

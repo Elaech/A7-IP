@@ -2,7 +2,14 @@ import React from 'react';
 import { Pagination, PaginationItem } from 'reactstrap';
 
 import { Paginator, PaginatorOptions } from './Paginator';
-import {PaginationEllipsis, PaginationNext, PaginationNumber} from './PaginationBarStyles';
+
+
+import {
+    PaginationEllipsis,
+    PaginationInformation,
+    PaginationNext,
+    PaginationNumber,
+} from './PaginationBarStyles';
 
 interface Props {
     options: PaginatorOptions;
@@ -28,9 +35,9 @@ export const PaginationBar: React.FC<Props> = (props: Props) => {
     const totalNumberOfPages: number = Paginator.totalNumberOfPages(options);
     return (
         <>
-            {pages.length > 1 && (
-                <>
-                    <Pagination>
+            <Pagination>
+                {pages.length > 1 && (
+                    <>
                         {pages.map((p: number, index: number) => {
                             return (
                                 <>
@@ -58,13 +65,20 @@ export const PaginationBar: React.FC<Props> = (props: Props) => {
                             );
                         })}
                         {!Paginator.isLast(options) && (
-                            <PaginationItem key="final">
+                            <PaginationItem>
                                 <PaginationNext onClick={onNextLinkClick}>Next</PaginationNext>
                             </PaginationItem>
                         )}
-                    </Pagination>
-                </>
-            )}
+                    </>
+                )}
+                <PaginationInformation>
+                    Afisam de la {options.total ? options.from + 1 : 0} pana la{' '}
+                    {options.total < options.size
+                        ? options.total
+                        : options.from + options.size || 0}{' '}
+                    din {options.total || 0} intrari
+                </PaginationInformation>
+            </Pagination>
         </>
     );
 };

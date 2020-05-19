@@ -27,18 +27,18 @@ export  const registerUserThunk = (userCredentials: RegisterUserRequest)=> async
 
         await setUserTokenThunk(payload.token)(dispatch);
 
-        const user = User.create(payload.User)
+        const user = User.create(payload.User);
         dispatch(registerUserSuccessAction(user));
         sessionStorage.setItem('user', user);
 
 
-        await Context.routerService.replace('/homepage');
+        await Context.routerService.push('/homepage/updateUser');
     } catch(e) {
         dispatch(registerUserErrorAction(e));
 
         Swal.fire({
-            title: 'Error!',
-            text: ` ${errorResponse.message} `,
+            title: 'Eroare!',
+            text: ` ${errorResponse.error} `,
             icon: 'error',
             confirmButtonText: 'Ok',
         })

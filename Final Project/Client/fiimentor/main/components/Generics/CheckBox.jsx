@@ -27,13 +27,10 @@ export const Checkbox: FC<Props> = (props: Props) => {
                 type="checkbox"
                 checked={field.value}
             />
-            {touched && errors && (
-                <div className={`is-invalid form-control`}>&nbsp;</div>
-            )}
             <Label for={field.name} check>
                 {label}
             </Label>
-            <FormFeedback>{errors.name}</FormFeedback>
+            {errors && (<FormFeedback>{errors.name}</FormFeedback>)}
         </FormGroup>
     );
 };
