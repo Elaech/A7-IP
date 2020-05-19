@@ -31,7 +31,7 @@ export  const getProfesoriThunk = (authorizer: string)=> async(
         dispatch(getProfesoriErrorAction(e));
 
         await Swal.fire({
-            title: 'Error!',
+            title: 'Eroare!',
             text: ` ${errorResponse} `,
             icon: 'error',
             confirmButtonText: 'Ok',

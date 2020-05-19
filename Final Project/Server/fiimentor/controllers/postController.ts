@@ -20,6 +20,17 @@ import {ToFromGroupe} from "./GetPostController/ToFromGroupe";
 import {ToFromAllProfessors} from "./GetPostController/ToFromAllProfessors";
 import {ToFromSpecificProfessor} from "./GetPostController/ToFromSpecificProfessor";
 import {ToFromTutorProfessor} from "./GetPostController/ToFromTutorProfessor";
+import { PostCommentRepository } from '../Repositories/PostCommentRepository';
+import { PostComment } from '../models/entities/PostComment';
+import { CommentModel } from './ModelsPostController/CommentModel';
+import { PostNotificationRepository } from '../Repositories/PostNotificationRepository';
+import { PrivateMessage } from '../models/entities/PrivateMessage';
+import { User } from '../models/entities/User';
+import { PrivateMessageNotificationRepository } from '../Repositories/PrivateMessageNotificationRepository';
+import { CommentNotificationRepository } from '../Repositories/CommentNotificationRepository';
+import {CreatePrivateMessageNotification} from "./NotificationController/CreatePrivateMessageNotification";
+import {CreatePostNotification} from "./NotificationController/CreatePostNotification";
+
 
 
 async function createPost(req: any, res: any) {
@@ -36,8 +47,8 @@ async function createPost(req: any, res: any) {
 
     const option = (body.recipients === 'All') ?
         'All' : (body.recipients === 'Professors') ?
-            'Professors' : 'Groupe';
-
+            'Professors' : (body.recipients === 'Groupe') ?
+                'Groupe' : 'BadRequest';
 
     try {
 
@@ -46,7 +57,10 @@ async function createPost(req: any, res: any) {
 
                 const postAllOption: PostAll = new PostAll(body, userId);
                 const postCreator: PostCreator = new PostCreator(postAllOption);
-                postCreator.createPost();
+                await postCreator.createPost();
+
+                const createdPost =(await (new PostRepository).getLatestPostByUserId(userId))[0];
+                CreatePostNotification.createNotification(createdPost,userId);
 
                 return res.status(HttpStatus.CREATED).json({
                     succes: true
@@ -56,15 +70,18 @@ async function createPost(req: any, res: any) {
 
                 const professorOption = (body.professors.recipient === 'All')
                     ? 'All' : (body.professors.recipient === 'Professor')
-                        ? 'Professor' : 'Tutor';
+                        ? 'Professor' : (body.professors.recipient === 'Tutor')
+                            ? 'Tutor' : 'BadRequest';
 
                 switch (professorOption) {
                     case 'All': {
                         const professorsPostAll: ProfessorsPostAll = new ProfessorsPostAll(body, userId);
                         const postProfessorsOption: PostProfessors = new PostProfessors(professorsPostAll);
                         const postCreator: PostCreator = new PostCreator(postProfessorsOption);
-                        postCreator.createPost();
+                        await postCreator.createPost();
 
+                        const createdPost =(await (new PostRepository).getLatestPostByUserId(userId))[0];
+                        CreatePostNotification.createNotification(createdPost,userId);
                         return res.status(HttpStatus.CREATED).json({
                             succes: true
                         })
@@ -73,7 +90,8 @@ async function createPost(req: any, res: any) {
                         const professorsPostProfessor: ProfessorsPostProfessor = new ProfessorsPostProfessor(body, userId, title, content, isAnonymous);
                         const postProfessorsOption: PostProfessors = new PostProfessors(professorsPostProfessor);
                         const postCreator: PostCreator = new PostCreator(postProfessorsOption);
-                        postCreator.createPost();
+                        await postCreator.createPost();
+                        CreatePrivateMessageNotification.createNotification(body.professors.professorId, userId);
 
                         return res.status(HttpStatus.CREATED).json({
                             succes: true
@@ -84,12 +102,20 @@ async function createPost(req: any, res: any) {
                         const professorsPostTutor: ProfessorsPostTutor = new ProfessorsPostTutor(req, userId, title, content, isAnonymous);
                         const postProfessorsOption: PostProfessors = new PostProfessors(professorsPostTutor);
                         const postCreator: PostCreator = new PostCreator(postProfessorsOption);
-                        postCreator.createPost();
+                        await postCreator.createPost();
+                        CreatePrivateMessageNotification.createNotification(req.user.payload.tutorId, userId);
 
                         return res.status(HttpStatus.CREATED).json({
                             succes: true
                         })
 
+                    }
+
+                    default: {
+                        return res.status(HttpStatus.BAD_REQUEST).json({
+                            succes: false,
+                            message: 'Professor recipient is wrong.'
+                        })
                     }
                 }
             }
@@ -100,7 +126,10 @@ async function createPost(req: any, res: any) {
                     const groupePostSpecific: GroupePostSpecific = new GroupePostSpecific(groupeId, userId, title, content, isAnonymous);
                     const postGroupeOption: PostGroupe = new PostGroupe(groupePostSpecific);
                     const postCreator: PostCreator = new PostCreator(postGroupeOption);
-                    postCreator.createPost();
+                    await postCreator.createPost();
+
+                    const createdPost =(await (new PostRepository).getLatestPostByUserId(userId))[0];
+                    CreatePostNotification.createNotification(createdPost,userId);
 
                     return res.status(HttpStatus.CREATED).json({
                         succes: true
@@ -111,13 +140,22 @@ async function createPost(req: any, res: any) {
                     const groupePostFaculty: GroupePostFaculty = new GroupePostFaculty(body, userId, title, content, isAnonymous);
                     const postGroupeOption: PostGroupe = new PostGroupe(groupePostFaculty);
                     const postCreator: PostCreator = new PostCreator(postGroupeOption);
-                    postCreator.createPost();
+                    await postCreator.createPost();
+
+                    const createdPost =(await (new PostRepository).getLatestPostByUserId(userId))[0];
+                    CreatePostNotification.createNotification(createdPost,userId);
 
                     return res.status(HttpStatus.CREATED).json({
                         succes: true
                     })
 
                 }
+            }
+            default : {
+                return res.status(HttpStatus.BAD_REQUEST).json({
+                    succes: false,
+                    message: 'Recipient is wrong.'
+                })
             }
         }
     } catch (error) {
@@ -156,23 +194,35 @@ async function createPostAll(body: any, userId: number, groupeTitle: string) {
 
 async function getPostList(req: any, res: any) {
 
+
+
     let queryParam: string;
     if (req.body.queryParam) queryParam = `%${req.body.queryParam}%`;
     else queryParam = "%";
     const groupeMemberRepository = new GroupeMemberRepository();
     const usersGroups = await groupeMemberRepository.getByUserId(req.user.payload.id);
     const usersGroupsId = usersGroups.map(temp => temp.groupeId);
+
     const getPostOptions = new GetPostListOptions(queryParam, req.body.isAnonymous, req.body.postedByMe, req.body.post, req.user.payload.id,
         usersGroups, req.body.size, (req.body.page - 1) * req.body.size, usersGroupsId, (req.body.isAnonymous ? [1] : [0, 1]));
     const toFromOption = req.body.toFrom;
 
+    let postsList;
     switch (toFromOption) {
         case 'All':
-            return res.status(HttpStatus.OK).json(await ToFromAll.postsToFromAll(getPostOptions));
+            postsList = await ToFromAll.postsToFromAll(getPostOptions);
+            return res.status(HttpStatus.OK).json({
+                totalPosts:postsList.totalPosts,
+                posts: postsList.posts
+            });
         case 'Groupe':
             const groupeId = req.body.groupe.groupeId;
             if (usersGroups.some(x => x.groupeId === groupeId)) {
-                return res.status(HttpStatus.OK).json(await ToFromGroupe.postsToFromGroupe(getPostOptions, groupeId));
+                const postsList = await ToFromGroupe.postsToFromGroupe(getPostOptions, groupeId);
+                return res.status(HttpStatus.OK).json({
+                    totalPosts:postsList.totalPosts,
+                    posts: postsList.posts
+                });
             } else {
                 return res.status(HttpStatus.UNAUTHORIZED).json({
                     success: false,
@@ -183,15 +233,31 @@ async function getPostList(req: any, res: any) {
 
             switch (req.body.professors.recipient) {
                 case 'All':
-                    return res.status(HttpStatus.OK).json(await ToFromAllProfessors.allProfessors(getPostOptions, req.user.payload.role));
+                    postsList = await ToFromAllProfessors.allProfessors(getPostOptions, req.user.payload.role);
+                    return res.status(HttpStatus.OK).json({
+                        totalPosts:postsList.totalPosts,
+                        posts: postsList.posts
+                    });
                 case 'Professor':
                     const professorId = req.body.professors.professorId;
-                    return res.status(HttpStatus.OK).json(await ToFromSpecificProfessor.specificProfessor(getPostOptions, professorId));
+                    postsList = await ToFromSpecificProfessor.specificProfessor(getPostOptions, professorId);
+                    return res.status(HttpStatus.OK).json({
+                        totalPosts:postsList.totalPosts,
+                        posts: postsList.posts
+                    });
                 case 'Tutor':
                     if (req.user.payload.role === 'student') {
-                        return res.status(HttpStatus.OK).json(await ToFromTutorProfessor.tutorWhenUserIsStudent(getPostOptions));
+                        postsList = await ToFromTutorProfessor.tutorWhenUserIsStudent(getPostOptions);
+                        return res.status(HttpStatus.OK).json({
+                            totalPosts:postsList.totalPosts,
+                            posts: postsList.posts
+                        });
                     } else if (req.user.payload.role === 'professor') {
-                        return res.status(HttpStatus.OK).json(await ToFromTutorProfessor.tutorWhenUserIsProfessor(getPostOptions));
+                        postsList = await ToFromTutorProfessor.tutorWhenUserIsProfessor(getPostOptions);
+                        return res.status(HttpStatus.OK).json({
+                            totalPosts:postsList.totalPosts,
+                            posts: postsList.posts
+                        });
                     }
                     break;
             }
@@ -213,7 +279,7 @@ async function getPostByPostId(req: any, res: any) {
     if (!post.length) {
         return res.status(HttpStatus.BAD_REQUEST).json({
             succes: false,
-            message: "The post does not exist."
+            status: "The post does not exist."
         })
     }
 
@@ -243,12 +309,49 @@ async function getPostByPostId(req: any, res: any) {
 
         post[0].isAnonymous ? response.author = "author" : response.author = `${lastName} ${firstName}`;
 
-        return res.status(HttpStatus.OK).json(response);
+        const postCommentRepository = new PostCommentRepository();
+        const comments:PostComment[] = await postCommentRepository.getByPostId(postId);
+        
+        const commentsResponse:CommentModel[] = [];
+        let index:number = 0;
+        const commentNotificationRepository = new CommentNotificationRepository();
+
+        while(index<comments.length) {
+            const comment:PostComment = comments[index];
+            let commentAuthor:string|null = null;
+
+            if(!comment.isAnonymous) {
+                const user:User = (await userRepository.getById(comment.userId))[0];
+                commentAuthor = `${user.lastName} ${user.firstName}`;
+            }
+            const commentModel:CommentModel = new CommentModel(commentAuthor,comment.content,comment.time,comment.isAnonymous);
+            commentsResponse.push(commentModel);
+
+            await commentNotificationRepository.updateSeen(userId,comment.id);
+
+            index++;
+        }
+
+
+        const postNotificationRepository = new PostNotificationRepository();
+        await postNotificationRepository.updateSeen(userId,postId);
+
+
+        return res.status(HttpStatus.OK).json({
+            "succes": true,
+            "title": response.title,
+            "content": response.content,
+            "author": response.author,
+            "timestamp": response.timestamp,
+            "isAnonymous": response.isAnonymous,
+            "groupeTitle": response.groupeTitle,
+            "comments" : commentsResponse
+        });
 
     } else {
         return res.status(HttpStatus.FORBIDDEN).json({
             succes: false,
-            message: "You do not have the right permissions to view this post."
+            status: "You do not have the right permissions to view this post."
         })
     }
 
@@ -265,7 +368,7 @@ async function getPrivateMessageByPrivateMessageId(req: any, res: any) {
     if (!pMessage.length) {
         return res.status(HttpStatus.BAD_REQUEST).json({
             succes: false,
-            message: "The post does not exist."
+            status: "The post does not exist."
         })
     }
 
@@ -287,16 +390,46 @@ async function getPrivateMessageByPrivateMessageId(req: any, res: any) {
             timestamp: pMessage[0].time,
             IsAnonymous: pMessage[0].isAnonymous
         }
-
         user = await userRepository.getById(pMessage[0].senderId);
         pMessage[0].isAnonymous ? response.author = "Anonymous" : response.author = `${user[0].lastName} ${user[0].firstName}`;
 
-        return res.status(HttpStatus.OK).json(response);
+
+        const comments:PrivateMessage[] = await privateMessageRepository.getBySenderIdAndReceiverId(pMessage[0].senderId,pMessage[0].receiverId, pMessage[0].time);
+        const commentsResponse:CommentModel[] = [];
+        let indexx:number = 0;
+
+        while(indexx<comments.length) {
+            const comment:PrivateMessage = comments[indexx];
+            let commentAuthor:string|null = null;
+
+            if(!comment.isAnonymous) {
+                const newUser:User = (await userRepository.getById(comment.senderId))[0];
+                commentAuthor = `${newUser.lastName} ${newUser.firstName}`;
+            }
+            const commentModel:CommentModel = new CommentModel(commentAuthor,comment.content,comment.time,comment.isAnonymous);
+            commentsResponse.push(commentModel);
+
+            indexx++;
+        }
+
+        const privateMessageNotificationRepository = new PrivateMessageNotificationRepository();
+        await privateMessageNotificationRepository.updateSeen(pMessage[0].receiverId,pMessage[0].senderId);
+
+        return res.status(HttpStatus.OK).json({
+            "succes": true,
+            "title": response.title,
+            "content": response.content,
+            "author": response.author,
+            "timestamp": response.timestamp,
+            "isAnonymous": response.IsAnonymous,
+            "comments" : commentsResponse
+        });
+
 
     } else {
         return res.status(HttpStatus.FORBIDDEN).json({
             succes: false,
-            message: "You do not have the right permissions to view this post."
+            status: "You do not have the right permissions to view this post."
         })
     }
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 import {Table, TableBody} from '@material-ui/core';
 import {TheadStyled, ThStyled, TrowStyled} from './ListOfPostsStyles';
-import type {SearchedPostsState} from '../../store/Post/searchPostReducer';
+import type {SearchedPosts} from '../../store/Post/searchPostReducer';
 import type {SearchRequest} from '../../core/services/ApiService';
 import type {AppState} from '../../store/AppState';
 import {searchPostThunk} from '../../store/Post/searchPostThunk';
@@ -16,7 +16,7 @@ import {PaginationBar} from '../Generics/Pagination/PaginationBar';
 import type {PaginatorOptions} from '../Generics/Pagination/Paginator';
 
 interface StateProps {
-    searchedPosts: SearchedPostsState;
+    searchedPosts: SearchedPosts;
 }
 
 interface DispatchProps {
@@ -43,13 +43,13 @@ class UnconnectedViewPosts extends React.Component<Props, State> {
     constructor() {
         super();
         this.state = {
-            from: size,
+            from: 0,
         };
     }
 
-    componentDidMount() {
+     componentDidMount() {
 
-        const page = Math.round(this.state.from/size);
+        const page = Math.floor(this.state.from /size);
 
         const request = SearchPostRequest.create({page});
 
@@ -62,7 +62,7 @@ class UnconnectedViewPosts extends React.Component<Props, State> {
     }
     componentDidUpdate(prevProps, prevState: State) {
         if (prevState.from !== this.state.from && prevProps) {
-            const page = Math.round(this.state.from/size);
+            const page = Math.floor(this.state.from /size);
 
             const request = SearchPostRequest.create({page});
 
@@ -90,14 +90,14 @@ class UnconnectedViewPosts extends React.Component<Props, State> {
     };
 
     render() {
-        const {searchedPosts} = this.props;
+        const {posts, total} = this.props.searchedPosts;
         const options: PaginatorOptions = {
             from: this.state.from,
-            total: 120,
+            total: total || 0,
             size,
         };
 
-        if (!searchedPosts) {
+        if (!posts) {
             return <div>Loading...</div>
         }
 
@@ -130,7 +130,7 @@ class UnconnectedViewPosts extends React.Component<Props, State> {
                         </TrowStyled>
                     </TheadStyled>
                     <TableBody>
-                        {searchedPosts.map((post, index) => (
+                        {posts.map((post, index) => (
                             <TrowStyled key={index}>
                                 <td>
                                     <Link href="/post/[id]" as={`/post/${post.id}&${post.type}`}>

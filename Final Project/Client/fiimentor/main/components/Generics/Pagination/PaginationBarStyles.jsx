@@ -30,3 +30,10 @@ export const PaginationNext = styled.div`
   text-transform: uppercase;
 `;
 
+export const PaginationInformation = styled.div`
+  color: #8e8e93;
+  font-family: GraphikCond-Medium;
+  font-size: 1rem;
+  letter-spacing: 1px;
+  margin-left: auto;
+`;

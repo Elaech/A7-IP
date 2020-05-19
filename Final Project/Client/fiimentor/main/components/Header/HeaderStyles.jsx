@@ -1,4 +1,7 @@
 import styled from 'styled-components';
+import { font } from '../../globalStyledVariables';
+
+
 export const HeaderStyles = styled.header`
   height: 64px;
   padding: 0 48px;
@@ -7,9 +10,10 @@ export const HeaderStyles = styled.header`
   align-items: center;
   font-size: 16px;
   font-weight: bold;
+  font-face: ${font.face};
+  font-family: ${font.family};
 
   span {
-    margin-right: 16px;
     text-transform: capitalize;
   }
 
@@ -21,7 +25,8 @@ export const HeaderStyles = styled.header`
   }
 `;
 export const LogoContainer = styled.div`
-  font-family: GraphikCond-Bold;
+  font-face: ${font.face};
+  font-family: ${font.family};
   cursor: pointer;
   margin-right: 1.5rem;
   text-align: left;
@@ -35,4 +40,8 @@ export const LogoContainer = styled.div`
   a {
     text-decoration: none;
   }
+`;
+export const UserName = styled.div`
+    position: relative;
+    left: 33%;
 `;

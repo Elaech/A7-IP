@@ -1,3 +1,4 @@
+import {Comment} from '../../core/domain/Comment';
 export class Postare {
 
 static contentConstraint = {
@@ -10,6 +11,9 @@ static titleConstraint = {
   max: 250,
 };
 
+static create(partial: Partial<Postare>) {
+  return new Postare(partial);
+}
   id: number;
   type: string;
   title: string;
@@ -17,10 +21,13 @@ static titleConstraint = {
   content: string;
   timestamp: number;
   isAnonymous: boolean;
+  comments: Comment[];
 
-  constructor(postare: Postare) {
-    const {id, type, title, content, timestamp, author, isAnonymous} = postare;
 
+  constructor(postare: Partial<Postare>={}) {
+    const {id, type, title, content, timestamp, author, isAnonymous, comments} = postare;
+
+    this.comments = comments;
     this.id = id;
     this.type = type;
     this.title = title;

@@ -15,6 +15,7 @@ interface Props extends FieldProps {
   groupClassName?: string;
   inputClassName?: string;
   disabled?:boolean;
+  helperText?:string;
 }
 
 
@@ -25,6 +26,7 @@ export const TextInput: FC<Props> = (props: Props) => {
     field,
     disabled,
     groupClassName,
+    helperText,
     form: { errors },
   } = props;
 
@@ -41,6 +43,9 @@ export const TextInput: FC<Props> = (props: Props) => {
         variant="outlined"
         disabled={disabled}
       />
+      <FormHelperText >
+        {helperText}
+      </FormHelperText>
       <FormHelperText error>
         {errors[name]}
       </FormHelperText>

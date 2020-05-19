@@ -12,11 +12,15 @@ type ActionType =
     | SearchPostAction
     ;
 
-export type SearchedPostsState = Postare[] | null;
+export interface SearchedPosts {
+    posts?: Postare[];
+    total?: number;
+}
 
-const initialState: SearchedPostsState = [];
 
-export const searchPostReducer = (state: SearchedPostsState = initialState, action: ActionType) => {
+const initialState: SearchedPosts = {};
+
+export const searchPostReducer = (state: SearchedPosts = initialState, action: ActionType) => {
     switch (action.type) {
         case SET_INITIAL_STATE:
             return initialState;

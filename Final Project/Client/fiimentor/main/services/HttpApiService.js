@@ -3,14 +3,16 @@ import {
   ApiService,
   LoginUserRequest,
   RegisterUserRequest,
+  UpdateUserRequest,
 } from '../core/services/ApiService';
 import {User} from '../core/domain/User';
 import { Student } from '../core/domain/Student';
 import { Profesor } from '../core/domain/Profesor';
 import { Tutore } from '../core/domain/Tutore';
 import { Postare } from '../core/domain/Postare';
+import { Comment } from '../core/domain/Comment';
 import type { UserLogged } from '../../global';
-import type {CreatePostRequest, SearchRequest} from '../core/services/ApiService';
+import type {CreateCommentRequest, CreatePostRequest, SearchRequest} from '../core/services/ApiService';
 
 export class HttpApiService implements ApiService{
   axiosService: AxiosService;
@@ -86,5 +88,25 @@ export class HttpApiService implements ApiService{
   async searchPost(req: SearchRequest, authorizer: string) : Promise<Postare[]>{
     this.setUserAuthorizer(authorizer);
     return this.axiosServiceToken.post('api/post/getPosts', req);
+  }
+
+
+  async createComment(req: CreateCommentRequest, authorizer: string): Promise<void> {
+    this.setUserAuthorizer(authorizer);
+    return this.axiosServiceToken.post('api/comment', req);
+  }
+
+  async getComments(): Promise<Comment[]> {
+    return this.axiosService.get('/comment');
+  }
+
+  async updateUser(req:UpdateUserRequest, authorizer: string): Promise<User>{
+    this.setUserAuthorizer(authorizer);
+    return this.axiosServiceToken.post('/api/register/role',req);
+  }
+
+  async getNotifications(authorizer: string): Promise<Postare[]> {
+    this.setUserAuthorizer(authorizer);
+    return this.axiosServiceToken.get('/api/notification');
   }
 }

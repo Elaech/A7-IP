@@ -7,6 +7,8 @@ import post from "./post";
 import pmessage from "./pmessage";
 import professor from "./professor";
 import groupe from"./groupe";
+import comment from './comment'
+import notification from './notification'
 
 const router = Router();
 
@@ -22,5 +24,6 @@ router.use('/auth', auth);
 router.use('/post',post);
 router.use('/pmessage',pmessage);
 router.use('/professor',professor);
-
+router.use('/comment',comment);
+router.use('/notification', notification);
 export = router;

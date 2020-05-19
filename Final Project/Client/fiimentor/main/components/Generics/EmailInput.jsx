@@ -15,6 +15,7 @@ interface Props extends FieldProps {
   placeholder?: string;
   groupClassName?: string;
   inputClassName?: string;
+  helperText?:string;
 }
 
 export const EmailInput: FC<Props> = (props: Props) => {
@@ -24,6 +25,7 @@ export const EmailInput: FC<Props> = (props: Props) => {
     field,
     groupClassName,
     inputClassName,
+    helperText,
     form: { errors },
   } = props;
 
@@ -40,7 +42,9 @@ export const EmailInput: FC<Props> = (props: Props) => {
         placeholder = {placeholder}
         variant = "outlined"
       />
-
+       <FormHelperText >
+        {helperText}
+      </FormHelperText>
       <FormHelperText error>
         {errors[name]}
       </FormHelperText>

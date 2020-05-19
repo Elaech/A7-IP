@@ -1,3 +1,4 @@
+import {Comment} from '../domain/Comment';
 import {Postare} from '../domain/Postare';
 import {Tutore} from '../domain/Tutore';
 import {Profesor} from '../domain/Profesor';
@@ -51,6 +52,13 @@ export interface CreatePostRequest {
     groupe?: GroupePost;
 }
 
+export interface CreateCommentRequest {
+    postId?: number;
+    pmessageId?: number;
+    content: string;
+    isAnonymous: false;
+}
+
 export interface SearchRequest {
     query: string;
     page: ' ';
@@ -63,6 +71,15 @@ export interface Filters {
     postedByMe: boolean;
     isAnonymous: boolean;
 
+}
+
+export interface UpdateUserRequest{
+    role: string;
+    year?: number;
+    number?: number;
+    letter?: string;
+    academicRank?: string;
+    groupeTitle?: string;
 }
 
 export interface ApiService {
@@ -88,5 +105,14 @@ export interface ApiService {
 
     getPrivateMessage(pmessageId: number, authorizer: string): Promise<Postare>;
 
+    createComment(req: CreateCommentRequest, authorizer: string): Promise<void>;
+
+    getComments(): Promise<Comment[]>;
+
     searchPost(req: SearchRequest, authorizer: string) : Promise<Postare[]>;
+
+    updateUser(req: UpdateUserRequest, authorizer: string): Promise<User>;
+
+    getNotifications(authorizer: string): Promise<Postare[]>;
+
 }

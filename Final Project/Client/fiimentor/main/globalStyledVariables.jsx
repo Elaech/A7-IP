@@ -2,7 +2,7 @@ import logo from '../static/images/final-logo.png';
 import logoPosts from '../static/images/logoPost.png';
 import React from 'react';
 import styled, {createGlobalStyle} from 'styled-components';
-
+import profile from '../static/images/profile.png'
 
 export const font = {
   face:
@@ -17,7 +17,8 @@ export const font = {
 
 export const LogoHome = ()=> <img src={logo} className="logo" alt="Logo"/>;
 export const LogoLogin = ()=> <img src={logo} className="logoLogin" alt="Logo"/>
-export const LogoPosts = ()=> <img src={logoPosts} className="logoPosts" alt="Logo" width="90%"/>;
+export const LogoPosts = ()=> <img src={logoPosts} className="logoPosts" alt="Logo"/>;
+export const Profile = () => <img src={profile} className="Profile" alt="Profile"/>;
 
 export const SiteContainer = styled.div`
   max-width: 1440px;
